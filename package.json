@@ -1,0 +1,57 @@
+{
+    "name": "config-srv",
+    "version": "1.0.0",
+    "description": "API and REST interface for editing a structured set of parameters",
+    "main": "src/instance.es6",
+    "scripts": {
+        "test": "mocha --file './test/init.es6' 'test/**/**spec.es6'"
+    },
+    "keywords": [
+        "configuration management",
+        "schema",
+        "edit",
+        "API",
+        "REST",
+        "validation",
+        "рarameter",
+        "settings",
+        "settings",
+        "preferences",
+        "service",
+        "interface",
+        "conf",
+        "config",
+        "configuration",
+        "store",
+        "config editable",
+        "config-node",
+        "node-config"
+    ],
+    "author": "Viacheslav Makarov <npmjs@bazilio.ru>",
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bazilio-san/config-service.git"
+    },
+    "files": [
+        "src/*.*"
+    ],
+    "devDependencies": {
+        "af-lib": "git+https://bitbucket.org/BazilioCat/af-lib.git#semver:2.*",
+        "chai": "^4.2.0",
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-loader": "^4.0.2",
+        "eslint-plugin-import": "^2.20.2",
+        "express": "^4.17.1",
+        "fs-extra": "^9.0.0",
+        "i18next": "^19.4.4",
+        "i18next-sync-fs-backend": "^1.1.1",
+        "mocha": "^7.1.2",
+        "supertest": "^4.0.2"
+    },
+    "engines": {
+        "node": ">= 10.0.0"
+    },
+    "dependencies": {}
+}

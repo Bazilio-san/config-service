@@ -1,0 +1,184 @@
+
+### Запрос помощи
+GET http://localhost:8683/config-service/help
+
+
+### ============= Не корректные запросы к "config-service", возвращающие 500 + помощь
+
+###
+GET http://localhost:8683/config-service/
+
+###
+GET http://localhost:8683/config-service
+
+###
+GET http://localhost:8683/config-service?foo-bar
+
+
+### =================== Не корректные запросы, возвращающие 501 (Not Implemented) ============
+
+###
+GET http://localhost:8683/any/other/path.html
+
+###
+GET http://localhost:8683
+
+
+### =================== мета-описание =========================================================
+
+### Полное мета-описание
+GET http://localhost:8683/config-service?get-schema=.
+
+###
+GET http://localhost:8683/config-service?get-schema=
+
+
+
+###
+GET http://localhost:8683/config-service?get-schema
+
+
+
+### ...на русском языке
+GET http://localhost:8683/config-service?get-schema&lng=ru
+
+### ...язык не определен - просто полное М.О.
+GET http://localhost:8683/config-service?get-schema&lng=foo
+
+
+
+### мета-описание именованной конфигурации
+GET http://localhost:8683/config-service?get-schema=config1
+
+###
+GET http://localhost:8683/config-service?get-schema=config+3
+
+### мета-описание НЕСУЩЕСТВУЮЩЕЙ конфигурации (ошибка)
+GET http://localhost:8683/config-service?get-schema=no-such-config
+
+### мета-описание фрагмента по его пути
+
+###
+GET http://localhost:8683/config-service?get-schema=config1.div13
+
+###
+GET http://localhost:8683/config-service?get-schema=config1.div13.v_json
+
+###
+GET http://localhost:8683/config-service?get-schema=config1.div13.v_float
+
+### - ERROR: "No such parameter in the Schema"
+GET http://localhost:8683/config-service?get-schema=config1.div13.v_json.defaultProp1
+
+### - ERROR: "No such parameter in the Schema"
+GET http://localhost:8683/config-service?get-schema=config1.div13
+
+
+### ============= Запрос списка именованных конфигураций =====================
+
+###
+GET http://localhost:8683/config-service?list
+
+
+### ============= Ошибки при установке значений параметров =====================
+
+### - ERROR 500: "No root parameter \"value\" was found. Expected {value: <new value>}"
+GET http://localhost:8683/config-service?set=config1.div13.v_json
+
+### - ERROR 500: "No root parameter \"value\" was found. Expected {value: <new value>}"
+POST http://localhost:8683/config-service?set=config1.div13.v_json
+Content-Type: application/json
+
+{
+    "a": 999,
+    "b": "content"
+}
+
+
+### ============= Установка значений параметров =====================
+
+###
+POST http://localhost:8683/config-service?set=config1.div13.v_json
+Content-Type: application/json
+
+{
+    "value": {
+        "a": 999,
+        "b": "content"
+    }
+}
+
+###
+POST http://localhost:8683/config-service?set=config1.div13.v_datetime
+Content-Type: application/json
+
+{
+    "value": "2020-03-20T20:09:08.345"
+}
+
+
+### - ERROR 500: "Passed empty parameter value 'set'"
+POST http://localhost:8683/config-service?set=
+Content-Type: application/json
+
+
+### - ERROR 500: "Parameter <> value could not be normalized. Reason: The string representation of the date does not match the pattern..."
+POST http://localhost:8683/config-service?set=config1.div13.v_datetime
+Content-Type: application/json
+
+{
+    "value": "2020-133-20T20:09:08.345"
+}
+
+
+### ============= Запрос значений параметров  =============
+### ============= В сопровождении доп информации  =============
+
+###
+GET http://localhost:8683/config-service?get-ex
+
+###
+GET http://localhost:8683/config-service?get-ex=config1
+
+###
+GET http://localhost:8683/config-service?get-ex=config1.div13.v_json
+
+###
+GET http://localhost:8683/config-service?get-ex=config 3.div31
+
+###
+GET http://localhost:8683/config-service?get-ex=config1.div13
+
+###
+GET http://localhost:8683/config-service?get-ex=config1.div13.v_datetime
+
+###
+GET http://localhost:8683/config-service?get-ex=config1.div11.div21.div31.div41
+
+### - ERROR 500: "No such parameter in the Schema"
+GET http://localhost:8683/config-service?get-ex=config1.div13.foo
+
+
+
+### ============= Запрос значений параметров "как есть" =============
+
+###
+GET http://localhost:8683/config-service?get
+
+###
+GET http://localhost:8683/config-service?get=config1
+
+###
+GET http://localhost:8683/config-service?get=config1.div13.v_json
+
+###
+GET http://localhost:8683/config-service?get=config 3.div31
+
+###
+GET http://localhost:8683/config-service?get=config1.div13.v_datetime
+
+### - ERROR 500: "No such parameter in the Schema"
+GET http://localhost:8683/config-service?get=config1.div13.foo
+
+
+

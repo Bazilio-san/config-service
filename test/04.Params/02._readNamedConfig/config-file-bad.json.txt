@@ -1,0 +1,5 @@
+{
+    "rules1": {
+        "DIV1": // This is bad json
+    }
+}

@@ -1,0 +1,9 @@
+module.exports = [
+    {
+        id: 'rules'
+        title: 'Настройки сигналов',
+        t: 'config.AlertsSettings',
+        type: 'section',
+        value: { // ТУТ ОШИБКА СИНТАКСИСА
+    },
+];

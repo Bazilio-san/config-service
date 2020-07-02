@@ -1,0 +1,39 @@
+{
+    "__root__title": "ЗАГОЛОВОК __root__",
+    "config1": {
+        "title": "ЗАГОЛОВОК config1",
+        "div10": {
+            "title": "ЗАГОЛОВОК config1.div10"
+        },
+        "div11": {
+            "title": "ЗАГОЛОВОК config1.div11",
+            "div21": {
+                "title": "ЗАГОЛОВОК config1.div11.div21",
+                "div31": {
+                    "title": "ЗАГОЛОВОК config1.div11.div21.div31",
+                    "div41": {
+                        "title": "ЗАГОЛОВОК config1.div11.div21.div31.div41"
+                    }
+                }
+            }
+        }
+    },
+    "config-2": {
+        "title": "ЗАГОЛОВОК config-2",
+        "div21": {
+            "title": "ЗАГОЛОВОК config-2.div21"
+        },
+        "div22": {
+            "title": "ЗАГОЛОВОК config-2.div22"
+        }
+    },
+    "config3": {
+        "title": "ЗАГОЛОВОК config 3",
+        "div31": {
+            "title": "ЗАГОЛОВОК config 3.div31"
+        },
+        "div32": {
+            "title": "ЗАГОЛОВОК config 3.div32"
+        }
+    }
+}

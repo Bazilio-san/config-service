@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="web server" type="NodeJSConfigurationType"
+                   path-to-js-file="example/web-server.es6" working-dir="$PROJECT_DIR$">
+        <envs>
+            <env name="LOGGER_LEVEL" value="debug"/>
+            <env name="NODE_CONFIG_DIR_" value="./example/config"/>
+        </envs>
+        <method v="2"/>
+    </configuration>
+</component>
