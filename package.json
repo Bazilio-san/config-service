@@ -1,6 +1,6 @@
 {
     "name": "config-srv",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "API and REST interface for editing a structured set of parameters",
     "main": "src/instance.es6",
     "scripts": {
@@ -37,7 +37,7 @@
         "src/*.*"
     ],
     "devDependencies": {
-        "af-lib": "git+https://bitbucket.org/BazilioCat/af-lib.git#semver:2.*",
+        "af-lib": "^1.0.2",
         "chai": "^4.2.0",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.1.0",
