@@ -170,7 +170,8 @@ module.exports = class Schema extends Utils {
         if (pathArr.length && !pathArr[pathArr.length - 1] && paramIndex !== -1) {
             pathArr[pathArr.length - 1] = `[${paramIndex}]`;
         }
-        const paramPath = pathArr.join('.').replace('.[', '[');
+        const paramPath = pathArr.join('.')
+            .replace('.[', '[');
         const paramText = paramPath + (title ? ` (${title})` : '');
         if (!id) {
             throw this._error(`Parameter ID not specified for «${paramText}»`);
@@ -406,7 +407,10 @@ module.exports = class Schema extends Utils {
         }
         if (__.hasProp(schemaItem, 't')) {
             if (writeMissingTranslate) {
-                const translation = i18n.t(t, { lng });
+                const translation = i18n.t(t, {
+                    id: schemaItem.id,
+                    lng
+                });
                 let tPath = t;
                 const i = tPath.indexOf(':');
                 if (i > -1) {
