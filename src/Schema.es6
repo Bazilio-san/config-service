@@ -67,12 +67,16 @@ const _lng_ = Symbol.for('_lng_');
 module.exports = class Schema extends Utils {
     constructor (serviceOptions = {}) {
         super(serviceOptions);
-        const { i18n, writeMissingTranslate, i18nNS = '', onChange } = serviceOptions;
+        const { i18n, writeMissingTranslate, i18nNS = '', translatedProperties, onChange } = serviceOptions;
         this.onChange = typeof onChange === 'function' ? onChange : () => {
         };
         this.i18n = i18n;
         this.i18nNS = i18nNS ? `${i18nNS}:` : '';
         this.writeMissingTranslate = writeMissingTranslate;
+        this.translatedProperties = [];
+        if (translatedProperties && Array.isArray(translatedProperties)) {
+            this.translatedProperties = translatedProperties.filter((v) => typeof v === 'string');
+        }
         this.pathsOfSchemaItems = new Map();
         this.schemaByLanguageCache = new Map();
         this._reloadSchema();
@@ -405,23 +409,33 @@ module.exports = class Schema extends Utils {
                 }
             });
         }
-        if (__.hasProp(schemaItem, 't')) {
-            if (writeMissingTranslate) {
-                const translation = i18n.t(t, {
-                    id: schemaItem.id,
-                    lng
-                });
-                let tPath = t;
-                const i = tPath.indexOf(':');
-                if (i > -1) {
-                    tPath = tPath.substr(i + 1);
+
+        if (i18n) {
+            const translationOptions = {
+                id: schemaItem.id,
+                lng
+            };
+            if (__.hasProp(schemaItem, 't')) {
+                if (writeMissingTranslate) {
+                    const translation = i18n.t(t, translationOptions);
+                    let tPath = t;
+                    const i = tPath.indexOf(':');
+                    if (i > -1) {
+                        tPath = tPath.substr(i + 1);
+                    }
+                    if (translation !== tPath) {
+                        schemaItem.title = translation;
+                    }
+                } else if (i18n.exists(t, { lng })) {
+                    schemaItem.title = i18n.t(t, translationOptions);
                 }
-                if (translation !== tPath) {
-                    schemaItem.title = translation;
-                }
-            } else if (i18n && i18n.exists(t, { lng })) {
-                schemaItem.title = i18n.t(t, { lng });
             }
+            this.translatedProperties.forEach((propName) => {
+                const translationId = schemaItem[propName];
+                if (translationId && (writeMissingTranslate || i18n.exists(translationId, { lng }))) {
+                    schemaItem[propName] = i18n.t(translationId, translationOptions);
+                }
+            });
         }
     }
 

@@ -8,6 +8,8 @@ module.exports = {
             id: 'config1',
             title: 'TITLE config1',
             t: 'cs:config1.title',
+            anyOtherProperty: 'any other value',
+            descr: 'DESCRIPTION HEADER',
             type: 'section',
             value: [
                 {

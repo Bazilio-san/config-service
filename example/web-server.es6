@@ -27,6 +27,7 @@ const serviceOptions = {
     loggerFinish,
     i18n,
     i18nNS: 'cs',
+    translatedProperties: ['descr'],
     _afLibEcho: echo,
     onChange: (paramPath, newValue, schemaItem, instance) => {
         instance.testOnChange = paramPath + newValue;

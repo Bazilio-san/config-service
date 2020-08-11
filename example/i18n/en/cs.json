@@ -2,6 +2,7 @@
     "__root__title": "ROOT TITLE",
     "config1": {
         "title": "TITLE config1",
+        "descr": "DESCRIPTION HEADER",
         "div10": {
             "title": "TITLE config1.div10"
         },

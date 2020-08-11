@@ -17,6 +17,7 @@ const serviceOptions = {
     loggerFinish,
     i18n,
     i18nNS: 'cs',
+    translatedProperties: ['descr'],
     writeMissingTranslate: true,
     _afLibEcho: echo
 };

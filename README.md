@@ -355,8 +355,12 @@ Each parameter is described by an object with the following properties:
 | id       | ID/property name | yes | valid JavaScript variable name | param1 |
 | type     | Property type | yes | property Type | section |
 | title    | Property title | no | Designed to be used as a field title/label in the editing interface | Title of property |
-| t        | Translation ID | no | Header translation ID. It is used if the i18next object was transferred during the initialization of the service. | cs:config1.prop1.title |
+| t        | Translation ID | no | Header translation ID. It is used if the `i18next` object was transferred during the initialization of the service. In this case, the `title` property will be replaced with the corresponding translation. | cs:config1.prop1.title |
 | value    | Property value | no |      |      |
+
+In addition to these properties, you can set any others and they will be transferred when requesting a schema through the API. For example, these can be properties for the interface for managing settings, for differentiating rights, etc.
+
+In addition, you can specify an additional list of properties that will be translated into other languages when using`i18next`. See the `translatedProperties` property in the chapter "Options when creating a service" below.
 
 
 
@@ -420,7 +424,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-
+    
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
@@ -734,6 +738,7 @@ Options when creating a service
 | onChange | function |  | The function that will be called when each property is successfully updated. Signature see below. |
 | onSaveNamedConfig | function |  | The function that will be called when the named configuration file is saved, which follows each update made in the named configuration parameters. |
 | userTypes | object | | In this property, you can pass custom parameter types. See above. |
+| translatedProperties | array | | The list of property names in the schema element, which, in addition to the `t` property, will be translated into other languages when` i18next` is used. Unlike `t`, whose value is left untouched, the values of properties listed in this array will be replaced with translation. |
 
 
 

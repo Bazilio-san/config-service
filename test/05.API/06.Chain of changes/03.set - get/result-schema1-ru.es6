@@ -8,6 +8,8 @@ module.exports = {
             id: 'config1',
             title: 'ЗАГОЛОВОК config1',
             t: 'cs:config1.title',
+            anyOtherProperty: 'any other value',
+            descr: 'ОПИСАНИЕ ЗАГОЛОВКА',
             type: 'section',
             value: [
                 {

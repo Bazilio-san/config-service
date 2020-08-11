@@ -7,6 +7,8 @@ module.exports = {
         {
             id: 'config1',
             title: 'config1 title',
+            anyOtherProperty: 'any other value',
+            descr: 'cs:config1.descr',
             t: 'cs:config1.title',
             type: 'section',
             value: [
