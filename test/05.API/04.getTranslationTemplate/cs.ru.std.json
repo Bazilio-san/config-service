@@ -2,6 +2,7 @@
     "__root__title": "ЗАГОЛОВОК __root__",
     "config1": {
         "title": "ЗАГОЛОВОК config1",
+        "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
         "div11": {
             "title": "ЗАГОЛОВОК config1.div11",
             "div21": {

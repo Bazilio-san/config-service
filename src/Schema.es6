@@ -480,42 +480,53 @@ module.exports = class Schema extends Utils {
     __setOneTranslatedTemplateNode (schemaItem, container, pathArr, options) {
         const { root = {}, lng = '', onlyStandardPaths = true, addPaths = false } = options;
         const { i18n } = this;
-        const { id, t } = schemaItem;
+        const { id } = schemaItem;
         const _id = id.replace(/\s/g, '__');
         options._id = _id;
-        let { title } = schemaItem;
         const isRoot = schemaItem[_isRootNode_];
         const ns = isRoot ? '' : this.i18nNS;
-        const standardPath = `${ns}${[...pathArr, _id, 'title'].join('.')}`;
-        if (t !== standardPath && (!onlyStandardPaths || isRoot)) {
-            let current = root;
-            const trPath = (isRoot ? t.replace(/^[^:]+:/, '') : t).split(/[:.]/);
-            while (trPath.length) {
-                const left = trPath.shift();
-                if (!__.isObject(current[left])) {
-                    current[left] = {};
-                }
-                if (trPath.length) {
-                    current = current[left];
+        const translatedProperties = ['t', ...this.translatedProperties];
+
+        translatedProperties.forEach((propName) => {
+            const lastPart = propName === 't' ? 'title' : propName;
+            const standardPath = `${ns}${[...pathArr, _id, lastPart].join('.')}`;
+            const propVal = schemaItem[propName];
+            let trans = schemaItem[lastPart];
+            if (propVal) {
+                if (propVal !== standardPath && (!onlyStandardPaths || isRoot)) {
+                    let current = root;
+                    const trPath = (isRoot ? propVal.replace(/^[^:]+:/, '') : propVal).split(/[:.]/);
+                    while (trPath.length) {
+                        const left = trPath.shift();
+                        if (!__.isObject(current[left])) {
+                            current[left] = {};
+                        }
+                        if (trPath.length) {
+                            current = current[left];
+                        } else {
+                            if (i18n && i18n.exists(propVal, { lng })) {
+                                trans = i18n.t(propVal, { lng });
+                            }
+                            current[left] = trans;
+                            if (addPaths) {
+                                current[propName] = propVal;
+                            }
+                        }
+                    }
                 } else {
-                    if (i18n && i18n.exists(t, { lng })) {
-                        title = i18n.t(t, { lng });
+                    if (i18n && i18n.exists(propVal, { lng })) {
+                        trans = i18n.t(propVal, { lng });
                     }
-                    current[left] = title;
-                    if (addPaths) {
-                        current.t = t;
+                    if (!container[_id]) {
+                        container[_id] = {};
+                    }
+                    container[_id][lastPart] = trans;
+                    if (addPaths && propName === 't') {
+                        container[_id].t = standardPath;
                     }
                 }
             }
-        } else {
-            if (i18n && i18n.exists(t, { lng })) {
-                title = i18n.t(t, { lng });
-            }
-            container[_id] = { title };
-            if (addPaths) {
-                container[_id].t = standardPath;
-            }
-        }
+        });
     }
 
     /**

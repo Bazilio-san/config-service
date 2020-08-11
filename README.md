@@ -70,6 +70,7 @@ module.exports = [
                         type: 'string',
                         title: 'Title of div111',
                         t: 'cs:namedConfig1.div11.div111',
+                        arbitraryParameter: 'arbitrary parameter value',
                         value: 'default string'
                     }
                 ]
@@ -228,6 +229,7 @@ responce:
             "title": "Title of div111",
             "t": "cs:namedConfig1.div11.div111",
             "defaultValue": "default string",
+            "arbitraryParameter": "arbitrary parameter value",
             "value": "new value 2"
         }
     ]
@@ -424,7 +426,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-    
+
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
@@ -597,6 +599,7 @@ File `<app_root>/i18n/en/cs.json`
     "__root__title": "TITLE EN for root",
     "config1": {
         "title": "TITLE EN for config1",
+        "descr": "DESCRIPTION EN for config1",
         "email": {
             "title": "TITLE EN for config1.email"
         }
@@ -611,6 +614,7 @@ File `<app_root>/i18n/ru/cs.json`
     "__root__title": "ЗАГОЛОВОК для root",
     "config1": {
         "title": "ЗАГОЛОВОК для config1",
+        "descr": "ОПИСАНИЕ for config1",
         "email": {
             "title": "ЗАГОЛОВОК для config1.email"
         }
@@ -628,6 +632,7 @@ module.exports = [
         title: 'default title',
         t: 'cs:config1.title',
         type: 'section',
+        description: 'cs:config1.descr',
         value: [
             {
                 id: 'email',
@@ -647,6 +652,7 @@ File <app_root>/app.js
 const serviceOptions = {
     i18n: require('./i18n/index.js')(),
     i18nNS: 'cs',
+    translatedProperties: ['description'],
     writeMissingTranslate: true
 };
 
@@ -668,6 +674,7 @@ console.log(JSON.stringify(schemaTranslated, undefined, 2));
             "title": "ЗАГОЛОВОК для config1",
             "t": "cs:config1.title",
             "type": "section",
+            "description": "ОПИСАНИЕ for config1",
             "value": [
                 {
                     "id": "email",
@@ -687,6 +694,7 @@ console.log(JSON.stringify(schemaTranslated, undefined, 2));
 
 ### Get translation file template
 
+File <app_root>/app.js (continuation)
 ```js
 const templateOptions = {
     lng: 'en',
@@ -713,11 +721,13 @@ const templateEn = configService.getTranslationTemplate(templateOptions);
 console.log(JSON.stringify(templateEn, undefined, 4));
 ```
 
-```
+
+```json
 {
     "__root__title": "TITLE EN for root",
     "config1": {
         "title": "TITLE EN for config1",
+        "description": "DESCRIPTION EN for config1",
         "email": {
             "title": "TITLE EN for config1.email"
         }

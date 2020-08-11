@@ -3,6 +3,7 @@
     "t": "cs:__root__title",
     "config1": {
         "title": "ЗАГОЛОВОК config1",
+        "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
         "t": "cs:config1.title",
         "div10": {
             "title": "ЗАГОЛОВОК config1.div10",
