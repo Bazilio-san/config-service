@@ -230,9 +230,11 @@ responce:
             "t": "cs:namedConfig1.div11.div111",
             "defaultValue": "default string",
             "arbitraryParameter": "arbitrary parameter value",
-            "value": "new value 2"
+            "value": "new value 2",
+            "path": "namedConfig1.div11.div111"
         }
-    ]
+    ],
+    "path": "namedConfig1.div11"
 }
 ```
 
@@ -360,9 +362,12 @@ Each parameter is described by an object with the following properties:
 | t        | Translation ID | no | Header translation ID. It is used if the `i18next` object was transferred during the initialization of the service. In this case, the `title` property will be replaced with the corresponding translation. | cs:config1.prop1.title |
 | value    | Property value | no |      |      |
 
+When a schema is requested via API/REST, the **path** property is automatically added to each schema element.
+It is the path to the schema element. It can be used when getting or saving the value of the element.
+
 In addition to these properties, you can set any others and they will be transferred when requesting a schema through the API. For example, these can be properties for the interface for managing settings, for differentiating rights, etc.
 
-In addition, you can specify an additional list of properties that will be translated into other languages when using`i18next`. See the `translatedProperties` property in the chapter "Options when creating a service" below.
+You can specify an additional list of properties that will be translated into other languages when using`i18next`. See the `translatedProperties` property in the chapter "Options when creating a service" below.
 
 
 
@@ -681,11 +686,14 @@ console.log(JSON.stringify(schemaTranslated, undefined, 2));
                     "type": "email",
                     "title": "ЗАГОЛОВОК для config1.email",
                     "t": "cs:config1.email.title",
-                    "value": "default@email.com"
+                    "value": "default@email.com",
+                    "path": "config1.email"
                 }
-            ]
+            ],
+            "path": "config1"
         }
-    ]
+    ],
+    "path": ""
 }
 ```
 
