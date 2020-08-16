@@ -310,7 +310,7 @@ module.exports = class Schema extends Utils {
                 return this._pathArr.join('.');
             },
             configurable: false,
-            enumerable: false
+            enumerable: true
         });
         if (type === 'section') {
             schemaItem[_isSection_] = true;
@@ -392,7 +392,7 @@ module.exports = class Schema extends Utils {
      * @param {schemaItemType} schemaItem
      * @param {Object} options
      */
-    __fnTranslateSchemaItemTitleCallback (schemaItem, options) {
+    __fnTranslateSchemaItemCallback (schemaItem, options) {
         const { i18n, lng, writeMissingTranslate = false, pathArr = [] } = options;
         const { t, type } = schemaItem;
         schemaItem[_lng_] = lng;
@@ -463,7 +463,7 @@ module.exports = class Schema extends Utils {
             lng,
             writeMissingTranslate: this.writeMissingTranslate
         };
-        this._traverseSchema(schemaClone, _traverseOptions, this.__fnTranslateSchemaItemTitleCallback);
+        this._traverseSchema(schemaClone, _traverseOptions, this.__fnTranslateSchemaItemCallback);
         this.schemaByLanguageCache.set(lng, schemaClone);
         return schemaClone;
     }

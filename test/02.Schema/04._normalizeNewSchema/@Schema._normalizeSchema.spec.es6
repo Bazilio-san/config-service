@@ -22,6 +22,7 @@ describe('Schema: _normalizeNewSchema()', () => {
     it('Missing optional properties should be added', () => {
         expect(instance.schema.value[0]).to.eql({
             id: 'rule1',
+            path: 'rule1',
             title: 'Title of rule1',
             t: 'cs:rule1.title',
             type: 'section',

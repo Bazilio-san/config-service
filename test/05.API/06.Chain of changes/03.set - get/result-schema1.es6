@@ -1,11 +1,13 @@
 module.exports = {
     id: '__root__',
+    path: '',
     type: 'section',
     title: 'Configuration root',
     t: 'cs:__root__title',
     value: [
         {
             id: 'config1',
+            path: 'config1',
             title: 'config1 title',
             t: 'cs:config1.title',
             anyOtherProperty: 'any other value',
@@ -14,6 +16,7 @@ module.exports = {
             value: [
                 {
                     id: 'div10',
+                    path: 'config1.div10',
                     type: 'string',
                     title: 'div10 - This title has a translation',
                     t: 'cs:config1.div10.title',
@@ -22,23 +25,27 @@ module.exports = {
                 },
                 {
                     id: 'div11',
+                    path: 'config1.div11',
                     type: 'section',
                     title: 'div11 title',
                     t: 'cs:config1.div11.title',
                     value: [
                         {
                             id: 'div21',
+                            path: 'config1.div11.div21',
                             type: 'section',
                             title: 'div21 title',
                             value: [
                                 {
                                     id: 'div31',
+                                    path: 'config1.div11.div21.div31',
                                     type: 'section',
                                     title: 'div31 title',
                                     t: 'cs:config1.div11.div21.div31.title',
                                     value: [
                                         {
                                             id: 'div41',
+                                            path: 'config1.div11.div21.div31.div41',
                                             type: 'string',
                                             title: 'div41 title',
                                             t: 'cs:config1.div11.div21.div31.div41.title',
@@ -54,12 +61,14 @@ module.exports = {
                 },
                 {
                     id: 'div13',
+                    path: 'config1.div13',
                     type: 'section',
                     title: 'div13 ORIGINAL TITLE - There are no translations for this title',
                     t: 'cs:config1.div13.title',
                     value: [
                         {
                             id: 'v_section_empty',
+                            path: 'config1.div13.v_section_empty',
                             type: 'section',
                             title: 'div1 [section empty] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_section.title',
@@ -67,6 +76,7 @@ module.exports = {
                         },
                         {
                             id: 'v_json',
+                            path: 'config1.div13.v_json',
                             type: 'json',
                             title: 'div1 [json] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_json.title',
@@ -95,6 +105,7 @@ module.exports = {
                         },
                         {
                             id: 'v_array',
+                            path: 'config1.div13.v_array',
                             type: 'array',
                             title: 'div1 [array] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_array.title',
@@ -108,6 +119,7 @@ module.exports = {
                         },
                         {
                             id: 'v_string',
+                            path: 'config1.div13.v_string',
                             type: 'string',
                             title: 'div1 [string] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_string.title',
@@ -116,6 +128,7 @@ module.exports = {
                         },
                         {
                             id: 'v_text',
+                            path: 'config1.div13.v_text',
                             type: 'text',
                             title: 'div1 [text] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_text.title',
@@ -124,6 +137,7 @@ module.exports = {
                         },
                         {
                             id: 'v_email',
+                            path: 'config1.div13.v_email',
                             type: 'email',
                             title: 'div1 [email] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_email.title',
@@ -132,6 +146,7 @@ module.exports = {
                         },
                         {
                             id: 'v_date',
+                            path: 'config1.div13.v_date',
                             type: 'date',
                             title: 'div1 [date] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.div13.v_date.title',
@@ -140,6 +155,7 @@ module.exports = {
                         },
                         {
                             id: 'v_time',
+                            path: 'config1.div13.v_time',
                             type: 'time',
                             title: 'div1 [time] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_time.title',
@@ -148,6 +164,7 @@ module.exports = {
                         },
                         {
                             id: 'v_datetime',
+                            path: 'config1.div13.v_datetime',
                             type: 'datetime',
                             title: 'div1 [datetime] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_datetime.title',
@@ -156,6 +173,7 @@ module.exports = {
                         },
                         {
                             id: 'v_number',
+                            path: 'config1.div13.v_number',
                             type: 'number',
                             title: 'div1 [number] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_number.title',
@@ -164,6 +182,7 @@ module.exports = {
                         },
                         {
                             id: 'v_int',
+                            path: 'config1.div13.v_int',
                             type: 'int',
                             title: 'div1 [int] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_int.title',
@@ -172,6 +191,7 @@ module.exports = {
                         },
                         {
                             id: 'v_float',
+                            path: 'config1.div13.v_float',
                             type: 'float',
                             title: 'div1 [float] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_float.title',
@@ -180,6 +200,7 @@ module.exports = {
                         },
                         {
                             id: 'v_money',
+                            path: 'config1.div13.v_money',
                             type: 'money',
                             title: 'div1 [money] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_money.title',
@@ -188,6 +209,7 @@ module.exports = {
                         },
                         {
                             id: 'v_boolean',
+                            path: 'config1.div13.v_boolean',
                             type: 'boolean',
                             title: 'div1 [boolean] ORIGINAL TITLE - There are no translations for this title',
                             t: 'cs:config1.v_boolean.title',
@@ -200,12 +222,14 @@ module.exports = {
         },
         {
             id: 'config-2',
+            path: 'config-2',
             title: 'config-2 title',
             t: 'cs:config-2.title',
             type: 'section',
             value: [
                 {
                     id: 'div21',
+                    path: 'config-2.div21',
                     type: 'array',
                     title: 'div21 title',
                     t: 'cs:config-2.div21.title',
@@ -222,6 +246,7 @@ module.exports = {
                 },
                 {
                     id: 'div22',
+                    path: 'config-2.div22',
                     type: 'array',
                     title: 'div22 title',
                     t: 'cs:config-2.div22.title',
@@ -238,6 +263,7 @@ module.exports = {
                 },
                 {
                     id: 'c0_s0',
+                    path: 'config-2.c0_s0',
                     type: 'string',
                     title: 'There are no values in the scheme and no in the config',
                     t: 'cs:config-2.c0_s0.title',
@@ -246,6 +272,7 @@ module.exports = {
                 },
                 {
                     id: 'c1_s0',
+                    path: 'config-2.c1_s0',
                     type: 'string',
                     title: 'There are no values in the scheme but in the config',
                     t: 'cs:config-2.c1_s0.title',
@@ -256,12 +283,14 @@ module.exports = {
         },
         {
             id: 'config 3',
+            path: 'config 3',
             title: 'config 3 title',
             t: 'cs:config3.title',
             type: 'section',
             value: [
                 {
                     id: 'div31',
+                    path: 'config 3.div31',
                     type: 'string',
                     title: 'div31 title',
                     t: 'cs:config3.div31.title',
@@ -270,6 +299,7 @@ module.exports = {
                 },
                 {
                     id: 'div32',
+                    path: 'config 3.div32',
                     type: 'string',
                     title: 'div32 title',
                     t: 'cs:config3.div32.title',
