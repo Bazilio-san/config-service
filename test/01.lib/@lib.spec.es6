@@ -20,9 +20,12 @@ objWoUndef.obj[symbolProp] = 'testSymbolProp';
 
 let cloned;
 
+const { prepareTestEnv } = require('../test-utils.es6')({ __dirname });
+
 describe('Lib functions should work properly', () => {
     describe('Function "cloneDeep()"', () => {
         before(() => {
+            instance = prepareTestEnv('Schema');
             cloned = lib.cloneDeep(inObj);
         });
         it('in !== out', () => {
@@ -30,6 +33,14 @@ describe('Lib functions should work properly', () => {
         });
         it('Deep equal', () => {
             expect(cloned).to.eql(fullCopy);
+        });
+        it('Remove certain properties', () => {
+            const expected = instance.cloneDeep(inObj);
+            const result = instance.cloneDeep(inObj, ['a', 'flo']);
+            delete expected.arr[0].a;
+            delete expected.obj.a;
+            delete expected.flo;
+            expect(result).to.eql(expected);
         });
         it('Verify copy symbol properties', () => {
             expect(cloned.obj[symbolProp]).to.equals(fullCopy.obj[symbolProp]);

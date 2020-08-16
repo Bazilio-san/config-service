@@ -72,7 +72,7 @@ function filterObj (obj, thruly) {
     });
 }
 
-function cloneDeep (obj, pureObj = false, hash = new WeakMap()) {
+function cloneDeep (obj, removeProps = [], pureObj = false, hash = new WeakMap()) {
     // https://stackoverflow.com/a/40294058/5239731
     if (Object(obj) !== obj) return obj; // primitives
     if (hash.has(obj)) return hash.get(obj); // cyclic reference
@@ -93,9 +93,9 @@ function cloneDeep (obj, pureObj = false, hash = new WeakMap()) {
         result = Object.create(null);
     }
     hash.set(obj, result);
-    const keys = [...Object.keys(obj), ...Object.getOwnPropertySymbols(obj)];
+    const keys = [...Object.keys(obj), ...Object.getOwnPropertySymbols(obj)].filter((propName) => !removeProps.includes(propName));
     return Object.assign(result, ...keys.map(
-        (key) => ({ [key]: cloneDeep(obj[key], pureObj, hash) })
+        (key) => ({ [key]: cloneDeep(obj[key], removeProps, pureObj, hash) })
     ));
 }
 

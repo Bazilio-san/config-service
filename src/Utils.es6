@@ -240,4 +240,14 @@ module.exports = class Utils {
             lastParamName
         };
     }
+
+    /**
+     * Expose method cloneDeep from lib.
+     *
+     * @param {Array} args
+     * @return {Object}
+     */
+    cloneDeep (...args) {
+        return __.cloneDeep(...args);
+    }
 };
