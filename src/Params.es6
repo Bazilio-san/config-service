@@ -107,7 +107,7 @@ module.exports = class Params extends Schema {
 
     __addNewValueCallback (schemaItem, { absentPaths, appliedPaths }) {
         // eslint-disable-next-line camelcase,prefer-const
-        let { value, [_v_]: currentValue, [_isSection_]: isSection, [_isProp_]: isProp, _paramPath: paramPath } = schemaItem || {};
+        let { value, [_v_]: currentValue, [_isSection_]: isSection, [_isProp_]: isProp, path: paramPath } = schemaItem || {};
         if (isSection && Array.isArray(value)) {
             if (__.canDeepDive(currentValue)) {
                 const sIds = value.map(({ id }) => id);

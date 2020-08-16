@@ -36,7 +36,7 @@ module.exports = {
     section: {
         jsTypes: ['null', 'array', 'object'],
         validator: (newVal, schemaItem, error = {}) => {
-            error.reason = `Cannot set a value for a 'section'. Path «${schemaItem._paramPath}». Value: «${newVal}»`;
+            error.reason = `Cannot set a value for a 'section'. Path «${schemaItem.path}». Value: «${newVal}»`;
             return undefined;
         }
     },

@@ -18,6 +18,7 @@ module.exports = {
     schemaDataType: 'string',
     schemaItem: {
         id: 'div41',
+        path: 'config1.div11.div21.div31.div41',
         type: 'string',
         title: 'div41 title',
         t: 'cs:config1.div11.div21.div31.div41.title',

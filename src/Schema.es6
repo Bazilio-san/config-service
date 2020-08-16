@@ -213,7 +213,7 @@ module.exports = class Schema extends Utils {
         const fnName = 'validateNewValue';
         const realType = this._detectRealType(newValue);
         // eslint-disable-next-line camelcase
-        const { type, _paramPath: paramPath } = schemaItem;
+        const { type, path: paramPath } = schemaItem;
         if (!this._validateType(realType, type)) {
             throw this._error(`The real type «${realType}» of value for «${paramPath}» not match schema data type «${type}»`);
         }
@@ -290,7 +290,7 @@ module.exports = class Schema extends Utils {
                         if (validated !== undefined) {
                             this[_value_] = validated;
                         }
-                        cs.onChange(this._paramPath, validated, this, cs);
+                        cs.onChange(this.path, validated, this, cs);
                     },
                     enumerable: true
                 });
@@ -305,12 +305,12 @@ module.exports = class Schema extends Utils {
                 });
             }
         }
-        Object.defineProperty(schemaItem, '_paramPath', {
+        Object.defineProperty(schemaItem, 'path', {
             get () {
                 return this._pathArr.join('.');
             },
             configurable: false,
-            enumerable: false
+            enumerable: true
         });
         if (type === 'section') {
             schemaItem[_isSection_] = true;
@@ -392,7 +392,7 @@ module.exports = class Schema extends Utils {
      * @param {schemaItemType} schemaItem
      * @param {Object} options
      */
-    __fnTranslateSchemaItemTitleCallback (schemaItem, options) {
+    __fnTranslateSchemaItemCallback (schemaItem, options) {
         const { i18n, lng, writeMissingTranslate = false, pathArr = [] } = options;
         const { t, type } = schemaItem;
         schemaItem[_lng_] = lng;
@@ -463,7 +463,7 @@ module.exports = class Schema extends Utils {
             lng,
             writeMissingTranslate: this.writeMissingTranslate
         };
-        this._traverseSchema(schemaClone, _traverseOptions, this.__fnTranslateSchemaItemTitleCallback);
+        this._traverseSchema(schemaClone, _traverseOptions, this.__fnTranslateSchemaItemCallback);
         this.schemaByLanguageCache.set(lng, schemaClone);
         return schemaClone;
     }
@@ -583,8 +583,8 @@ module.exports = class Schema extends Utils {
         const lng = schemaItem[_lng_] || '';
         const fullPath = fullPathArr.join('.') + (lng ? `:${lng}` : '');
         if (!this.pathsOfSchemaItems.has(fullPath)) {
-            const where = schemaItem._paramPath
-                ? `in the Schema fragment «${schemaItem._paramPath}»`
+            const where = schemaItem.path
+                ? `in the Schema fragment «${schemaItem.path}»`
                 : 'in the Schema';
             throw this._error(`No such parameter «${paramPath}» ${where}. Function «${fnName}»`);
         }
