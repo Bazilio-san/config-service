@@ -441,6 +441,7 @@ module.exports = class Schema extends Utils {
                 const translationId = schemaItem[propName];
                 if (translationId && (writeMissingTranslate || i18n.exists(translationId, { lng }))) {
                     schemaItem[propName] = i18n.t(translationId, translationOptions);
+                    schemaItem[`${propName}Tid`] = translationId;
                 }
             });
         }
