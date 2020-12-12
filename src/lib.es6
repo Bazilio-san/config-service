@@ -80,7 +80,7 @@ function cloneDeep (obj, removeProps = [], pureObj = false, hash = new WeakMap()
     if (obj instanceof Set) {
         result = new Set(obj); // See note about this!
     } else if (obj instanceof Map) {
-        result = new Map(Array.from(obj, ([key, val]) => [key, cloneDeep(val, hash)]));
+        result = new Map(Array.from(obj, ([key, val]) => [key, cloneDeep(val, removeProps, pureObj, hash)]));
     } else if (obj instanceof Date) {
         result = new Date(obj);
     } else if (obj instanceof RegExp) {
