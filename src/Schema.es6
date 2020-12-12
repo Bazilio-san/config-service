@@ -71,7 +71,14 @@ module.exports = class Schema extends Utils {
         this.onChange = typeof onChange === 'function' ? onChange : () => {
         };
         this.i18n = i18n;
-        this.i18nNS = i18nNS ? `${i18nNS}:` : '';
+        this.i18nNS = '';
+        if (i18nNS) {
+            this.i18nNS = `${i18nNS}:`;
+            if (i18n && typeof i18n.loadNamespaces === 'function') {
+                i18n.loadNamespaces(i18nNS);
+            }
+        }
+
         this.writeMissingTranslate = writeMissingTranslate;
         this.translatedProperties = [];
         if (translatedProperties && Array.isArray(translatedProperties)) {
