@@ -12,6 +12,7 @@ module.exports = {
             t: 'cs:config1.title',
             anyOtherProperty: 'any other value',
             descr: 'DESCRIPTION HEADER',
+            descrTid: 'cs:config1.descr',
             type: 'section',
             value: [
                 {
