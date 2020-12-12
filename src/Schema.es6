@@ -290,7 +290,7 @@ module.exports = class Schema extends Utils {
                         if (validated !== undefined) {
                             this[_value_] = validated;
                         }
-                        cs.onChange(this.path, validated, this, cs);
+                        cs.onChange(this.path, validated, schemaItem, cs);
                     },
                     enumerable: true
                 });
