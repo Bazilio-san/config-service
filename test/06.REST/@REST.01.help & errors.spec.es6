@@ -28,6 +28,10 @@ describe(`REST: help & errors`, () => {
                 get(url)
                     .expect(500)
                     .expect('Content-Type', /json/)
+                    .expect((res) => {
+                        const { message, name, help } = res.body.err;
+                        res.body.err = { message, name, help };
+                    })
                     .expect({
                         err: {
                             message: 'Invalid request',
