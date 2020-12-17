@@ -25,7 +25,7 @@ function hasProp (obj, propNAme) {
 }
 
 function toKey (value) {
-    if (typeof value === 'string' || isSymbol(value)) {
+    if (typeof value === 'string') {
         return value;
     }
     const result = (`${value}`);
