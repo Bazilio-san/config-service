@@ -24,6 +24,8 @@ function hasProp (obj, propNAme) {
     return Object.prototype.hasOwnProperty.call(obj, propNAme);
 }
 
+const INFINITY = 1 / 0;
+
 function toKey (value) {
     if (typeof value === 'string') {
         return value;
