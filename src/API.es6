@@ -19,13 +19,13 @@ module.exports = class API extends Params {
      * - the presence of Schemas for the transferred properties
      * In case of discrepancies, an error is generated.
      *
-     * @param {propPathType} paramPath_
+     * @param {propPathType} paramPath
      * @param {any} paramValue
      * @param {String} fnName
      * @return {boolean}
      */
-    set (paramPath_, paramValue, fnName = 'set') {
-        const { pathArr, configName } = this._parseParamPathFragment(paramPath_, fnName);
+    set (paramPath, paramValue, fnName = 'set') {
+        const { pathArr, configName } = this._parseParamPathFragment(paramPath, fnName);
         if (!configName) {
             throw this._error(`The path must begin with a named configuration identifier. Function «${fnName}»`);
         }
@@ -46,24 +46,24 @@ module.exports = class API extends Params {
      *      paramName,
      *      paramPath,
      *
-     * @param {propPathType} paramPath_
+     * @param {propPathType} paramPath
      * @param {String} fnName
      * @return {*}
      */
-    getEx (paramPath_, fnName) {
+    getEx (paramPath, fnName) {
         fnName = fnName || 'get';
         const {
-            paramPath,
+            paramPath: paramPath_,
             pathArr,
             lastParamName,
             schemaItem,
-        } = this._parseParamPath(paramPath_, fnName);
+        } = this._parseParamPath(paramPath, fnName);
         const parentSchemaItem = schemaItem[_parentSchemaItem_];
         const configValuesFromSchema = this._getValues(pathArr);
         const result = {
             value: configValuesFromSchema,
             defaultValue: __.get(this.defaults, pathArr),
-            paramPath,
+            paramPath: paramPath_,
             paramName: lastParamName
         };
         if (schemaItem[_isRootNode_]) {

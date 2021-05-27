@@ -135,8 +135,8 @@ module.exports = class Params extends Schema {
      * Fills the Schema with actual values
      * @private
      */
-    _fillSchemaWithValues (paramPath_, newValues, fnName = '_fillSchemaWithValues') {
-        const { pathArr, schemaItem } = this._parseParamPath(paramPath_, fnName);
+    _fillSchemaWithValues (paramPath, newValues, fnName = '_fillSchemaWithValues') {
+        const { pathArr, schemaItem } = this._parseParamPath(paramPath, fnName);
         const absentPaths = new Set();
         const appliedPaths = new Set();
         const options = { pathArr, absentPaths, appliedPaths };
