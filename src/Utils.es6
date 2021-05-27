@@ -22,6 +22,7 @@ module.exports = class Utils {
          */
         this.errorLogger = errorLogger && typeof errorLogger === 'function' ? errorLogger : null;
         this.registerTypes(userTypes);
+        this.lib = __;
     }
 
     /**
