@@ -1,6 +1,6 @@
 {
     "name": "config-srv",
-    "version": "1.1.14",
+    "version": "1.1.15",
     "description": "API and REST interface for editing a structured set of parameters",
     "main": "src/instance.es6",
     "scripts": {
@@ -37,18 +37,18 @@
         "src/*.*"
     ],
     "devDependencies": {
-        "af-lib": "^1.0.2",
-        "chai": "^4.2.0",
-        "eslint": "^6.8.0",
-        "eslint-config-airbnb-base": "^14.1.0",
+        "af-lib": "^1.0.32",
+        "chai": "^4.3.4",
+        "eslint": "^7.27.0",
+        "eslint-config-airbnb-base": "^14.2.1",
         "eslint-loader": "^4.0.2",
-        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-import": "^2.23.3",
         "express": "^4.17.1",
-        "fs-extra": "^9.0.0",
-        "i18next": "^19.4.4",
+        "fs-extra": "^10.0.0",
+        "i18next": "^20.3.0",
         "i18next-sync-fs-backend": "^1.1.1",
-        "mocha": "^7.1.2",
-        "supertest": "^4.0.2"
+        "mocha": "^8.4.0",
+        "supertest": "^6.1.3"
     },
     "engines": {
         "node": ">= 10.0.0"
