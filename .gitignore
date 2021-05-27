@@ -16,7 +16,7 @@ thumbs.db
 
 /example/i18n/cs.missing.json
 /1.js
-/example/config/service/default/
+/example/config/service/config-data/
 /example/config/service/testing/
 /sync-bf.*
 /example/config/service/schema.js

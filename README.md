@@ -42,7 +42,7 @@ $ mkdir config
 $ cd config
 $ mkdir service
 $ cd service
-$ mkdir default
+$ mkdir config-data
 ```
 
 **Create Schema file in the folder `<app_root>/config/service/`:**
@@ -95,10 +95,10 @@ module.exports = [
 ];
 ```
 
-**Create named config files in the folder `<app_root>/config/service/default`:**
+**Create named config files in the folder `<app_root>/config/service/config-data`:**
 
 ```shell
-$ cd default
+$ cd config-data
 $ vi namedConfig1.json
 ```
 
@@ -390,13 +390,13 @@ Files location
 ----------------------------
 
 The folder where the service searches for Schema file is by default `<app_root>/config/service/`.
-The default folder from which the named configuration files will be read is `<app_root>/config/service/default`.
+The default folder from which the named configuration files will be read is `<app_root>/config/service/config-data`.
 
     <app_root>
     .
     └── config
         └── service
-            ├── default
+            ├── config-data
             │   ├── named_config_1.json
             │   ├── named_config_2.json
             │   └── ...
@@ -538,7 +538,7 @@ File structure for example:
     .
     └── config
     │   └── service
-    │       ├── default
+    │       ├── config-data
     │       │   └── config1.json
     │       └── schema.js
     └── i18n
