@@ -74,8 +74,12 @@ module.exports = class Schema extends Utils {
         this.i18nNS = '';
         if (i18nNS) {
             this.i18nNS = `${i18nNS}:`;
-            if (i18n && typeof i18n.loadNamespaces === 'function') {
-                i18n.loadNamespaces(i18nNS);
+            if (i18n) {
+                if (typeof i18n.loadNs === 'function') {
+                    i18n.loadNs(i18nNS);
+                } else if (typeof i18n.loadNamespaces === 'function') {
+                    i18n.loadNamespaces(i18nNS);
+                }
             }
         }
 
@@ -445,6 +449,13 @@ module.exports = class Schema extends Utils {
                 }
             });
         }
+    }
+
+    /**
+     * Clearing the schema cache.
+     */
+    clearSchemaCache () {
+        this.schemaByLanguageCache = new Map();
     }
 
     /**
