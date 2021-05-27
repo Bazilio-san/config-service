@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions, max-len,no-console */
 const fse = require('fs-extra');
-const echo = require('af-lib/echo');
+const echo = require('af-echo');
 const path = require('path');
 
 const { errorLogger, loggerFinish } = require('../example/logger-service.es6');

@@ -7,7 +7,7 @@ process.env.NODE_CONFIG_DIR = path.resolve(`${__dirname}/config`);
 const express = require('express');
 const app = require('express')();
 const webServer = require('http').Server(app);
-const echo = require('af-lib/echo');
+const echo = require('af-echo');
 
 const { errorLogger, loggerFinish } = require('./logger-service.es6');
 const i18n = require('./i18n/i18n.es6')();

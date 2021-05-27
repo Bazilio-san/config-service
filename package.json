@@ -1,6 +1,6 @@
 {
     "name": "config-srv",
-    "version": "1.1.15",
+    "version": "1.1.16",
     "description": "API and REST interface for editing a structured set of parameters",
     "main": "src/instance.es6",
     "scripts": {
@@ -37,7 +37,8 @@
         "src/*.*"
     ],
     "devDependencies": {
-        "af-lib": "^1.0.32",
+        "af-echo": "^0.0.8",
+        "af-logger": "^0.0.2",
         "chai": "^4.3.4",
         "eslint": "^7.27.0",
         "eslint-config-airbnb-base": "^14.2.1",
@@ -52,6 +53,5 @@
     },
     "engines": {
         "node": ">= 10.0.0"
-    },
-    "dependencies": {}
+    }
 }

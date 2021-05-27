@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-const Logger = require('af-lib/logger');
+const Logger = require('af-logger');
 
 const loggerOptions = {
     prefix: '',
