@@ -214,7 +214,7 @@ GET http://localhost:8683/config-service?get-schema
 GET http://localhost:8683/config-service?get-schema=namedConfig1.div11
 ```
 
-responce:
+response:
 
 ```json
 {
@@ -246,7 +246,7 @@ responce:
 GET http://localhost:8683/config-service?list
 ```
 
-responce:
+response:
 
 ```json
 [
@@ -263,7 +263,7 @@ responce:
 GET http://localhost:8683/config-service?get
 ```
 
-responce:
+response:
 
 ```json
 {
@@ -287,7 +287,7 @@ responce:
 GET http://localhost:8683/config-service?get=namedConfig1.div11.div111
 ```
 
-responce:
+response:
 
 ```json
 {
@@ -304,7 +304,7 @@ responce:
 GET http://localhost:8683/config-service?get-ex=namedConfig1.div11
 ```
 
-responce:
+response:
 
 ```json
 {
