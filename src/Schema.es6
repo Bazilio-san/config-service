@@ -148,6 +148,9 @@ module.exports = class Schema extends Utils {
             const lastPathElement = ([...pathArr].pop() || '');
             if (lastPathElement !== id) {
                 if (!isRoot) {
+                    if (!Array.isArray(options.pathArr)) {
+                        options.pathArr = [];
+                    }
                     options.pathArr.push(id);
                 }
             }

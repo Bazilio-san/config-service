@@ -25,7 +25,10 @@ module.exports = class API extends Params {
      * @return {boolean}
      */
     set (paramPath, paramValue, fnName = 'set') {
-        const { pathArr, configName } = this._parseParamPathFragment(paramPath, fnName);
+        const {
+            pathArr,
+            configName
+        } = this._parseParamPathFragment(paramPath, fnName);
         if (!configName) {
             throw this._error(`The path must begin with a named configuration identifier. Function «${fnName}»`);
         }
@@ -56,7 +59,7 @@ module.exports = class API extends Params {
             paramPath: paramPath_,
             pathArr,
             lastParamName,
-            schemaItem,
+            schemaItem
         } = this._parseParamPath(paramPath, fnName);
         const parentSchemaItem = schemaItem[_parentSchemaItem_];
         const configValuesFromSchema = this._getValues(pathArr);
@@ -111,7 +114,10 @@ module.exports = class API extends Params {
         if (!propPath) {
             return localizedSchema;
         }
-        const { paramPath, pathArr } = this._parseParamPathFragment(propPath, fnName);
+        const {
+            paramPath,
+            pathArr
+        } = this._parseParamPathFragment(propPath, fnName);
         const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, fnName);
         if (!__.isSchemaItem(schemaItemLocalized)) {
             throw this._error(`Failed to get translated schema. Path: «${paramPath}». Function «${fnName}»`);
@@ -125,6 +131,56 @@ module.exports = class API extends Params {
      */
     list () {
         return this.configNames;
+    }
+
+    /**
+     * Simple parameter data { path, value }
+     *
+     * @typedef {Object} propSimpleType
+     * @property {propPathStrType} path - parameter path
+     * @property {schemaValueType} value - parameter value
+     */
+
+    /**
+     * Extended parameter data { id, path, type, value, defaultValue ...<other schema item properties> }
+     *
+     * @typedef {Object} propExtendedType
+     */
+
+    /**
+     * Returns plain list of parameters, which types is not "section" as Simple or Extended parameter data
+     * @param {propPathStrType} paramPath
+     * @param {Boolean} isExtended
+     * @return {propSimpleType[]|propExtendedType[]}
+     */
+    plainParamsList (paramPath, isExtended = false) {
+        const fnName = 'plainParamsList';
+        const {
+            paramPath: paramPath_,
+            pathArr,
+            lastParamName,
+            schemaItem
+        } = this._parseParamPath(paramPath, fnName);
+
+        const propList = [];
+        const traverseOptions = {};
+
+        const propertyCallback = (propertyTypeSchemaItem) => {
+            const {
+                path,
+                value
+            } = propertyTypeSchemaItem;
+            const prop = isExtended
+                ? { ...propertyTypeSchemaItem }
+                : {
+                    path: propertyTypeSchemaItem.path,
+                    value: propertyTypeSchemaItem.value
+                };
+            propList.push(prop);
+        };
+        this.traverseSchema(schemaItem, traverseOptions, null, null, propertyCallback);
+
+        return propList;
     }
 
     /**

@@ -1,0 +1,78 @@
+[
+    {
+        "path": "config1.div10",
+        "value": "ACTUAL value"
+    },
+    {
+        "path": "config1.div11.div21.div31.div41",
+        "value": "ACTUAL string"
+    },
+    {
+        "path": "config1.div13.v_json",
+        "value": {
+            "defaultProp1": {
+                "a": 2
+            },
+            "defaultProp2": [
+                "a",
+                "r",
+                "r"
+            ],
+            "defaultProp3": "sssss",
+            "defaultProp4": 555,
+            "defaultProp5": true,
+            "defaultProp6": null
+        }
+    },
+    {
+        "path": "config1.div13.v_array",
+        "value": [
+            111,
+            222
+        ]
+    },
+    {
+        "path": "config1.div13.v_string",
+        "value": "any string"
+    },
+    {
+        "path": "config1.div13.v_text",
+        "value": "\nМного\nстрочный\nтекст"
+    },
+    {
+        "path": "config1.div13.v_email",
+        "value": "default@value.com"
+    },
+    {
+        "path": "config1.div13.v_date",
+        "value": "2020-02-28"
+    },
+    {
+        "path": "config1.div13.v_time",
+        "value": "11:12:13.456"
+    },
+    {
+        "path": "config1.div13.v_datetime",
+        "value": "2020-02-28T11:12:13.456"
+    },
+    {
+        "path": "config1.div13.v_number",
+        "value": 123
+    },
+    {
+        "path": "config1.div13.v_int",
+        "value": 456
+    },
+    {
+        "path": "config1.div13.v_float",
+        "value": 456.7890123
+    },
+    {
+        "path": "config1.div13.v_money",
+        "value": 456.7891432
+    },
+    {
+        "path": "config1.div13.v_boolean",
+        "value": true
+    }
+]

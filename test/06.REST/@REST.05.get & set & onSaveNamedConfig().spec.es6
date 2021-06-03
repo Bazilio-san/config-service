@@ -11,7 +11,7 @@ const newValues = [
     ['config1.div13.v_json', { a: 1 }],
     ['config-2.div21', [{ f: 2 }, { g: 3 }]],
     ['config1.div10', '!!!НОВАЯ СТРОКА!!!'],
-    ['config1.div13.v_email', 'new.value-of@email-123.test.com'],
+    ['config1.div13.v_email', 'new.value-of@email-123.test.com']
 ];
 const unchangedValues = [
     ['', expected],
@@ -20,7 +20,7 @@ const unchangedValues = [
     ['config-2.div22', [10, 20, 30]],
     ['config1.div13.v_int', 456],
     ['config1.div13.v_datetime', '2020-02-28T11:12:13.456'],
-    ['config1.div13.v_float', 456.7890123],
+    ['config1.div13.v_float', 456.7890123]
 ];
 
 describe(`REST: get & set`, () => {
@@ -34,7 +34,7 @@ describe(`REST: get & set`, () => {
             ['set', 'config1.div13.v_json', null, /No root parameter .value. was found/],
             ['set', '', { value: 'newVal' }, /Passed empty parameter value .set./],
             ['set', 'config1.div13.v_email', { value: 99999 }, /The real type .+ not match schema data type/],
-            ['set', 'config1.div13.v_email', { value: '99999' }, /Validation error/],
+            ['set', 'config1.div13.v_email', { value: '99999' }, /Validation error/]
         ].forEach(([fn, paramPath, value, re]) => {
             it(`ERROR (${fn}): ${re.source}`, (done) => {
                 post(`${cu}${fn}=${paramPath}`)

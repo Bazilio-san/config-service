@@ -99,19 +99,27 @@ module.exports = class REST extends API {
             return;
         }
         const { query } = req;
-        if (query.get !== undefined) {
-            const pathArr_ = query.get;
-            return this._httpCall(this.getRest, { args: [pathArr_], req, res });
+
+        const { get: getValue, 'get-ex': getValueEx, set: setValue, list: getConfigList, lng } = query;
+        let {
+            'get-schema': getSchema,
+            'plain-params-list': plainParamsList,
+            'plain-params-list-ex': plainParamsListEx
+        } = query;
+
+        if (getValue !== undefined) {
+            return this._httpCall(this.getRest, { args: [getValue], req, res });
         }
-        if (query['get-ex'] !== undefined) {
-            const pathArr_ = query['get-ex'];
-            return this._httpCall(this.getEx, { args: [pathArr_], req, res });
+
+        if (getValueEx !== undefined) {
+            return this._httpCall(this.getEx, { args: [getValueEx], req, res });
         }
-        if (query.set !== undefined) {
-            if (!query.set) {
+
+        if (setValue !== undefined) {
+            if (!setValue) {
                 return this._httpErr500(res, `Passed empty parameter value «set»`);
             }
-            const paramPath = query.set;
+            const paramPath = setValue;
             if (!req.body) {
                 return this._httpErr500(res, 'Missing request body');
             }
@@ -121,16 +129,26 @@ module.exports = class REST extends API {
             const paramValue = req.body.value;
             return this._httpCall(this.set, { args: [paramPath, paramValue], req, res });
         }
-        if (query['get-schema'] !== undefined) {
-            let pathArr_ = query['get-schema'];
-            if (pathArr_ === '.') {
-                pathArr_ = '';
+        if (getSchema !== undefined) {
+            if (getSchema === '.') {
+                getSchema = '';
             }
-            const { lng } = query;
-            return this._httpCall(this.getSchema, { args: [pathArr_, lng], req, res });
+            return this._httpCall(this.getSchema, { args: [getSchema, lng], req, res });
         }
-        if (query.list !== undefined) {
+        if (getConfigList !== undefined) {
             return this._httpCall(this.list, { args: [], req, res });
+        }
+        if (plainParamsList !== undefined) {
+            if (plainParamsList === '.') {
+                plainParamsList = '';
+            }
+            return this._httpCall(this.plainParamsList, { args: [plainParamsList], req, res });
+        }
+        if (plainParamsListEx !== undefined) {
+            if (plainParamsListEx === '.') {
+                plainParamsListEx = '';
+            }
+            return this._httpCall(this.plainParamsList, { args: [plainParamsListEx, true], req, res });
         }
 
         return this._invalidRequest(res);

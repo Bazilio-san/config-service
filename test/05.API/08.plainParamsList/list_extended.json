@@ -1,0 +1,169 @@
+[
+    {
+        "id": "div10",
+        "type": "string",
+        "title": "div10 - This title has a translation",
+        "t": "cs:config1.div10.title",
+        "defaultValue": "DEFAULT string",
+        "value": "ACTUAL value",
+        "path": "config1.div10"
+    },
+    {
+        "id": "div41",
+        "type": "string",
+        "title": "div41 title",
+        "t": "cs:config1.div11.div21.div31.div41.title",
+        "defaultValue": "default string",
+        "value": "ACTUAL string",
+        "path": "config1.div11.div21.div31.div41"
+    },
+    {
+        "id": "v_json",
+        "type": "json",
+        "title": "div1 [json] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_json.title",
+        "defaultValue": {
+            "defaultProp1": {
+                "a": 2
+            },
+            "defaultProp2": [
+                "a",
+                "r",
+                "r"
+            ],
+            "defaultProp3": "sssss",
+            "defaultProp4": 555,
+            "defaultProp5": true,
+            "defaultProp6": null
+        },
+        "value": {
+            "defaultProp1": {
+                "a": 2
+            },
+            "defaultProp2": [
+                "a",
+                "r",
+                "r"
+            ],
+            "defaultProp3": "sssss",
+            "defaultProp4": 555,
+            "defaultProp5": true,
+            "defaultProp6": null
+        },
+        "path": "config1.div13.v_json"
+    },
+    {
+        "id": "v_array",
+        "type": "array",
+        "title": "div1 [array] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_array.title",
+        "defaultValue": [
+            111,
+            222
+        ],
+        "value": [
+            111,
+            222
+        ],
+        "path": "config1.div13.v_array"
+    },
+    {
+        "id": "v_string",
+        "type": "string",
+        "title": "div1 [string] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_string.title",
+        "defaultValue": "any string",
+        "value": "any string",
+        "path": "config1.div13.v_string"
+    },
+    {
+        "id": "v_text",
+        "type": "text",
+        "title": "div1 [text] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_text.title",
+        "defaultValue": "\nМного\nстрочный\nтекст",
+        "value": "\nМного\nстрочный\nтекст",
+        "path": "config1.div13.v_text"
+    },
+    {
+        "id": "v_email",
+        "type": "email",
+        "title": "div1 [email] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_email.title",
+        "defaultValue": "default@value.com",
+        "value": "default@value.com",
+        "path": "config1.div13.v_email"
+    },
+    {
+        "id": "v_date",
+        "type": "date",
+        "title": "div1 [date] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_date.title",
+        "defaultValue": "2020-02-28",
+        "value": "2020-02-28",
+        "path": "config1.div13.v_date"
+    },
+    {
+        "id": "v_time",
+        "type": "time",
+        "title": "div1 [time] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_time.title",
+        "defaultValue": "11:12:13.456",
+        "value": "11:12:13.456",
+        "path": "config1.div13.v_time"
+    },
+    {
+        "id": "v_datetime",
+        "type": "datetime",
+        "title": "div1 [datetime] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_datetime.title",
+        "defaultValue": "2020-02-28T11:12:13.456",
+        "value": "2020-02-28T11:12:13.456",
+        "path": "config1.div13.v_datetime"
+    },
+    {
+        "id": "v_number",
+        "type": "number",
+        "title": "div1 [number] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_number.title",
+        "defaultValue": 123,
+        "value": 123,
+        "path": "config1.div13.v_number"
+    },
+    {
+        "id": "v_int",
+        "type": "int",
+        "title": "div1 [int] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_int.title",
+        "defaultValue": 456,
+        "value": 456,
+        "path": "config1.div13.v_int"
+    },
+    {
+        "id": "v_float",
+        "type": "float",
+        "title": "div1 [float] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_float.title",
+        "defaultValue": 456.7890123,
+        "value": 456.7890123,
+        "path": "config1.div13.v_float"
+    },
+    {
+        "id": "v_money",
+        "type": "money",
+        "title": "div1 [money] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_money.title",
+        "defaultValue": 456.7891432,
+        "value": 456.7891432,
+        "path": "config1.div13.v_money"
+    },
+    {
+        "id": "v_boolean",
+        "type": "boolean",
+        "title": "div1 [boolean] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.v_boolean.title",
+        "defaultValue": true,
+        "value": true,
+        "path": "config1.div13.v_boolean"
+    }
+]
