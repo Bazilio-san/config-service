@@ -133,11 +133,13 @@ module.exports = class Schema extends Utils {
         } = options;
 
         // eslint-disable-next-line camelcase,prefer-const
-        let {
+        const {
             id,
             value,
             type,
             [_isRootNode_]: isRoot,
+        } = schemaFragment || {};
+        let {
             [_isSection_]: isSection,
             [_isProp_]: isProp
         } = schemaFragment || {};
@@ -253,7 +255,7 @@ module.exports = class Schema extends Utils {
      * @return {*}
      */
     validateNewValue (newValue, schemaItem) {
-        const fnName = 'validateNewValue';
+        const callFrom = 'validateNewValue';
         const realType = this._detectRealType(newValue);
         // eslint-disable-next-line camelcase
         const {
@@ -272,7 +274,7 @@ module.exports = class Schema extends Utils {
 
         const { validator } = this.types[type] || {};
         if (!validator) {
-            throw this._error(`Validator function not found for type «${type}». Function «${fnName}»`);
+            throw this._error(`Validator function not found for type «${type}». Function «${callFrom}»`);
         }
         const error = {};
 
@@ -641,15 +643,16 @@ module.exports = class Schema extends Utils {
 
     // ========================== USED IN CHILD CLASSES =======================
 
+    // noinspection JSCommentMatchesSignature
     /**
      * Returns a fragment of a Schema at the specified path
      *
      * @param {propPathArrType} propPath
      * @param {schemaItemType} schemaItem
-     * @param {String} fnName - function name to substitute in error message
      * @return {schemaItemType}
      */
-    _getSchemaFragment (propPath, schemaItem, fnName) {
+    _getSchemaFragment (propPath, schemaItem, ...args) {
+        const callFrom = args[0] || '_getSchemaFragment';
         const {
             paramPath,
             pathArr
@@ -658,7 +661,7 @@ module.exports = class Schema extends Utils {
             schemaItem = this.schema;
         }
         if (!__.isNonEmptyObject(schemaItem)) {
-            throw this._error(`Argument «schemaItem» is empty or either not an object or an empty object. Path: «${paramPath}» Function «${fnName}»`);
+            throw this._error(`Argument «schemaItem» is empty or either not an object or an empty object. Path: «${paramPath}» Function «${callFrom}»`);
         }
 
         const fullPathArr = [...(schemaItem._pathArr || []), ...pathArr];
@@ -668,7 +671,7 @@ module.exports = class Schema extends Utils {
             const where = schemaItem.path
                 ? `in the Schema fragment «${schemaItem.path}»`
                 : 'in the Schema';
-            throw this._error(`No such parameter «${paramPath}» ${where}. Function «${fnName}»`);
+            throw this._error(`No such parameter «${paramPath}» ${where}. Function «${callFrom}»`);
         }
         return this.pathsOfSchemaItems.get(fullPath);
     }

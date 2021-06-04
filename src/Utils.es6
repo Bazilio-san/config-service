@@ -112,7 +112,8 @@ module.exports = class Utils {
         if (__.isNonEmptyObject(userTypes)) {
             __.each(userTypes, ({ jsTypes = ['any'], validator = () => {} }, userTypeName) => {
                 if (jsTypes && Array.isArray(jsTypes)) {
-                    jsTypes = jsTypes.filter((v) => ['any', 'null', 'object', 'array', 'string', 'number', 'boolean'].includes(v));
+                    jsTypes = jsTypes.filter((v) => ['any', 'null', 'object', 'array', 'string', 'number',
+                        'boolean'].includes(v));
                     if (jsTypes.length) {
                         if (!__.hasProp(types, userTypeName)) {
                             types[userTypeName] = {};
@@ -127,7 +128,8 @@ module.exports = class Utils {
                     types[userTypeName].validator = validator;
                 }
                 if (types[userTypeName] && !types[userTypeName].validator) {
-                    types[userTypeName].validator = (newValue, defaultValue = null) => (newValue === undefined ? defaultValue : newValue);
+                    types[userTypeName].validator = (newValue,
+                        defaultValue = null) => (newValue === undefined ? defaultValue : newValue);
                 }
             });
         }
@@ -209,21 +211,22 @@ module.exports = class Utils {
         return `Expected: «${jsTypes.join(',')}»`;
     }
 
+    // noinspection JSCommentMatchesSignature
     /**
      * Parses the path to the parameter, checking and normalizing it.
      * Returns the path as a string representation and as an array.
      *
      * @param {propPathType} propPath
-     * @param {String}fnName
      * @return {Object}
      */
-    _parseParamPathFragment (propPath, fnName = '_parseParamPathFragment') {
+    _parseParamPathFragment (propPath, ...args) {
+        const callFrom = args[0] || '_parseParamPathFragment';
         propPath = propPath || '';
         const isValid = typeof propPath === 'string'
             || (Array.isArray(propPath) && !propPath.some((v) => typeof v !== 'string'));
 
         if (!isValid) {
-            throw this._error(`Parameter path is not a string or array of strings: «${String(propPath)}». Function «${fnName}»`);
+            throw this._error(`Parameter path is not a string or array of strings: «${String(propPath)}». Function «${callFrom}»`);
         }
         const paramPath = typeof propPath === 'string' ? propPath : propPath.join('.');
         if (!Array.isArray(propPath)) {

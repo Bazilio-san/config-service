@@ -90,15 +90,16 @@ module.exports = class Params extends Schema {
         return valuesContainer;
     }
 
+    // noinspection JSCommentMatchesSignature
     /**
      * Get the value of a configuration parameter along its path
      *
      * @param {propPathType} paramPath
-     * @param {String} fnName
      * @return {*}
      */
-    _getValues (paramPath, fnName = '_getValues') {
-        const { schemaItem, lastParamName } = this._parseParamPath(paramPath, fnName);
+    _getValues (paramPath, ...args) {
+        const callFrom = args[0] || '_getValues';
+        const { schemaItem, lastParamName } = this._parseParamPath(paramPath, callFrom);
         const values = this._getValuesFromSchemaFragment(schemaItem);
         return lastParamName ? values[lastParamName] : values.__root__;
     }
@@ -135,8 +136,9 @@ module.exports = class Params extends Schema {
      * Fills the Schema with actual values
      * @private
      */
-    _fillSchemaWithValues (paramPath, newValues, fnName = '_fillSchemaWithValues') {
-        const { pathArr, schemaItem } = this._parseParamPath(paramPath, fnName);
+    _fillSchemaWithValues (paramPath, newValues, ...args) {
+        const callFrom = args[0] || '_fillSchemaWithValues';
+        const { pathArr, schemaItem } = this._parseParamPath(paramPath, callFrom);
         const absentPaths = new Set();
         const appliedPaths = new Set();
         const options = { pathArr, absentPaths, appliedPaths };
@@ -201,6 +203,7 @@ module.exports = class Params extends Schema {
         return configValue;
     }
 
+    // noinspection JSCommentMatchesSignature
     /**
      * Parse the path to the parameter into parts. Casting to an array. Validation
      *
@@ -209,12 +212,12 @@ module.exports = class Params extends Schema {
      *
      * @private
      * @param {propPathType} pathArr_
-     * @param {String} fnName - function name to substitute in error message
      * @return {Object}
      */
-    _parseParamPath (pathArr_ = '', fnName) {
-        const { pathArr, paramPath, configName, pathParent, lastParamName } = this._parseParamPathFragment(pathArr_, fnName);
-        const schemaItem = this._getSchemaFragment(pathArr, this.schema, fnName);
+    _parseParamPath (pathArr_ = '', ...args) {
+        const callFrom = args[0] || '_parseParamPath'; // function name to substitute in error message
+        const { pathArr, paramPath, configName, pathParent, lastParamName } = this._parseParamPathFragment(pathArr_, callFrom);
+        const schemaItem = this._getSchemaFragment(pathArr, this.schema, callFrom);
         return {
             paramPath,
             pathArr: [...pathArr],
@@ -228,6 +231,7 @@ module.exports = class Params extends Schema {
 
     // ###################################################################################################################################
 
+    // noinspection JSCommentMatchesSignature
     /**
      * Set new named configuration data and saves it to a file.
      * The default parameter structure is superimposed on the passed parameter structure.
@@ -237,13 +241,13 @@ module.exports = class Params extends Schema {
      * @param {Object} configValue
      * @param {Boolean} refreshSchema - Values loaded from the previous config that are not in the
      *                            new one remain if the refreshSchema flag is specified
-     * @param {String} fnName
      */
-    _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, fnName = '_updateAndSaveNamedConfig') {
+    _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, ...args) {
+        const callFrom = args[0] || '_updateAndSaveNamedConfig'; // function name to substitute in error message
         if (refreshSchema) {
             this._reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
         }
-        this._fillSchemaWithValues(configName, configValue, fnName);
+        this._fillSchemaWithValues(configName, configValue, callFrom);
         this._saveNamedConfig(configName);
     }
 
