@@ -155,27 +155,16 @@ module.exports = class API extends Params {
      */
     plainParamsList (paramPath, isExtended = false) {
         const fnName = 'plainParamsList';
-        const {
-            paramPath: paramPath_,
-            pathArr,
-            lastParamName,
-            schemaItem
-        } = this._parseParamPath(paramPath, fnName);
+        const { schemaItem } = this._parseParamPath(paramPath, fnName);
 
         const propList = [];
         const traverseOptions = {};
 
         const propertyCallback = (propertyTypeSchemaItem) => {
-            const {
-                path,
-                value
-            } = propertyTypeSchemaItem;
+            const { path, value } = propertyTypeSchemaItem;
             const prop = isExtended
-                ? { ...propertyTypeSchemaItem }
-                : {
-                    path: propertyTypeSchemaItem.path,
-                    value: propertyTypeSchemaItem.value
-                };
+                ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
+                : { path, value };
             propList.push(prop);
         };
         this.traverseSchema(schemaItem, traverseOptions, null, null, propertyCallback);

@@ -36,7 +36,7 @@ describe('Lib functions should work properly', () => {
         });
         it('Remove certain properties', () => {
             const expected = instance.cloneDeep(inObj);
-            const result = instance.cloneDeep(inObj, ['a', 'flo']);
+            const result = instance.cloneDeep(inObj, { removeProps: ['a', 'flo'] });
             delete expected.arr[0].a;
             delete expected.obj.a;
             delete expected.flo;
@@ -44,6 +44,16 @@ describe('Lib functions should work properly', () => {
         });
         it('Verify copy symbol properties', () => {
             expect(cloned.obj[symbolProp]).to.equals(fullCopy.obj[symbolProp]);
+        });
+        it('Remove symbol properties', () => {
+            const result = instance.cloneDeep(inObj, { removeSymbols: true });
+            expect(result[symbolProp]).to.equals(undefined);
+            expect(result.obj[symbolProp]).to.equals(undefined);
+            expect(result.arr.findIndex((v) => symbolProp === v)).gte(-1);
+        });
+        it('Remove object constructors (pureObj)', () => {
+            const result = instance.cloneDeep(inObj, { pureObj: true });
+            expect(result.obj.constructor).to.equals(undefined);
         });
         it('Changes in the properties of inner objects of copy are absent in the original', () => {
             fullCopy.arr[0].s0 = 'new';

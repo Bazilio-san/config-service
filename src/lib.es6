@@ -74,7 +74,21 @@ function filterObj (obj, thruly) {
     });
 }
 
-function cloneDeep (obj, removeProps = [], pureObj = false, hash = new WeakMap()) {
+function cloneDeep (obj, options = {}) {
+    if (!options.removeProps) {
+        options.removeProps = []; // Array of property names to be removed
+    }
+    if (options.pureObj === undefined) {
+        options.pureObj = false; // If true, cloned objects will not contain a constructor
+    }
+    if (options.removeSymbols === undefined) {
+        options.removeSymbols = false; // If true, cloned objects will not contain Symbol properties
+    }
+    if (!options.hash) {
+        options.hash = new WeakMap(); // If true, cloned objects will not contain a constructor
+    }
+    const { removeProps, pureObj, removeSymbols, hash } = options;
+
     // https://stackoverflow.com/a/40294058/5239731
     if (Object(obj) !== obj) return obj; // primitives
     if (hash.has(obj)) return hash.get(obj); // cyclic reference
@@ -82,22 +96,33 @@ function cloneDeep (obj, removeProps = [], pureObj = false, hash = new WeakMap()
     if (obj instanceof Set) {
         result = new Set(obj); // See note about this!
     } else if (obj instanceof Map) {
-        result = new Map(Array.from(obj, ([key, val]) => [key, cloneDeep(val, removeProps, pureObj, hash)]));
+        result = new Map(Array.from(obj, ([key, val]) => [key, cloneDeep(val, options)]));
     } else if (obj instanceof Date) {
         result = new Date(obj);
     } else if (obj instanceof RegExp) {
         result = new RegExp(obj.source, obj.flags);
     } else if (obj instanceof Function) {
         result = obj;
-    } else if (!pureObj && obj.constructor) {
-        result = new obj.constructor();
+    } else if (obj.constructor) {
+        // If there is a constructor. Except when pureObj === true and it is a real {}-object
+        if (pureObj) {
+            if (obj.constructor === Object) {
+                result = Object.create(null);
+            } else {
+                result = new obj.constructor();
+            }
+        } else {
+            result = new obj.constructor();
+        }
     } else {
         result = Object.create(null);
     }
     hash.set(obj, result);
-    const keys = [...Object.keys(obj), ...Object.getOwnPropertySymbols(obj)].filter((propName) => !removeProps.includes(propName));
+
+    const keys = (removeSymbols ? Object.keys(obj) : [...Object.keys(obj), ...Object.getOwnPropertySymbols(obj)])
+        .filter((propName) => !removeProps.includes(propName));
     return Object.assign(result, ...keys.map(
-        (key) => ({ [key]: cloneDeep(obj[key], removeProps, pureObj, hash) })
+        (key) => ({ [key]: cloneDeep(obj[key], options) })
     ));
 }
 
