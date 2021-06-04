@@ -13,7 +13,7 @@ module.exports = class API extends Params {
 
     // noinspection JSCommentMatchesSignature
     /**
-     * Saving a parameter value at a given path
+     * Save a parameter value at a given path
      *
      * During the storage process, checks are carried out on the validity of the stored data:
      * - matching types specified in the Schema
@@ -43,7 +43,7 @@ module.exports = class API extends Params {
 
     // noinspection JSCommentMatchesSignature
     /**
-     * Getting the value of a configuration parameter along its path
+     * Get the value of a configuration parameter along its path
      * The parameter value is passed in the property 'paramValue' of the object
      * and is accompanied by additional information:
      *      defaultValue,
@@ -101,7 +101,7 @@ module.exports = class API extends Params {
 
     /**
      * Returns a Schema for the specified parameter path.
-     * If the first argument is empty, the Schema is returned in full
+     * If the first argument is empty, the entire schema is returned.
      * If the second argument is passed - 'lng', then the 'title' properties are replaced with
      * localized headers in accordance with the value of the 't' parameter (if specified)
      *
@@ -150,6 +150,7 @@ module.exports = class API extends Params {
 
     /**
      * Returns plain list of parameters, which types is not "section" as Simple or Extended parameter data
+     *
      * @param {propPathStrType} paramPath
      * @param {Boolean} isExtended
      * @return {propSimpleType[]|propExtendedType[]}
@@ -195,6 +196,7 @@ module.exports = class API extends Params {
      */
 
     /**
+     * Returns a translation template
      *
      * @param {getTranslationTemplateOptionsType} options
      * @return {Object}

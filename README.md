@@ -158,6 +158,82 @@ console.log(value);
 // -> new value 2
 ```
 
+## API methods
+
+<span style="font-size: 11px;">&lt;ep&gt; - shorthand for "entry point", for example, <code>http://localhost:8683/config-service</code></span>
+
+<table style="font-size: 13px;">
+    <tr>
+        <th style="width: 200px">Api method</th>
+        <th style="width: 400px">Description</th>
+        <th style="width: 300px">REST API method</th>
+    </tr>
+    <tr>
+        <td>
+            <b>get</b> (paramPath)
+        </td>
+        <td>
+            Get the value of a configuration parameter along its path. Unlike the getEx method, this function returns
+                value as is, without additional information
+        </td>
+        <td>
+            GET &lt;ep&gt;?<b>get</b>[=&lt;paramPath&gt;]
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>getEx</b> (paramPath)
+        </td>
+        <td>
+            Get the value of a configuration parameter along its path<br>
+            The parameter value is passed in the property 'paramValue' of the object and is accompanied by additional
+                information:<br>
+            - defaultValue,<br>
+            - isNamedConfig,<br>
+            - paramName,<br>
+            - paramPath,<br>
+        </td>
+        <td>
+            GET &lt;ep&gt;?<b>get-ex</b>[=&lt;paramPath&gt;]
+        </td>
+    </tr>
+    <tr>
+        <td><b>set</b> (paramPath, paramValue)</td>
+        <td>Save a parameter value at a given path</td>
+        <td>POST &lt;ep&gt;?<b>set</b>[=&lt;paramPath&gt;]
+<pre>{
+    "value": 1234
+}</pre>
+		</td>
+    </tr>
+    <tr>
+        <td><b>getSchema</b> (propPath, lng)</td>
+        <td>Returns a Schema for the specified parameter path.<br>
+            If the first argument is empty, the entire schema is returned.<br>
+            If the second argument (lng) is passed, then the 'title' properties are replaced with localized versions
+                in accordance with the value of the 't' parameter (if specified)
+        </td>
+        <td>GET &lt;ep&gt;?<b>get-schema</b>[=&lt;paramPath&gt;][&amp;&lt;lng&gt;]</td>
+    </tr>
+    <tr>
+        <td><b>list</b> ()</td>
+        <td>Returns a list of named configuration IDs</td>
+        <td>GET &lt;ep&gt;?<b>list</b></td>
+    </tr>
+    <tr>
+        <td><b>plainParamsList</b> (paramPath, isExtended)</td>
+        <td>Returns plain list of parameters, which types is not "section" as Simple or Extended parameter data</td>
+        <td>
+            GET &lt;ep&gt;?<b>plain-params-list</b>[=&lt;paramPath&gt;]<br>
+            GET &lt;ep&gt;?<b>plain-params-list-ex</b>[=&lt;paramPath&gt;]
+        </td>
+    </tr>
+    <tr>
+        <td><b>getTranslationTemplate</b> (options)</td>
+        <td>Returns a translation template</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
 
 
 ## Using REST API
@@ -341,7 +417,6 @@ GET http://localhost:8683/config-service/help
 
 
 > Sample Queries for WebStorm: [example.http](https://github.com/Bazilio-san/config-service/blob/master/example/example.http)
->
 
 
 
@@ -431,7 +506,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-
+    
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
