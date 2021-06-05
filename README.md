@@ -506,7 +506,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-    
+
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
@@ -843,12 +843,35 @@ A parent application using the component can receive parameter change notificati
 
 For this purpose, callback functions are passed to the service constructor as part of the options object.
 
-| Callback function                                   | Arguments                                                    |      |
-| --------------------------------------------------- | ------------------------------------------------------------ | ---- |
-| **onChange**(*paramPath*, *newValue*, *schemaItem*) | *paramPath* {String} - contains the path to the updated parameter<br />*newValue* {*} - value of updated  parameter<br />*schemaItem* {Object} - reference to a fragment of the schema containing the changed value. It contains additional information that may be useful when processing an event. |      |
-| **onSaveNamedConfig**(*configName*)                 | *configName* {String} - named configuration name. It is the file name. |      |
-
-
+<table style="font-size: 13px;">
+    <tr>
+        <th style="width: 300px">Callback function</th>
+        <th style="width: 500px">Arguments</th>
+    </tr>
+    <tr>
+        <td>
+            <b>onChange</b>(<i>paramPath</i>, <i>newValue</i>, <i>schemaItem</i>, <i>csInstance</i>, <i>isJustInitialized</i>)
+        </td>
+        <td>
+            <i>paramPath</i> {String} - contains the path to the updated parameter<br />
+            <i>newValue</i> {*} - value of updated  parameter<br />
+            <i>schemaItem</i> {Object} - reference to a fragment of the schema containing the changed value.
+It contains additional information that may be useful when processing an event.<br />
+            <i>cs</i> {Schema} - reference to a Schema instance<br />
+            <i>isJustInitialized</i> {Boolean} - An indication that this is the initialization of the parameter value
+when creating an instance of the class. When the value is set via <b>set()</b>, this flag will be <b>false</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>onSaveNamedConfig</b>(<i>configName</i>, <i>cs</i>)
+        </td>
+        <td>
+            <i>configName</i> {String} - named configuration name. It is the file name.<br />
+            <i>cs</i> {Schema} - reference to a Schema instance
+        </td>
+    </tr>
+</table>
 
 
 

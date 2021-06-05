@@ -7,8 +7,8 @@ const {
 
 let testValue;
 
-const onChange = (paramPath, newValue, schemaItem) => {
-    testValue = paramPath + newValue + schemaItem.id;
+const onChange = (paramPath, newValue, schemaItem, cs, isJustInitialized) => {
+    testValue = `${paramPath} / ${newValue} / ${schemaItem.id} / ${isJustInitialized}`;
 };
 
 describe('Check onChange method call', () => {
@@ -23,11 +23,13 @@ describe('Check onChange method call', () => {
     });
 
     it('Method onChange should work', () => {
+        let expected = `config-2.c1_s0 / value is ONLY in the CONFIG / c1_s0 / true`;
+        expect(testValue).equals(expected);
         const paramPath = 'config1.div13.v_string';
         const newValue = 'new value';
         const id = 'v_string';
         instance.set(paramPath, newValue);
-        const expected = paramPath + newValue + id;
+        expected = `${paramPath} / ${newValue} / ${id} / ${false}`;
         expect(testValue).equals(expected);
     });
 

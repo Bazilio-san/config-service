@@ -15,6 +15,7 @@ const _parentSchemaItem_ = Symbol.for('_parentSchemaItem_');
 const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
 const _value_ = Symbol.for('_value_');
+const _initialized_ = Symbol.for('_initialized_');
 const _lng_ = Symbol.for('_lng_');
 
 /**
@@ -342,11 +343,13 @@ module.exports = class Schema extends Utils {
                         return this[_value_] === undefined ? this.defaultValue : this[_value_];
                     },
                     set (newVal) {
+                        const isJustInitialized = !this[_initialized_];
+                        this[_initialized_] = true;
                         const validated = cs.validateNewValue(newVal, schemaItem);
                         if (validated !== undefined) {
                             this[_value_] = validated;
+                            cs.onChange(this.path, validated, schemaItem, cs, isJustInitialized);
                         }
-                        cs.onChange(this.path, validated, schemaItem, cs);
                     },
                     enumerable: true
                 });
