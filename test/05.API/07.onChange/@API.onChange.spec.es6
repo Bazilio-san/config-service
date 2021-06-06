@@ -1,3 +1,4 @@
+/* eslint-disable max-len,no-console */
 const {
     serviceOptions,
     API,
@@ -44,9 +45,19 @@ describe('Check onChange method call', () => {
         try {
             instance.set(paramPath, newValue);
         } catch (e) {
-            //
+            console.log(e);
         }
+        // testValue should not change since the onChange function was not called
+        expect(testValue).equals('config1.div13.v_email / new@value.com / v_email / false');
         expect(instance.get(paramPath)).equals('new@value.com');
+    });
+
+    it('The onChange method should not be triggered when the onChange = false parameter is passed in the options', () => {
+        const paramPath = 'config1.div13.v_email';
+        instance.set(paramPath, 'another@value.com', { onChange: false });
+        // testValue should not change since the onChange function was not called
+        expect(testValue).equals('config1.div13.v_email / new@value.com / v_email / false');
+        expect(instance.get(paramPath)).equals('another@value.com');
     });
 
     after(clearTestEnv);

@@ -79,6 +79,51 @@ describe(`REST: get & set`, () => {
         });
     });
 
+    describe(`OnChange () method should not be called if noonchange parameter is passed`, () => {
+        const paramPath = 'config1.div13.v_time';
+        const oldVal = '11:12:13.456';
+        const newVal1 = '01:01:01.777';
+
+        it(`Seting new value by "set=${paramPath}&noonchange" and checking that the onChange method was NOT called`, (done) => {
+            instance.testOnChange = 'foo';
+            post(`${cu}set=${paramPath}&noonchange`)
+                .send({ value: newVal1 })
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(() => {
+                    expect(instance.testOnChange).equals('foo');
+                    done();
+                });
+        });
+
+        it(`Checking a new value by "get":`, (done) => {
+            get(`${cu}get=${paramPath}`)
+                .end((err, res) => {
+                    expect(res.body.value).to.eql(newVal1);
+                    done();
+                });
+        });
+
+        it(`Rolling back old value by call "set=${paramPath}" and checking that the onChange method was called`, (done) => {
+            post(`${cu}set=${paramPath}`)
+                .send({ value: oldVal })
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(() => {
+                    expect(instance.testOnChange).equals(paramPath + oldVal);
+                    done();
+                });
+        });
+
+        it(`Checking an old value by "get":`, (done) => {
+            get(`${cu}get=${paramPath}`)
+                .end((err, res) => {
+                    expect(res.body.value).to.eql(oldVal);
+                    done();
+                });
+        });
+    });
+
     describe(`Checking a new values by "get":`, () => {
         each(expected12, (configExpected, configName) => {
             it(`Named config: "${configName}"`, (done) => {

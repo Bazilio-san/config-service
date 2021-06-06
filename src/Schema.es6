@@ -17,6 +17,7 @@ const _isProp_ = Symbol.for('_isProp_');
 const _value_ = Symbol.for('_value_');
 const _initialized_ = Symbol.for('_initialized_');
 const _lng_ = Symbol.for('_lng_');
+const _onChange_ = Symbol.for('_onChange_');
 
 /**
  * Path to configuration parameter
@@ -347,10 +348,17 @@ module.exports = class Schema extends Utils {
                     set (newVal) {
                         const isJustInitialized = !this[_initialized_];
                         this[_initialized_] = true;
+                        let { onChange } = cs;
+                        if (newVal && typeof newVal === 'object' && newVal[_onChange_] !== undefined) {
+                            newVal = newVal.value;
+                            onChange = newVal[_onChange_];
+                        }
                         const validated = cs.validateNewValue(newVal, schemaItem);
                         if (validated !== undefined) {
                             this[_value_] = validated;
-                            cs.onChange(this.path, validated, schemaItem, cs, isJustInitialized);
+                            if (onChange && typeof onChange === 'function') {
+                                onChange(this.path, validated, schemaItem, cs, isJustInitialized);
+                            }
                         }
                     },
                     enumerable: true

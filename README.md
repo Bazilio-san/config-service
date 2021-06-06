@@ -158,7 +158,7 @@ console.log(value);
 // -> new value 2
 ```
 
-## API methods
+## API / REST API methods
 
 <span style="font-size: 11px;">&lt;ep&gt; - shorthand for "entry point", for
 example, <code>http://localhost:8683/config-service</code></span>
@@ -166,7 +166,7 @@ example, <code>http://localhost:8683/config-service</code></span>
 <table style="font-size: 13px;">
     <thead>
     <tr>
-        <th style="width: 200px">Api method</th>
+        <th style="width: 200px">API method</th>
         <th style="width: 400px">Description</th>
         <th style="width: 300px">REST API method</th>
     </tr>
@@ -204,10 +204,8 @@ example, <code>http://localhost:8683/config-service</code></span>
     <tr>
         <td><b>set</b> (paramPath, paramValue)</td>
         <td>Save a parameter value at a given path</td>
-        <td>POST &lt;ep&gt;?<b>set</b>[=&lt;paramPath&gt;]
-<pre>{
-    "value": 1234
-}</pre>
+        <td>POST &lt;ep&gt;?<b>set</b>=&lt;paramPath&gt;
+<pre>{"value": 1234}</pre>
 		</td>
     </tr>
     <tr>
@@ -239,6 +237,7 @@ example, <code>http://localhost:8683/config-service</code></span>
     </tr>
     </tbody>
 </table>
+
 
 
 ## Using REST API
@@ -555,7 +554,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-
+    
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
@@ -999,6 +998,20 @@ For this purpose, callback functions are passed to the service constructor as pa
                 <li><em>cs</em> {Schema} - reference to a Schema instance</li>
                 <li><em>isJustInitialized</em> {Boolean} - An indication that this is the initialization of the parameter value
                     when creating an instance of the class. When the value is set via <b>set()</b>, this flag will be <b>false</b></li>
+                <br>
+                You can pass an alternative onChange handler when calling the API of the 'set' method:<br />
+                <b>set</b> (<em>&lt;paramPath&gt;, &lt;newValue&gt;, {onChange: &lt;alt_handler&gt;}</em>)<br />
+                <br>
+                You can also suppress the call of the handler:<br />
+                <b>set</b> (<em>&lt;paramPath&gt;, &lt;newValue&gt;, {onChange: <b>false</b>;}</em>)<br />
+                <br>
+                You can suppress the call of the handler when calling the set REST API method by passing the 'noonchange' parameter:
+                <pre><code lang="http request">###
+POST http://localhost:8683/config-service?set=param_path&amp;<b>noonchange</b>
+Content-Type: application/json
+&nbsp;
+{ "value": "01:01:01.000" }
+</code></pre>
             </ul>
         </td>
     </tr>
@@ -1015,6 +1028,7 @@ For this purpose, callback functions are passed to the service constructor as pa
     </tr>
     </tbody>
 </table>
+
 
 
 

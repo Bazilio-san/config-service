@@ -9,6 +9,7 @@ const _isRootNode_ = Symbol.for('_isRootNode_');
 const _v_ = Symbol.for('_v_');
 const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
+const _onChange_ = Symbol.for('_onChange_');
 
 /**
  * Initialization:
@@ -111,6 +112,7 @@ module.exports = class Params extends Schema {
         const {
             value,
             [_v_]: currentValue,
+            [_onChange_]: onChange,
             [_isSection_]: isSection,
             [_isProp_]: isProp,
             path: paramPath
@@ -131,10 +133,18 @@ module.exports = class Params extends Schema {
             value.forEach((childSchemaItem) => {
                 if (__.isSchemaItem(childSchemaItem)) {
                     childSchemaItem[_v_] = __.canDeepDive(currentValue) ? currentValue[childSchemaItem.id] : undefined;
+                    if (onChange !== undefined) {
+                        childSchemaItem[_onChange_] = onChange;
+                    }
                 }
             });
         } else if (isProp) {
-            schemaItem.value = currentValue;
+            if (onChange !== undefined) {
+                schemaItem.value = { value: currentValue, [_onChange_]: onChange };
+            } else {
+                schemaItem.value = currentValue;
+            }
+            delete schemaItem[_onChange_];
         }
     }
 
@@ -149,6 +159,9 @@ module.exports = class Params extends Schema {
         const appliedPaths = new Set();
         const traverseOptions = { pathArr, absentPaths, appliedPaths };
         schemaItem[_v_] = newValues;
+        if (options.onChange !== undefined) {
+            schemaItem[_onChange_] = options.onChange;
+        }
         this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
         if (absentPaths.size) {
             // console.log(`Missed:\n${[...absentPaths].join('\n')}`);

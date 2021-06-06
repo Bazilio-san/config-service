@@ -134,7 +134,8 @@ module.exports = class REST extends API {
                 return this._httpErr500(res, `No root parameter «value» was found. Expected {value: <new value>}`);
             }
             const paramValue = req.body.value;
-            return this._httpCall(this.set, { args: [paramPath, paramValue], req, res });
+            const options = /\bnoonchange\b/im.test(req.url) ? { onChange: false } : {};
+            return this._httpCall(this.set, { args: [paramPath, paramValue, options], req, res });
         }
         if (getSchema !== undefined) {
             if (getSchema === '.') {
