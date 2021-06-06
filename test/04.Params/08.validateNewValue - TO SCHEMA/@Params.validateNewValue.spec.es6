@@ -18,7 +18,7 @@ describe('Params: validateNewValue()', () => {
 
     function getSchemaItem (paramPath) {
         const pathArr = paramPath.split('.');
-        return instance._getSchemaFragment(pathArr, null, 'test');
+        return instance._getSchemaFragment(pathArr, null, { callFrom: 'test' });
     }
 
     function vnv (paramPath, value) {
@@ -78,7 +78,7 @@ describe('Params: validateNewValue()', () => {
         ['int', {}, reErrorRealType],
         ['float', ['555'], reErrorRealType],
         ['money', 'str', /Failed to convert string to number/],
-        ['boolean', [], reErrorRealType],
+        ['boolean', [], reErrorRealType]
     ].forEach(([schemaDataType, value, expected]) => {
         if (expected === undefined) {
             expected = value;

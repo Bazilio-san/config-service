@@ -23,7 +23,7 @@ describe('API: plainParamsList()', () => {
     });
 
     it(`plainParamsList`, () => {
-        const testValue = instance.plainParamsList('config1', true);
+        const testValue = instance.plainParamsList('config1', { isExtended: true });
         expect(testValue).to.eql(expectedListEx);
     });
 

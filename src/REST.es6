@@ -149,13 +149,15 @@ module.exports = class REST extends API {
             if (plainParamsList === '.') {
                 plainParamsList = '';
             }
-            return this._httpCall(this.plainParamsList, { args: [plainParamsList], req, res });
+            const paramPath = plainParamsList;
+            return this._httpCall(this.plainParamsList, { args: [paramPath], req, res });
         }
         if (plainParamsListEx !== undefined) {
             if (plainParamsListEx === '.') {
                 plainParamsListEx = '';
             }
-            return this._httpCall(this.plainParamsList, { args: [plainParamsListEx, true], req, res });
+            const paramPath = plainParamsListEx;
+            return this._httpCall(this.plainParamsList, { args: [paramPath, { isExtended: true }], req, res });
         }
 
         return this._invalidRequest(res);

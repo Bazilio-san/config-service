@@ -11,7 +11,6 @@ module.exports = class API extends Params {
         super(serviceOptions);
     }
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Save a parameter value at a given path
      *
@@ -22,26 +21,27 @@ module.exports = class API extends Params {
      *
      * @param {propPathType} paramPath
      * @param {any} paramValue
+     * @param {Object} options
      * @return {boolean}
      */
-    set (paramPath, paramValue, ...args) {
-        const callFrom = args[0] || 'set';
+    set (paramPath, paramValue, options = {}) {
+        options.callFrom = options.callFrom || 'set';
+
         const {
             pathArr,
             configName
-        } = this._parseParamPathFragment(paramPath, callFrom);
+        } = this._parseParamPathFragment(paramPath, options);
         if (!configName) {
-            throw this._error(`The path must begin with a named configuration identifier. Function «${callFrom}»`);
+            throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
         }
         if (!this.configNames.includes(configName)) {
-            throw this._error(`There is no named configuration «${configName}» in the schema. Function «${callFrom}»`);
+            throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
         }
-        this._fillSchemaWithValues(pathArr, paramValue, callFrom);
+        this._fillSchemaWithValues(pathArr, paramValue, options);
         this._saveNamedConfig(configName);
         return true;
     }
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Get the value of a configuration parameter along its path
      * The parameter value is passed in the property 'paramValue' of the object
@@ -52,16 +52,17 @@ module.exports = class API extends Params {
      *      paramPath,
      *
      * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {*}
      */
-    getEx (paramPath, ...args) {
-        const callFrom = args[0] || 'get';
+    getEx (paramPath, options = {}) {
+        options.callFrom = options.callFrom || 'getEx';
         const {
             paramPath: paramPath_,
             pathArr,
             lastParamName,
             schemaItem
-        } = this._parseParamPath(paramPath, callFrom);
+        } = this._parseParamPath(paramPath, options);
         const parentSchemaItem = schemaItem[_parentSchemaItem_];
         const configValuesFromSchema = this._getValues(pathArr);
         const result = {
@@ -83,20 +84,24 @@ module.exports = class API extends Params {
      * Unlike the getEx method, this function returns value as is, without additional information.
      *
      * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {*}
      */
-    get (paramPath) {
-        return this._getValues(paramPath, 'get');
+    get (paramPath, options = {}) {
+        options.callFrom = options.callFrom || 'get';
+        return this._getValues(paramPath, options);
     }
 
     /**
      * Synonym for get.
      *
      * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {*}
      */
-    value (paramPath) {
-        return this._getValues(paramPath, 'value');
+    value (paramPath, options = {}) {
+        options.callFrom = options.callFrom || 'value';
+        return this._getValues(paramPath, options);
     }
 
     /**
@@ -107,10 +112,11 @@ module.exports = class API extends Params {
      *
      * @param {propPathType} propPath
      * @param {String} lng - translation language
+     * @param {Object} options
      * @return {schemaItemType}
      */
-    getSchema (propPath, lng) {
-        const callFrom = 'getSchema';
+    getSchema (propPath, lng, options = {}) {
+        options.callFrom = options.callFrom || 'getSchema';
         const localizedSchema = this._getSchemaByLanguage(lng);
         if (!propPath) {
             return localizedSchema;
@@ -118,10 +124,10 @@ module.exports = class API extends Params {
         const {
             paramPath,
             pathArr
-        } = this._parseParamPathFragment(propPath, callFrom);
-        const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, callFrom);
+        } = this._parseParamPathFragment(propPath, options);
+        const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, options);
         if (!__.isSchemaItem(schemaItemLocalized)) {
-            throw this._error(`Failed to get translated schema. Path: «${paramPath}». Function «${callFrom}»`);
+            throw this._error(`Failed to get translated schema. Path: «${paramPath}». Function «${options.callFrom}»`);
         }
         return schemaItemLocalized;
     }
@@ -152,19 +158,20 @@ module.exports = class API extends Params {
      * Returns plain list of parameters, which types is not "section" as Simple or Extended parameter data
      *
      * @param {propPathStrType} paramPath
-     * @param {Boolean} isExtended
+     * @param {Object} options
+     * @param {Boolean} options.isExtended
      * @return {propSimpleType[]|propExtendedType[]}
      */
-    plainParamsList (paramPath, isExtended = false) {
-        const callFrom = 'plainParamsList';
-        const { schemaItem } = this._parseParamPath(paramPath, callFrom);
+    plainParamsList (paramPath, options = {}) {
+        options.callFrom = options.callFrom || 'plainParamsList';
+        const { schemaItem } = this._parseParamPath(paramPath, options);
 
         const propList = [];
         const traverseOptions = {};
 
         const propertyCallback = (propertyTypeSchemaItem) => {
             const { path, value } = propertyTypeSchemaItem;
-            const prop = isExtended
+            const prop = options.isExtended
                 ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
                 : { path, value };
             propList.push(prop);

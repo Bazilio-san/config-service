@@ -211,34 +211,37 @@ module.exports = class Utils {
         return `Expected: «${jsTypes.join(',')}»`;
     }
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Parses the path to the parameter, checking and normalizing it.
      * Returns the path as a string representation and as an array.
      *
-     * @param {propPathType} propPath
+     * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {Object}
      */
-    _parseParamPathFragment (propPath, ...args) {
-        const callFrom = args[0] || '_parseParamPathFragment';
-        propPath = propPath || '';
-        const isValid = typeof propPath === 'string'
-            || (Array.isArray(propPath) && !propPath.some((v) => typeof v !== 'string'));
+    _parseParamPathFragment (paramPath, options = {}) {
+        options.callFrom = options.callFrom || '_parseParamPathFragment';
+        paramPath = paramPath || '';
+        const isValid = typeof paramPath === 'string'
+            || (Array.isArray(paramPath) && !paramPath.some((v) => typeof v !== 'string'));
 
         if (!isValid) {
-            throw this._error(`Parameter path is not a string or array of strings: «${String(propPath)}». Function «${callFrom}»`);
+            throw this._error(`Parameter path is not a string or array of strings: «${String(paramPath)}». Function «${options.callFrom}»`);
         }
-        const paramPath = typeof propPath === 'string' ? propPath : propPath.join('.');
-        if (!Array.isArray(propPath)) {
-            propPath = paramPath.split('.').filter((v) => `${v}`.trim());
+        let pathArr;
+        if (typeof paramPath === 'string') {
+            pathArr = paramPath.split('.').filter((v) => `${v}`.trim());
+        } else {
+            pathArr = paramPath;
+            paramPath = pathArr.filter((v) => `${v}`.trim()).join('.');
         }
-        const configName = propPath.length ? propPath[0] : '';
-        const pathParent = [...propPath];
+        const configName = pathArr.length ? pathArr[0] : '';
+        const pathParent = [...pathArr];
         const lastParamName = pathParent.length ? pathParent.pop() : '';
 
         return {
             paramPath,
-            pathArr: propPath,
+            pathArr,
             configName,
             pathParent,
             lastParamName

@@ -90,16 +90,16 @@ module.exports = class Params extends Schema {
         return valuesContainer;
     }
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Get the value of a configuration parameter along its path
      *
      * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {*}
      */
-    _getValues (paramPath, ...args) {
-        const callFrom = args[0] || '_getValues';
-        const { schemaItem, lastParamName } = this._parseParamPath(paramPath, callFrom);
+    _getValues (paramPath, options = {}) {
+        options.callFrom = options.callFrom || '_getValues';
+        const { schemaItem, lastParamName } = this._parseParamPath(paramPath, options);
         const values = this._getValuesFromSchemaFragment(schemaItem);
         return lastParamName ? values[lastParamName] : values.__root__;
     }
@@ -108,7 +108,13 @@ module.exports = class Params extends Schema {
 
     __addNewValueCallback (schemaItem, { absentPaths, appliedPaths }) {
         // eslint-disable-next-line camelcase,prefer-const
-        let { value, [_v_]: currentValue, [_isSection_]: isSection, [_isProp_]: isProp, path: paramPath } = schemaItem || {};
+        const {
+            value,
+            [_v_]: currentValue,
+            [_isSection_]: isSection,
+            [_isProp_]: isProp,
+            path: paramPath
+        } = schemaItem || {};
         if (isSection && Array.isArray(value)) {
             if (__.canDeepDive(currentValue)) {
                 const sIds = value.map(({ id }) => id);
@@ -136,14 +142,14 @@ module.exports = class Params extends Schema {
      * Fills the Schema with actual values
      * @private
      */
-    _fillSchemaWithValues (paramPath, newValues, ...args) {
-        const callFrom = args[0] || '_fillSchemaWithValues';
-        const { pathArr, schemaItem } = this._parseParamPath(paramPath, callFrom);
+    _fillSchemaWithValues (paramPath, newValues, options = {}) {
+        options.callFrom = options.callFrom || '_fillSchemaWithValues';
+        const { pathArr, schemaItem } = this._parseParamPath(paramPath, options);
         const absentPaths = new Set();
         const appliedPaths = new Set();
-        const options = { pathArr, absentPaths, appliedPaths };
+        const traverseOptions = { pathArr, absentPaths, appliedPaths };
         schemaItem[_v_] = newValues;
-        this._traverseSchema(schemaItem, options, this.__addNewValueCallback);
+        this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
         if (absentPaths.size) {
             // console.log(`Missed:\n${[...absentPaths].join('\n')}`);
         }
@@ -203,7 +209,6 @@ module.exports = class Params extends Schema {
         return configValue;
     }
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Parse the path to the parameter into parts. Casting to an array. Validation
      *
@@ -211,15 +216,22 @@ module.exports = class Params extends Schema {
      * Information is cached.
      *
      * @private
-     * @param {propPathType} pathArr_
+     * @param {propPathType} paramPath
+     * @param {Object} options
      * @return {Object}
      */
-    _parseParamPath (pathArr_ = '', ...args) {
-        const callFrom = args[0] || '_parseParamPath'; // function name to substitute in error message
-        const { pathArr, paramPath, configName, pathParent, lastParamName } = this._parseParamPathFragment(pathArr_, callFrom);
-        const schemaItem = this._getSchemaFragment(pathArr, this.schema, callFrom);
+    _parseParamPath (paramPath = '', options = {}) {
+        options.callFrom = options.callFrom || '_parseParamPath'; // function name to substitute in error message
+        const {
+            pathArr,
+            paramPath: paramPath_,
+            configName,
+            pathParent,
+            lastParamName
+        } = this._parseParamPathFragment(paramPath, options);
+        const schemaItem = this._getSchemaFragment(pathArr, this.schema, options);
         return {
-            paramPath,
+            paramPath: paramPath_,
             pathArr: [...pathArr],
             pathParent,
             lastParamName: schemaItem[_isRootNode_] ? '__root__' : lastParamName,
@@ -231,7 +243,6 @@ module.exports = class Params extends Schema {
 
     // ###################################################################################################################################
 
-    // noinspection JSCommentMatchesSignature
     /**
      * Set new named configuration data and saves it to a file.
      * The default parameter structure is superimposed on the passed parameter structure.
@@ -240,14 +251,15 @@ module.exports = class Params extends Schema {
      * @param {String} configName
      * @param {Object} configValue
      * @param {Boolean} refreshSchema - Values loaded from the previous config that are not in the
+     * @param {Object} options
      *                            new one remain if the refreshSchema flag is specified
      */
-    _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, ...args) {
-        const callFrom = args[0] || '_updateAndSaveNamedConfig'; // function name to substitute in error message
+    _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, options = {}) {
+        options.callFrom = options.callFrom || '_updateAndSaveNamedConfig'; // function name to substitute in error message
         if (refreshSchema) {
             this._reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
         }
-        this._fillSchemaWithValues(configName, configValue, callFrom);
+        this._fillSchemaWithValues(configName, configValue, options);
         this._saveNamedConfig(configName);
     }
 

@@ -19,9 +19,9 @@ describe('API: _getSchemaByLanguage(): Parameter updates should apply to all obj
     before(() => {
         instance = prepareTestEnv('API');
 
-        instance._parseParamPath(paramPath, 'test');
-        instance._parseParamPath('config1', 'test');
-        instance._parseParamPath('', 'test');
+        instance._parseParamPath(paramPath, { callFrom: 'test' });
+        instance._parseParamPath('config1', { callFrom: 'test' });
+        instance._parseParamPath('', { callFrom: 'test' });
 
         instance.set(paramPath, expected);
     });
