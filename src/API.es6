@@ -110,24 +110,24 @@ module.exports = class API extends Params {
      * If the second argument is passed - 'lng', then the 'title' properties are replaced with
      * localized headers in accordance with the value of the 't' parameter (if specified)
      *
-     * @param {propPathType} propPath
+     * @param {propPathType} paramPath
      * @param {String} lng - translation language
      * @param {Object} options
      * @return {schemaItemType}
      */
-    getSchema (propPath, lng, options = {}) {
+    getSchema (paramPath, lng, options = {}) {
         options.callFrom = options.callFrom || 'getSchema';
         const localizedSchema = this._getSchemaByLanguage(lng);
-        if (!propPath) {
+        if (!paramPath) {
             return localizedSchema;
         }
         const {
-            paramPath,
+            paramPath: paramPath_,
             pathArr
-        } = this._parseParamPathFragment(propPath, options);
+        } = this._parseParamPathFragment(paramPath, options);
         const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, options);
         if (!__.isSchemaItem(schemaItemLocalized)) {
-            throw this._error(`Failed to get translated schema. Path: «${paramPath}». Function «${options.callFrom}»`);
+            throw this._error(`Failed to get translated schema. Path: «${paramPath_}». Function «${options.callFrom}»`);
         }
         return schemaItemLocalized;
     }

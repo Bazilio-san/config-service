@@ -293,8 +293,9 @@ module.exports = class Schema extends Utils {
      * iterating through a new Schema in order to verify and normalize it.
      *
      * @param {schemaItemType} schemaItem
-     * @param {propPathArrType} pathArr
-     * @param {Number} index - index of the schemaItem in the 'section' array.
+     * @param {Object} options
+     * @param {propPathArrType} options.pathArr
+     * @param {Number} options.index - index of the schemaItem in the 'section' array.
      *                          Used as an identifier for an error message
      *                          if the id property is missing in schemaItem
      * @private
@@ -650,22 +651,22 @@ module.exports = class Schema extends Utils {
     /**
      * Returns a fragment of a Schema at the specified path
      *
-     * @param {propPathArrType} propPath
+     * @param {propPathType} paramPath
      * @param {schemaItemType} schemaItem
      * @param {Object} options
      * @return {schemaItemType}
      */
-    _getSchemaFragment (propPath, schemaItem, options = {}) {
+    _getSchemaFragment (paramPath, schemaItem, options = {}) {
         options.callFrom = options.callFrom || '_getSchemaFragment';
         const {
-            paramPath,
+            paramPath: paramPath_,
             pathArr
-        } = this._parseParamPathFragment(propPath, options);
+        } = this._parseParamPathFragment(paramPath, options);
         if (!schemaItem) {
             schemaItem = this.schema;
         }
         if (!__.isNonEmptyObject(schemaItem)) {
-            throw this._error(`Argument «schemaItem» is empty or either not an object or an empty object. Path: «${paramPath}» Function «${options.callFrom}»`);
+            throw this._error(`Argument «schemaItem» is empty or either not an object or an empty object. Path: «${paramPath_}» Function «${options.callFrom}»`);
         }
 
         const fullPathArr = [...(schemaItem._pathArr || []), ...pathArr];
@@ -675,7 +676,7 @@ module.exports = class Schema extends Utils {
             const where = schemaItem.path
                 ? `in the Schema fragment «${schemaItem.path}»`
                 : 'in the Schema';
-            throw this._error(`No such parameter «${paramPath}» ${where}. Function «${options.callFrom}»`);
+            throw this._error(`No such parameter «${paramPath_}» ${where}. Function «${options.callFrom}»`);
         }
         return this.pathsOfSchemaItems.get(fullPath);
     }
