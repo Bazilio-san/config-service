@@ -1,19 +1,13 @@
 /* eslint-disable max-len */
 
 const lib = require('../../src/lib.es6');
-const { cloneDeep, each } = require('../../src/lib.es6');
-const { cu, initWS, get, post } = require('./init-test-web-server.es6');
+const { cu, get } = require('./init-test-web-server.es6');
 
 const expectedListFull = lib.cloneDeep(require('../05.API/08.plainParamsList/list-full.json'));
 const expectedList = lib.cloneDeep(require('../05.API/08.plainParamsList/list.json'));
 const expectedListEx = lib.cloneDeep(require('../05.API/08.plainParamsList/list_extended.json'));
 
 describe(`REST: get & set`, () => {
-    let instance;
-    before(() => {
-        instance = initWS();
-    });
-
     const urlFull = `${cu}plain-params-list`;
     it(`"${urlFull}" --> full params-list`, (done) => {
         get(urlFull).end((err, res) => {
@@ -37,5 +31,4 @@ describe(`REST: get & set`, () => {
             done();
         });
     });
-
 });

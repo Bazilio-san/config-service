@@ -5,9 +5,8 @@ Edit the configuration parameters through the API / REST API
 ===================================
 
 #### Service provides the ability to edit hierarchically organized parameter values for your Node.js application through the API or through the REST API.
+
 #### The structure of the parameters is specified in the Schema file, which can be used to build the parameter editing interface.
-
-
 
 Project Guidelines
 ------------------
@@ -15,8 +14,6 @@ Project Guidelines
 * *Simple* - Get started fast
 * *Lightweight* - No dependencies
 * *Predictable* - Well tested foundation for module and app developers
-
-
 
 Features
 --------------------
@@ -28,8 +25,6 @@ Features
 - Function for obtaining a translation file template
 - Parameter update event notification
 - Ability to add custom parameter types
-
-
 
 Quick Start
 ---------------
@@ -104,7 +99,9 @@ $ vi namedConfig1.json
 
 ```json
 {
-    "div11": { "div111": "actual string" }
+    "div11": {
+        "div111": "actual string"
+    }
 }
 ```
 
@@ -114,12 +111,15 @@ $ vi namedConfig2.json
 
 ```json
 {
-    "div21": [5, 6, 7]
+    "div21": [
+        5,
+        6,
+        7
+    ]
 }
 ```
 
 **Use it in your code:**
-
 
 ```shell
 $ cd ../../../
@@ -160,14 +160,18 @@ console.log(value);
 
 ## API methods
 
-<span style="font-size: 11px;">&lt;ep&gt; - shorthand for "entry point", for example, <code>http://localhost:8683/config-service</code></span>
+<span style="font-size: 11px;">&lt;ep&gt; - shorthand for "entry point", for
+example, <code>http://localhost:8683/config-service</code></span>
 
 <table style="font-size: 13px;">
+    <thead>
     <tr>
         <th style="width: 200px">Api method</th>
         <th style="width: 400px">Description</th>
         <th style="width: 300px">REST API method</th>
     </tr>
+    </thead>
+    <tbody>
     <tr>
         <td>
             <b>get</b> (paramPath)
@@ -233,6 +237,7 @@ console.log(value);
         <td>Returns a translation template</td>
         <td>&nbsp;</td>
     </tr>
+    </tbody>
 </table>
 
 
@@ -282,7 +287,6 @@ $ node example-rest.js
 GET http://localhost:8683/config-service?get-schema
 ```
 
-
 **Get Schema for the given path:**
 
 ```http request
@@ -314,7 +318,6 @@ response:
 }
 ```
 
-
 **Get a list of named configurations:**
 
 ```http request
@@ -330,7 +333,6 @@ response:
     "namedConfig2"
 ]
 ```
-
 
 **Get whole parameter structure:**
 
@@ -350,7 +352,11 @@ response:
             }
         },
         "namedConfig2": {
-            "div21": [5, 6, 7]
+            "div21": [
+                5,
+                6,
+                7
+            ]
         }
     }
 }
@@ -370,8 +376,6 @@ response:
     "value": "new value 2"
 }
 ```
-
-
 
 **Get parameter value(s) from a given path (accompanied by additional information):**
 
@@ -415,7 +419,6 @@ Content-Type: application/json
 GET http://localhost:8683/config-service/help
 ```
 
-
 > Sample Queries for WebStorm: [example.http](https://github.com/Bazilio-san/config-service/blob/master/example/example.http)
 
 
@@ -424,25 +427,71 @@ GET http://localhost:8683/config-service/help
 Schema file
 ---------------------
 
-The `schema.js` file contains information about the structure of parameters,
-their types and field titles for the editing interface.
+The `schema.js` file contains information about the structure of parameters, their types and field titles for the
+editing interface.
 
 Each parameter is described by an object with the following properties:
 
-| property | description | mandatory | note | example |
-| -------- | ---- | ---- | ---- | ---- |
-| id       | ID/property name | yes | valid JavaScript variable name | param1 |
-| type     | Property type | yes | property Type | section |
-| title    | Property title | no | Designed to be used as a field title/label in the editing interface | Title of property |
-| t        | Translation ID | no | Header translation ID. It is used if the `i18next` object was transferred during the initialization of the service. In this case, the `title` property will be replaced with the corresponding translation. | cs:config1.prop1.title |
-| value    | Property value | no |      |      |
+<table>
+    <thead>
+    <tr>
+        <th>property</th>
+        <th>description</th>
+        <th>mandatory</th>
+        <th>note</th>
+        <th>example</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>id</td>
+        <td>ID/property name</td>
+        <td>yes</td>
+        <td>valid JavaScript variable name</td>
+        <td>param1</td>
+    </tr>
+    <tr>
+        <td>type</td>
+        <td>Property type</td>
+        <td>yes</td>
+        <td>property Type</td>
+        <td>section</td>
+    </tr>
+    <tr>
+        <td>title</td>
+        <td>Property title</td>
+        <td>no</td>
+        <td>Designed to be used as a field title/label in the editing interface</td>
+        <td>Title of property</td>
+    </tr>
+    <tr>
+        <td>t</td>
+        <td>Translation ID</td>
+        <td>no</td>
+        <td>Header translation ID. It is used if the <code>i18next</code> object was transferred during the
+            initialization of the service. In this case, the <code>title</code> property will be replaced with
+            the corresponding translation.
+        </td>
+        <td>cs:config1.prop1.title</td>
+    </tr>
+    <tr>
+        <td>value</td>
+        <td>Property value</td>
+        <td>no</td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
 
-When a schema is requested via API/REST, the **path** property is automatically added to each schema element.
-It is the path to the schema element. It can be used when getting or saving the value of the element.
+When a schema is requested via API/REST, the **path** property is automatically added to each schema element. It is the
+path to the schema element. It can be used when getting or saving the value of the element.
 
-In addition to these properties, you can set any others and they will be transferred when requesting a schema through the API. For example, these can be properties for the interface for managing settings, for differentiating rights, etc.
+In addition to these properties, you can set any others and they will be transferred when requesting a schema through
+the API. For example, these can be properties for the interface for managing settings, for differentiating rights, etc.
 
-You can specify an additional list of properties that will be translated into other languages when using`i18next`. See the `translatedProperties` property in the chapter "Options when creating a service" below.
+You can specify an additional list of properties that will be translated into other languages when using`i18next`. See
+the `translatedProperties` property in the chapter "Options when creating a service" below.
 
 
 
@@ -451,12 +500,14 @@ Named configuration files
 
 **Separation of a configuration into parts**
 
-There is a need to edit individual groups of settings independently. That is, the interface should have different pages for different groups of settings.
-To do this, the parameters are stored in named configurations.
+There is a need to edit individual groups of settings independently. That is, the interface should have different pages
+for different groups of settings. To do this, the parameters are stored in named configurations.
 
-`Named configuration files` are files with the `json` extension and names that exactly match the names of the properties of the first level of the Schema object.
+`Named configuration files` are files with the `json` extension and names that exactly match the names of the properties
+of the first level of the Schema object.
 
-When a parameter value changes within a single named configuration, the corresponding file is re-saved. Files of other named configurations are not affected.
+When a parameter value changes within a single named configuration, the corresponding file is re-saved. Files of other
+named configurations are not affected.
 
 
 
@@ -464,8 +515,8 @@ When a parameter value changes within a single named configuration, the correspo
 Files location
 ----------------------------
 
-The folder where the service searches for Schema file is by default `<app_root>/config/service/`.
-The default folder from which the named configuration files will be read is `<app_root>/config/service/config-data`.
+The folder where the service searches for Schema file is by default `<app_root>/config/service/`. The default folder
+from which the named configuration files will be read is `<app_root>/config/service/config-data`.
 
     <app_root>
     .
@@ -477,7 +528,6 @@ The default folder from which the named configuration files will be read is `<ap
             │   └── ...
             └── schema.js
 
-
 You can specify a different location for `schema.js` through the environment variable.
 
 `NODE_CONFIG_SERVICE_SCHEMA_DIR`
@@ -486,7 +536,6 @@ For example:
 
     NODE_CONFIG_SERVICE_SCHEMA_DIR=./config/my            -> <app_root>/config/my/
     NODE_CONFIG_SERVICE_SCHEMA_DIR=/opt/node/config/my    -> /opt/node/config/my
-
 
 Different location for named configurations can be changed by setting the value of the environment variable:
 
@@ -528,26 +577,25 @@ In this case, the service will work with the following structure:
 
 
 
-
 Types of Parameters
 ---------------------
 
-| Standard Schema types |  suitable js types   |  note  |  example    |
-| ---- | ---- | ---- | ---- |
-| section |  object/array |      |      |
-| array |  object/array |  | [1,2, 'str'] |
-| string | * |  | 'any string' |
-| text |  string |  | 'any text' |
-| date |  string | YYYY-MM-DD | '2020-06-05' |
-| time |  string | HH:mm:ss.SSS | '14:03:23.478' |
-| datetime |  string | YYYY-MM-DDTHH:mm:ss.SSS | '2020-06-05T14:03:23.478' |
-| email |  string |      | 'any.bo-dy@email.do-main.com' |
-| number |  number, string |      | 123.456, '123.567' |
-| int |  number, string |      | 12, '13' |
-| float |  number, string |      | 123.456, '123.567' |
-| money |  number, string |      | 123.456, '123.567' |
-| boolean |  boolean |      | true |
-| json | * |      | { a: 1, b: [1,2,3]} |
+| Standard Schema types | suitable js types | note                    | example                       |
+| --------------------- | ----------------- | ----------------------- | ----------------------------- |
+| section               | object/array      |                         |                               |
+| array                 | object/array      |                         | [1,2, 'str']                  |
+| string                | *                 |                         | 'any string'                  |
+| text                  | string            |                         | 'any text'                    |
+| date                  | string            | YYYY-MM-DD              | '2020-06-05'                  |
+| time                  | string            | HH:mm:ss.SSS            | '14:03:23.478'                |
+| datetime              | string            | YYYY-MM-DDTHH:mm:ss.SSS | '2020-06-05T14:03:23.478'     |
+| email                 | string            |                         | 'any.bo-dy@email.do-main.com' |
+| number                | number, string    |                         | 123.456, '123.567'            |
+| int                   | number, string    |                         | 12, '13'                      |
+| float                 | number, string    |                         | 123.456, '123.567'            |
+| money                 | number, string    |                         | 123.456, '123.567'            |
+| boolean               | boolean           |                         | true                          |
+| json                  | *                 |                         | { a: 1, b: [1,2,3]}           |
 
 ### Custom parameter types
 
@@ -557,13 +605,42 @@ To do this, pass the `userTypes` property to the service constructor as part of 
 
 An object must contain properties of the same name as user types, each of which contains two properties:
 
-| property  | type     | default  | description                                                  |
-| --------- | -------- | -------- | ------------------------------------------------------------ |
-| jsTypes   | array    | ['any']  | An array of javascript types matching the user type. Used when validating a value. |
-| validator | function | () => {} | Validation function of the new value. Called before each parameter update. <br />Gets three arguments:<br />*newValue* {any} - new value<br />*schemaItem* {schemaItemType} - fragment of the schema containing the new value<br />*error* {Object} - container for transmitting validation error message<br />The function should return a checked and normalized value or fill in `error.reason` |
+<table>
+    <thead>
+    <tr>
+        <th>property</th>
+        <th>type</th>
+        <th>default</th>
+        <th>description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>jsTypes</td>
+        <td>array</td>
+        <td>['any']</td>
+        <td>An array of javascript types matching the user type. Used when validating a value.</td>
+    </tr>
+    <tr>
+        <td>validator</td>
+        <td>function</td>
+        <td>() => {}</td>
+        <td>Validation function of the new value. Called before each parameter update. <br />
+            Gets three arguments:
+            <ul>
+                <li><em>newValue</em> {any} - new value</li>
+            	<li><em>schemaItem</em> {schemaItemType} - fragment of the schema containing the new value</li>
+            	<li><em>error</em> {Object} - container for transmitting validation error message</li>
+            </ul>
+            The function should return a checked and normalized value or fill in <code>error.reason</code>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-If you fill in the `error.reason` property with an error message, an error of the `ConfigServiceError` type will be generated.
-The parameter value will remain the same.
+
+If you fill in the `error.reason` property with an error message, an error of the `ConfigServiceError` type will be
+generated. The parameter value will remain the same.
 
 Example:
 
@@ -598,12 +675,11 @@ const configService = require('config-service')({ userTypes });
 
 
 
-
-
 i18n
 -----------
 
-In order to get localized field headers in the Schema, when initializing the service, you need to pass the `i18next` object as part of the options.
+In order to get localized field headers in the Schema, when initializing the service, you need to pass the `i18next`
+object as part of the options.
 
 ### Example
 
@@ -626,14 +702,10 @@ File structure for example:
     │   └── index.js
     └── app.js
 
-
-
 ```shell
 $ npm install express
 $ npm install i18next i18next-sync-fs-backend
 ```
-
-
 
 File `<app_root>/i18n/index.js`
 
@@ -701,7 +773,6 @@ File `<app_root>/i18n/ru/cs.json`
     }
 }
 ```
-
 
 File `<app_root>/config/service/schema.js`
 
@@ -772,12 +843,10 @@ console.log(JSON.stringify(schemaTranslated, undefined, 2));
 }
 ```
 
-
-
-
 ### Get translation file template
 
 File <app_root>/app.js (continuation)
+
 ```js
 const templateOptions = {
     lng: 'en',
@@ -804,7 +873,6 @@ const templateEn = configService.getTranslationTemplate(templateOptions);
 console.log(JSON.stringify(templateEn, undefined, 4));
 ```
 
-
 ```json
 {
     "__root__title": "TITLE EN for root",
@@ -818,22 +886,89 @@ console.log(JSON.stringify(templateEn, undefined, 4));
 }
 ```
 
+
+
 Options when creating a service
 -------------------------------
 
-|   option   |   type   |   default   |   description   |
-| ---- | ---- | ---- | ---- |
-|   i18n   |   object   |      |   i18next instance   |
-|   i18nNS   |   string   |   ''   |   i18next namespace. Match translation file name. If not specified, the default namespace from i18n settings is used.   |
-|   writeMissingTranslate   |   boolean   |   false   |   If 'true', then a file of missing translations will be generated    |
-|   errorLogger   |   object   |       |   An object that provides the 'error' method, which saves an error message to the log    |
-| jsonStringifySpace | number | 2 | Number of spaces when formatting JSON of named configuration |
-| onChange | function |  | The function that will be called when each property is successfully updated. Signature see below. |
-| onSaveNamedConfig | function |  | The function that will be called when the named configuration file is saved, which follows each update made in the named configuration parameters. |
-| userTypes | object | | In this property, you can pass custom parameter types. See above. |
-| translatedProperties | array | | The list of property names in the schema element, which, in addition to the `t` property, will be translated into other languages when` i18next` is used. Unlike `t`, whose value is left untouched, the values of properties listed in this array will be replaced with translation. |
-
-
+<table>
+    <thead>
+    <tr>
+        <th>option</th>
+        <th>type</th>
+        <th>default</th>
+        <th>description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>i18n</td>
+        <td>object</td>
+        <td></td>
+        <td>i18next instance</td>
+    </tr>
+    <tr>
+        <td>i18nNS</td>
+        <td>string</td>
+        <td>''</td>
+        <td>i18next namespace. Match translation file name. If not specified, the default namespace from i18n settings is used.
+        </td>
+    </tr>
+    <tr>
+        <td>writeMissingTranslate</td>
+        <td>boolean</td>
+        <td>false</td>
+        <td>If 'true', then a file of missing translations will be generated</td>
+    </tr>
+    <tr>
+        <td>errorLogger</td>
+        <td>object</td>
+        <td></td>
+        <td>An object that provides the 'error' method, which saves an error message to the log</td>
+    </tr>
+    <tr>
+        <td>jsonStringifySpace</td>
+        <td>number</td>
+        <td>2</td>
+        <td>Number of spaces when formatting JSON of named configuration</td>
+    </tr>
+    <tr>
+        <td>onChange</td>
+        <td>function</td>
+        <td></td>
+        <td>The function that will be called when each property is successfully updated. Signature see below.</td>
+    </tr>
+    <tr>
+        <td>onSaveNamedConfig</td>
+        <td>function</td>
+        <td></td>
+        <td>The function that will be called when the named configuration file is saved, which follows each update made
+            in the named configuration parameters.
+        </td>
+    </tr>
+    <tr>
+        <td>userTypes</td>
+        <td>object</td>
+        <td></td>
+        <td>In this property, you can pass custom parameter types. See above.</td>
+    </tr>
+    <tr>
+        <td>translatedProperties</td>
+        <td>array</td>
+        <td></td>
+        <td>The list of property names in the schema element, which, in addition to the <code>t</code> property, will be
+            translated into other languages when<code>i18next</code> is used. Unlike <code>t</code>, whose value is left
+            untouched, the values of properties listed in this array will be replaced with translation.
+        </td>
+    </tr>
+    <tr>
+        <td>serviceUrlPath</td>
+        <td>string</td>
+        <td><nobr>/config-service</nobr></td>
+        <td>Path in the URL of REST API</td>
+    </tr>
+    </tbody>
+</table>
 
 
 Parameter update notifications
@@ -843,35 +978,44 @@ A parent application using the component can receive parameter change notificati
 
 For this purpose, callback functions are passed to the service constructor as part of the options object.
 
-<table style="font-size: 13px;">
+<table>
+    <thead>
     <tr>
         <th style="width: 300px">Callback function</th>
         <th style="width: 500px">Arguments</th>
     </tr>
+    </thead>
+    <tbody>
     <tr>
         <td>
-            <b>onChange</b>(<i>paramPath</i>, <i>newValue</i>, <i>schemaItem</i>, <i>csInstance</i>, <i>isJustInitialized</i>)
+            <b>onChange</b> (<em>paramPath</em>, <em>newValue</em>, <em>schemaItem</em>, <em>csInstance</em>, <em>isJustInitialized</em>)
         </td>
         <td>
-            <i>paramPath</i> {String} - contains the path to the updated parameter<br />
-            <i>newValue</i> {*} - value of updated  parameter<br />
-            <i>schemaItem</i> {Object} - reference to a fragment of the schema containing the changed value.
-It contains additional information that may be useful when processing an event.<br />
-            <i>cs</i> {Schema} - reference to a Schema instance<br />
-            <i>isJustInitialized</i> {Boolean} - An indication that this is the initialization of the parameter value
-when creating an instance of the class. When the value is set via <b>set()</b>, this flag will be <b>false</b>
+            <ul>
+                <li><em>paramPath</em> {String} - contains the path to the updated parameter</li>
+                <li><em>newValue</em> {*} - value of updated  parameter</li>
+                <li><em>schemaItem</em> {Object} - reference to a fragment of the schema containing the changed value.
+                    It contains additional information that may be useful when processing an event.</li>
+                <li><em>cs</em> {Schema} - reference to a Schema instance</li>
+                <li><em>isJustInitialized</em> {Boolean} - An indication that this is the initialization of the parameter value
+                    when creating an instance of the class. When the value is set via <b>set()</b>, this flag will be <b>false</b></li>
+            </ul>
         </td>
     </tr>
     <tr>
         <td>
-            <b>onSaveNamedConfig</b>(<i>configName</i>, <i>cs</i>)
+            <b>onSaveNamedConfig</b> (<em>configName</em>, <em>cs</em>)
         </td>
         <td>
-            <i>configName</i> {String} - named configuration name. It is the file name.<br />
-            <i>cs</i> {Schema} - reference to a Schema instance
-        </td>
+            <ul>
+                <li><em>configName</em> {String} - named configuration name. It is the file name.</li>
+                <li><em>cs</em> {Schema} - reference to a Schema instance</li>
+            </ul>
+       </td>
     </tr>
+    </tbody>
 </table>
+
 
 
 

@@ -1,6 +1,6 @@
 const lib = require('../../../src/lib.es6');
 
-const { prepareTestEnv, clearTestEnv, fnError } = require('../../test-utils.es6')({ __dirname });
+const { prepareTestEnv, clearTestEnv } = require('../../test-utils.es6')({ __dirname });
 
 const expectedListFull = lib.cloneDeep(require('./list-full.json'));
 const expectedList = lib.cloneDeep(require('./list.json'));

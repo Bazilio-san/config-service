@@ -8,6 +8,13 @@ const API = require('./API.es6');
 module.exports = class REST extends API {
     constructor (serviceOptions = {}) {
         super(serviceOptions);
+        let { serviceUrlPath } = serviceOptions;
+        serviceUrlPath = (`/${serviceUrlPath || ''}`).replace(/[/\\]+/g, '/').replace(/\/+$/, '');
+        if (!serviceUrlPath.replace('/', '')) {
+            serviceUrlPath = '/config-service';
+        }
+        this.serviceUrlPath = serviceUrlPath;
+        this.testPathRe = new RegExp(`^${this.serviceUrlPath}([^\\d\\w ]|)`);
         this.rest = this.rest.bind(this);
     }
 
@@ -30,7 +37,7 @@ module.exports = class REST extends API {
                 ...err,
                 message,
                 name: 'ConfigServiceError',
-                help: '/config-service/help'
+                help: `${this.serviceUrlPath}/help`
             }
         });
     }
@@ -91,10 +98,10 @@ module.exports = class REST extends API {
      * @return {void}
      */
     rest (req, res, next) {
-        if (req.path === '/config-service/help') {
+        if (req.path === `${this.serviceUrlPath}/help`) {
             return this._help(res, 200);
         }
-        if (!/^\/config-service([^\d\w ]|)/.test(req.path)) {
+        if (!this.testPathRe.test(req.path)) {
             next();
             return;
         }

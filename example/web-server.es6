@@ -37,6 +37,10 @@ const serviceOptions = {
     }
 };
 
+if (process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH) {
+    serviceOptions.serviceUrlPath = process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH;
+}
+
 const cs = new REST(serviceOptions);
 
 app.configServiceREST = cs;
@@ -64,5 +68,5 @@ webServer.listen(httpPort, httpHost, () => {
     g(`Web-Server listening on http://${httpHost}:${httpPort}`);
     g('=======================================================================\n');
 });
-
+app.webServer = webServer;
 module.exports.webApp = app;
