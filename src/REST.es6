@@ -172,7 +172,7 @@ module.exports = class REST extends API {
                 return this._httpErr500(res, 'Missing request body');
             }
             const options = typeof req.body === 'object' ? req.body : {};
-            return this._httpCall(this.set, { args: [options], req, res });
+            return this._httpCall(this.getTranslationTemplate, { args: [options], req, res });
         }
 
         return this._invalidRequest(res);
