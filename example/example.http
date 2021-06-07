@@ -181,4 +181,13 @@ GET http://localhost:8683/config-service?get=config1.div13.v_datetime
 GET http://localhost:8683/config-service?get=config1.div13.foo
 
 
+### - translation-template
+POST http://localhost:8683/config-service?translation-template
+Content-Type: application/json
+
+{
+    "lng": "ru",
+    "onlyStandardPaths": false,
+    "addPaths": true
+}
 

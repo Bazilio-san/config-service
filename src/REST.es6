@@ -107,7 +107,14 @@ module.exports = class REST extends API {
         }
         const { query } = req;
 
-        const { get: getValue, 'get-ex': getValueEx, set: setValue, list: getConfigList, lng } = query;
+        const {
+            get: getValue,
+            'get-ex': getValueEx,
+            set: setValue,
+            list: getConfigList,
+            lng,
+            'translation-template': translationTemplate
+        } = query;
         let {
             'get-schema': getSchema,
             'plain-params-list': plainParamsList,
@@ -159,6 +166,13 @@ module.exports = class REST extends API {
             }
             const paramPath = plainParamsListEx;
             return this._httpCall(this.plainParamsList, { args: [paramPath, { isExtended: true }], req, res });
+        }
+        if (translationTemplate !== undefined) {
+            if (!req.body) {
+                return this._httpErr500(res, 'Missing request body');
+            }
+            const options = typeof req.body === 'object' ? req.body : {};
+            return this._httpCall(this.set, { args: [options], req, res });
         }
 
         return this._invalidRequest(res);
