@@ -9,7 +9,7 @@ const { clearTestEnv } = require('./test-utils.es6')({ __dirname });
 
 const { loggerFinish } = require('../example/logger-service.es6');
 
-describe('Testing environment should be set properly', () => {
+describe('_INIT: Testing environment should be set properly', () => {
     it('NODE_ENV should be "testing"', () => {
         expect(process.env.NODE_ENV).to.equal('testing');
     });

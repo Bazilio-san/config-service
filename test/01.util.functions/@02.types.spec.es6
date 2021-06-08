@@ -33,7 +33,7 @@ const realTypes = {
     'boolean': true
 };
 
-describe('Types: Type checking methods should works properly', () => {
+describe('Utils: Type checking methods should works properly', () => {
     describe('Method _schemaDataTypeExists...', () => {
         schemaDataTypes.forEach((schemaDataType) => {
             it(`"${schemaDataType}" schema data type must exist`, () => {

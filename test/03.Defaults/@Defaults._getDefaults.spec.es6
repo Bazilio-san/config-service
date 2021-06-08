@@ -5,7 +5,7 @@ const {
     clearTestEnv
 } = require('../test-utils.es6')({ __dirname });
 
-describe('Defaults must be valid', () => {
+describe('Defaults: must be valid', () => {
     let instance;
     before(() => {
         instance = prepareTestEnv('Params');

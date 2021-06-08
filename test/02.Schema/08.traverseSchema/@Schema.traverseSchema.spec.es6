@@ -5,7 +5,7 @@ const {
 
 const expected = require('./expected.es6');
 
-describe('Method traverseSchema should work properly', () => {
+describe('Schema: Method traverseSchema should work properly', () => {
     let instance;
 
     before(() => {
@@ -30,8 +30,8 @@ describe('Method traverseSchema should work properly', () => {
 
     it('Method traverseSchema should properly calls propertyCallback()', () => {
         const traverseOptions = { accum: [] };
-        instance.traverseSchema(instance.schema, traverseOptions, null, null,  (schemaItem, options) => {
-            options.accum.push(schemaItem.id + ' / ' + schemaItem.type);
+        instance.traverseSchema(instance.schema, traverseOptions, null, null, (schemaItem, options) => {
+            options.accum.push(`${schemaItem.id} / ${schemaItem.type}`);
         });
         expect(traverseOptions.accum).to.eql(expected.traverseProperty);
     });

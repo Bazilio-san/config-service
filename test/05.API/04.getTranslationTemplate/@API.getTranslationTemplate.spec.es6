@@ -4,7 +4,7 @@ const ruSt = require('./cs.ru.std.json');
 const ruStdPath = require('./cs.ru.std.paths.json');
 const ruExPath = require('./cs.ru.ex.paths.json');
 
-describe('Function getTranslationTemplate() should work properly', () => {
+describe('API: Function getTranslationTemplate() should work properly', () => {
     let instance;
     before(() => {
         instance = prepareTestEnv('API');

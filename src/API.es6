@@ -9,6 +9,22 @@ const _parentSchemaItem_ = Symbol.for('_parentSchemaItem_');
 module.exports = class API extends Params {
     constructor (serviceOptions = {}) {
         super(serviceOptions);
+        const { noThrow } = serviceOptions;
+        if (noThrow && typeof noThrow === 'object') {
+            this.noThrow = noThrow;
+        } else if (noThrow === true) {
+            this.noThrow = {
+                set: true,
+                getEx: true,
+                get: true,
+                value: true,
+                getSchema: true,
+                plainParamsList: true,
+                getTranslationTemplate: true
+            };
+        } else {
+            this.noThrow = {};
+        }
     }
 
     /**
@@ -25,21 +41,26 @@ module.exports = class API extends Params {
      * @return {boolean}
      */
     set (paramPath, paramValue, options = {}) {
-        options.callFrom = options.callFrom || 'set';
-
-        const {
-            pathArr,
-            configName
-        } = this._parseParamPathFragment(paramPath, options);
-        if (!configName) {
-            throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
+        try {
+            options.callFrom = options.callFrom || 'set';
+            const {
+                pathArr,
+                configName
+            } = this._parseParamPathFragment(paramPath, options);
+            if (!configName) {
+                throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
+            }
+            if (!this.configNames.includes(configName)) {
+                throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
+            }
+            this._fillSchemaWithValues(pathArr, paramValue, options);
+            this._saveNamedConfig(configName);
+            return true;
+        } catch (err) {
+            if (!this.noThrow.set) {
+                throw err;
+            }
         }
-        if (!this.configNames.includes(configName)) {
-            throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
-        }
-        this._fillSchemaWithValues(pathArr, paramValue, options);
-        this._saveNamedConfig(configName);
-        return true;
     }
 
     /**
@@ -56,27 +77,33 @@ module.exports = class API extends Params {
      * @return {*}
      */
     getEx (paramPath, options = {}) {
-        options.callFrom = options.callFrom || 'getEx';
-        const {
-            paramPath: paramPath_,
-            pathArr,
-            lastParamName,
-            schemaItem
-        } = this._parseParamPath(paramPath, options);
-        const parentSchemaItem = schemaItem[_parentSchemaItem_];
-        const configValuesFromSchema = this._getValues(pathArr);
-        const result = {
-            value: configValuesFromSchema,
-            defaultValue: __.get(this.defaults, pathArr),
-            paramPath: paramPath_,
-            paramName: lastParamName
-        };
-        if (schemaItem[_isRootNode_]) {
-            result.isRoot = true;
-        } else if (parentSchemaItem && parentSchemaItem[_isRootNode_]) {
-            result.isNamedConfig = true;
+        try {
+            options.callFrom = options.callFrom || 'getEx';
+            const {
+                paramPath: paramPath_,
+                pathArr,
+                lastParamName,
+                schemaItem
+            } = this._parseParamPath(paramPath, options);
+            const parentSchemaItem = schemaItem[_parentSchemaItem_];
+            const configValuesFromSchema = this._getValues(pathArr);
+            const result = {
+                value: configValuesFromSchema,
+                defaultValue: __.get(this.defaults, pathArr),
+                paramPath: paramPath_,
+                paramName: lastParamName
+            };
+            if (schemaItem[_isRootNode_]) {
+                result.isRoot = true;
+            } else if (parentSchemaItem && parentSchemaItem[_isRootNode_]) {
+                result.isNamedConfig = true;
+            }
+            return result;
+        } catch (err) {
+            if (!this.noThrow.getEx) {
+                throw err;
+            }
         }
-        return result;
     }
 
     /**
@@ -88,8 +115,14 @@ module.exports = class API extends Params {
      * @return {*}
      */
     get (paramPath, options = {}) {
-        options.callFrom = options.callFrom || 'get';
-        return this._getValues(paramPath, options);
+        try {
+            options.callFrom = options.callFrom || 'get';
+            return this._getValues(paramPath, options);
+        } catch (err) {
+            if (!this.noThrow.get) {
+                throw err;
+            }
+        }
     }
 
     /**
@@ -100,8 +133,14 @@ module.exports = class API extends Params {
      * @return {*}
      */
     value (paramPath, options = {}) {
-        options.callFrom = options.callFrom || 'value';
-        return this._getValues(paramPath, options);
+        try {
+            options.callFrom = options.callFrom || 'value';
+            return this._getValues(paramPath, options);
+        } catch (err) {
+            if (!this.noThrow.value) {
+                throw err;
+            }
+        }
     }
 
     /**
@@ -116,20 +155,26 @@ module.exports = class API extends Params {
      * @return {schemaItemType}
      */
     getSchema (paramPath, lng, options = {}) {
-        options.callFrom = options.callFrom || 'getSchema';
-        const localizedSchema = this._getSchemaByLanguage(lng);
-        if (!paramPath) {
-            return localizedSchema;
+        try {
+            options.callFrom = options.callFrom || 'getSchema';
+            const localizedSchema = this._getSchemaByLanguage(lng);
+            if (!paramPath) {
+                return localizedSchema;
+            }
+            const {
+                paramPath: paramPath_,
+                pathArr
+            } = this._parseParamPathFragment(paramPath, options);
+            const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, options);
+            if (!__.isSchemaItem(schemaItemLocalized)) {
+                throw this._error(`Failed to get translated schema. Path: «${paramPath_}». Function «${options.callFrom}»`);
+            }
+            return schemaItemLocalized;
+        } catch (err) {
+            if (!this.noThrow.getSchema) {
+                throw err;
+            }
         }
-        const {
-            paramPath: paramPath_,
-            pathArr
-        } = this._parseParamPathFragment(paramPath, options);
-        const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, options);
-        if (!__.isSchemaItem(schemaItemLocalized)) {
-            throw this._error(`Failed to get translated schema. Path: «${paramPath_}». Function «${options.callFrom}»`);
-        }
-        return schemaItemLocalized;
     }
 
     /**
@@ -163,22 +208,25 @@ module.exports = class API extends Params {
      * @return {propSimpleType[]|propExtendedType[]}
      */
     plainParamsList (paramPath, options = {}) {
-        options.callFrom = options.callFrom || 'plainParamsList';
-        const { schemaItem } = this._parseParamPath(paramPath, options);
-
-        const propList = [];
-        const traverseOptions = {};
-
-        const propertyCallback = (propertyTypeSchemaItem) => {
-            const { path, value } = propertyTypeSchemaItem;
-            const prop = options.isExtended
-                ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
-                : { path, value };
-            propList.push(prop);
-        };
-        this.traverseSchema(schemaItem, traverseOptions, null, null, propertyCallback);
-
-        return propList;
+        try {
+            options.callFrom = options.callFrom || 'plainParamsList';
+            const { schemaItem } = this._parseParamPath(paramPath, options);
+            const propList = [];
+            const traverseOptions = {};
+            const propertyCallback = (propertyTypeSchemaItem) => {
+                const { path, value } = propertyTypeSchemaItem;
+                const prop = options.isExtended
+                    ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
+                    : { path, value };
+                propList.push(prop);
+            };
+            this.traverseSchema(schemaItem, traverseOptions, null, null, propertyCallback);
+            return propList;
+        } catch (err) {
+            if (!this.noThrow.plainParamsList) {
+                throw err;
+            }
+        }
     }
 
     /**
@@ -209,7 +257,13 @@ module.exports = class API extends Params {
      * @return {Object}
      */
     getTranslationTemplate (options) {
-        options.root = {};
-        return this._getTranslationTemplate({ container: options.root }, options);
+        try {
+            options.root = {};
+            return this._getTranslationTemplate({ container: options.root }, options);
+        } catch (err) {
+            if (!this.noThrow.getTranslationTemplate) {
+                throw err;
+            }
+        }
     }
 };

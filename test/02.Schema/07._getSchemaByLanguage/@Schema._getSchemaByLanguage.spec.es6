@@ -6,7 +6,7 @@ const {
 const expectedSchemaRu = require('./expected-schema-ru---default-values.es6');
 const expectedSchemaEn = require('./expected-schema-en---default-values.es6');
 
-describe('Translations should work properly', () => {
+describe('Schema: Translations should work properly', () => {
     let instance;
     before(() => {
         instance = prepareTestEnv('Schema');

@@ -19,7 +19,7 @@ const ERROR_BOOLEAN_NUM2 = /numeric representation of -1\|1\|0 is expected/;
 
 const fromIndex = 0;
 
-describe('Validation and normalization of values depending on the type should work properly', () => {
+describe('Utils: Validation and normalization of values depending on the type should work properly', () => {
     describe('Method _validateType()...', () => {
         const cases = [
             ['section', [], /Cannot set a value for a 'section'/],

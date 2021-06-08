@@ -22,7 +22,7 @@ let cloned;
 
 const { prepareTestEnv } = require('../test-utils.es6')({ __dirname });
 
-describe('Lib functions should work properly', () => {
+describe('Lib: functions should work properly', () => {
     describe('Function "cloneDeep()"', () => {
         before(() => {
             instance = prepareTestEnv('Schema');

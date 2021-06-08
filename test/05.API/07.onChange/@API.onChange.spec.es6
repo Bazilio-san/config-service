@@ -12,7 +12,7 @@ const onChange = (paramPath, newValue, schemaItem, cs, isJustInitialized) => {
     testValue = `${paramPath} / ${newValue} / ${schemaItem.id} / ${isJustInitialized}`;
 };
 
-describe('Check onChange method call', () => {
+describe('API: Check onChange method call', () => {
     let instance;
     before(() => {
         prepareTestEnv(false);

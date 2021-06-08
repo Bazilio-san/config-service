@@ -28,8 +28,13 @@ const CONFIG_DIR = 'testing';
 process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = SCHEMA_DIR;
 process.env.NODE_CONFIG_SERVICE_DIR = CONFIG_DIR;
 
-function newInstance (type, writeMissingTranslate = false) {
-    serviceOptions.writeMissingTranslate = writeMissingTranslate;
+function newInstance (type, addOptions = {}) {
+    if (addOptions.writeMissingTranslate === undefined) {
+        addOptions.writeMissingTranslate = false;
+    }
+    Object.entries(addOptions).forEach(([key, val]) => {
+        serviceOptions[key] = val;
+    });
     if (typeof type === 'string') {
         switch (type) {
             case 'Schema':
@@ -172,7 +177,7 @@ module.exports = (context) => ({
         return errMsg;
     },
 
-    prepareTestEnv (isNewInstance = true, schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, writeMissingTranslate = false) {
+    prepareTestEnv (isNewInstance = true, schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, addOptions = {}) {
         process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = schemaDir;
         process.env.NODE_CONFIG_SERVICE_DIR = configDir;
         const configPath = Params.getConfigDir();
@@ -187,6 +192,6 @@ module.exports = (context) => ({
         if (isNewInstance === false) {
             return null;
         }
-        return newInstance(isNewInstance, writeMissingTranslate);
+        return newInstance(isNewInstance, addOptions);
     }
 });
