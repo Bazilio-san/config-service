@@ -579,22 +579,24 @@ In this case, the service will work with the following structure:
 Types of Parameters
 ---------------------
 
-| Standard Schema types | suitable js types | note                    | example                       |
-| --------------------- | ----------------- | ----------------------- | ----------------------------- |
-| section               | object/array      |                         |                               |
-| array                 | object/array      |                         | [1,2, 'str']                  |
-| string                | *                 |                         | 'any string'                  |
-| text                  | string            |                         | 'any text'                    |
-| date                  | string            | YYYY-MM-DD              | '2020-06-05'                  |
-| time                  | string            | HH:mm:ss.SSS            | '14:03:23.478'                |
-| datetime              | string            | YYYY-MM-DDTHH:mm:ss.SSS | '2020-06-05T14:03:23.478'     |
-| email                 | string            |                         | 'any.bo-dy@email.do-main.com' |
-| number                | number, string    |                         | 123.456, '123.567'            |
-| int                   | number, string    |                         | 12, '13'                      |
-| float                 | number, string    |                         | 123.456, '123.567'            |
-| money                 | number, string    |                         | 123.456, '123.567'            |
-| boolean               | boolean           |                         | true                          |
-| json                  | *                 |                         | { a: 1, b: [1,2,3]}           |
+| Standard Schema types | suitable js types | note                    | example                           |
+| --------------------- | ----------------- | ----------------------- | --------------------------------- |
+| section               | object/array      |                         |                                   |
+| array                 | object/array      |                         | [1,2, 'str']                      |
+| string                | *                 |                         | 'any string'                      |
+| text                  | string            |                         | 'any text'                        |
+| date                  | string            | YYYY-MM-DD              | '2020-06-05'                      |
+| time                  | string            | HH:mm:ss.SSS            | '14:03:23.478'                    |
+| datetime              | string            | YYYY-MM-DDTHH:mm:ss.SSS | '2020-06-05T14:03:23.478'         |
+| email                 | string            |                         | 'any.bo-dy@email.do-main.com'     |
+| number                | number, string    |                         | 123.456, '123.567'                |
+| int                   | number, string    |                         | 12, '13'                          |
+| long                  | number, string    |                         | 9223372036854775000, '92233'      |
+| float                 | number, string    |                         | 123.456, '123.567'                |
+| double                | number, string    |                         | 1234567890.1234567, '123.4567890' |
+| money                 | number, string    |                         | 123.456, '123.567'                |
+| boolean (bool)        | boolean           |                         | true                              |
+| json                  | *                 |                         | { a: 1, b: [1,2,3]}               |
 
 ### Custom parameter types
 
@@ -1028,7 +1030,6 @@ Content-Type: application/json
     </tr>
     </tbody>
 </table>
-
 
 
 
