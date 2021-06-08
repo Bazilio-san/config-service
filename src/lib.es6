@@ -185,7 +185,7 @@ module.exports = {
     },
     parseAndValidateDate (str, reasonContainer = {}) {
         if (typeof str !== 'string') {
-            reasonContainer.reason = `A string representation of the date is expected. Received type: ${typeof str}`;
+            reasonContainer.reason = `A string representation of the date is expected ( pattern "YYYY-MM-DD[THH:mm:ss[.SSS]]" ). Received type: ${typeof str}`;
             return null;
         }
         const reDateTime = /^(\d{4})-([01]\d)-([0-3]\d)(?:[ T]([0-2]\d?):([0-5]\d?):([0-5]\d?)(?:\.(\d{3}))?)?$/;
@@ -201,7 +201,7 @@ module.exports = {
         const d = new Date(YYYY, MM - 1, DD, HH, mm, ss, SSS);
         const dNum = d.getTime();
         if (!dNum && dNum !== 0) { // NaN value, Invalid date
-            reasonContainer.reason = `String representation of date cannot be converted to date: "${str}"`;
+            reasonContainer.reason = `String representation of date cannot be converted to date: "${str}". Expected format is YYYY-MM-DDTHH.mm.ss.SSS or YYYY-MM-DD or HH.mm.ss.SSS or HH.mm.ss`;
             return null;
         }
         if (d.getMonth() !== MM - 1 || d.getDate() !== DD

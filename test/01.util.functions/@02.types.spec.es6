@@ -17,8 +17,11 @@ const schemaDataTypes = [
     'email',
     'number',
     'int',
+    'long',
     'float',
+    'double',
     'money',
+    'bool',
     'boolean'
 ];
 
@@ -87,21 +90,32 @@ describe('Types: Type checking methods should works properly', () => {
             ['int', 'string', true],
             ['int', 'null', true],
 
+            ['long', 'number', true],
+            ['long', 'string', true],
+            ['long', 'null', true],
+
             ['float', 'number', true],
             ['float', 'string', true],
             ['float', 'null', true],
+
+            ['double', 'number', true],
+            ['double', 'string', true],
+            ['double', 'null', true],
 
             ['money', 'number', true],
             ['money', 'string', true],
             ['money', 'null', true],
 
-            ['boolean', 'boolean', true],
+            ['bool', 'boolean', true],
+            ['boolean', 'null', true],
+
+            ['bool', 'boolean', true],
             ['boolean', 'null', true],
 
             ['foo', 'boolean', false],
             [null, null, false],
             ['boolean', null, false],
-            ['email', 'number', false],
+            ['email', 'number', false]
         ];
         cases.forEach(([schemaDataType, type, result]) => {
             it(`"${schemaDataType}" schema data type corresponds to type "${type}" - "${result}"`, () => {
@@ -122,8 +136,11 @@ describe('Types: Type checking methods should works properly', () => {
             ['email', null, true],
             ['number', null, true],
             ['int', null, true],
+            ['long', null, true],
             ['float', null, true],
+            ['double', null, true],
             ['money', null, true],
+            ['bool', null, true],
             ['boolean', null, true],
 
             ['section', [], true],
@@ -152,10 +169,15 @@ describe('Types: Type checking methods should works properly', () => {
             ['number', 'string may represent a number', true],
             ['int', 345, true],
             ['int', 'string may represent a number', true],
+            ['long', 345, true],
+            ['long', 'string may represent a number', true],
             ['float', 567.89, true],
             ['float', 'string may represent a number', true],
+            ['double', 567.89, true],
+            ['double', 'string may represent a number', true],
             ['money', 567.89, true],
             ['money', 'string may represent a number', true],
+            ['bool', true, true],
             ['boolean', true, true],
             //
             ['section', 'ssss', false],
@@ -169,8 +191,11 @@ describe('Types: Type checking methods should works properly', () => {
             ['datetime', ['arr'], false],
             ['email', 2, false],
             ['int', {}, false],
+            ['long', {}, false],
             ['float', ['555'], false],
-            ['boolean', [], false],
+            ['double', ['555'], false],
+            ['bool', [], false],
+            ['boolean', [], false]
         ].forEach(([schemaDataType, realValue, expected]) => {
             it(`${realValue} -> ${schemaDataType} -> ${expected}`, () => {
                 expect(csu._validateValueByType(realValue, schemaDataType)).to.equals(expected);
