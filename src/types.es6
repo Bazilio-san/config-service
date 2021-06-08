@@ -41,6 +41,17 @@ function numberValidator (newVal, schemaItem, error = {}, isFractional = false) 
     }
     if (!isFractional) {
         val = Math.round(Math.max(Math.min(val, MAX_LONG), MIN_LONG));
+    } else {
+        const { precision, type } = schemaItem;
+        if (type === 'float') {
+            val = Math.fround(val);
+            if (`${val}`.startsWith(`${newVal}`)) {
+                val = typeof newVal === 'string' ? parseFloat(newVal) : newVal;
+            }
+        }
+        if (precision != null) {
+            val = Number(val.toFixed(precision));
+        }
     }
     return val === 0 ? 0 : val;
 }
@@ -222,21 +233,19 @@ module.exports = {
     float: {
         jsTypes: ['null', 'number', 'string'],
         validator: (newVal, schemaItem, error = {}) => {
-            let validated = numberValidator(newVal, schemaItem, error, true);
+            const validated = numberValidator(newVal, schemaItem, error, true);
             if (validated == null) {
                 return null;
             }
-            validated = Math.fround(validated);
-            // validated  = new Float32Array([validated])[0];
-            if (`${validated}`.startsWith(`${newVal}`)) {
-                validated = typeof newVal === 'string' ? parseFloat(newVal) : newVal;
-            }
-            return validated === 0 ? 0 : validated;
+            return validated;
         }
     },
     double: {
         jsTypes: ['null', 'number', 'string'],
-        validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true)
+        validator: (newVal, schemaItem, error = {}) => {
+            const validated = numberValidator(newVal, schemaItem, error, true);
+            return validated;
+        }
     },
     money: {
         jsTypes: ['null', 'number', 'string'],

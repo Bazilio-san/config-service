@@ -235,12 +235,12 @@ module.exports = class Schema extends Utils {
         }
         // Determine the type by value
         let realType = this._detectRealType(defaultValue);
-        if (!this._validateType(realType, schemaDataType)) { // ? TEST
+        if (!this._validateType(realType, schemaDataType)) { // VVT
             throw this._error(`The real type «${realType}» of default value for param «${
                 paramText}» found in Schema does not match schema data type «${schemaDataType}»`);
         }
         realType = this._detectRealType(value);
-        if (!this._validateType(realType, schemaDataType)) { // ? TEST
+        if (!this._validateType(realType, schemaDataType)) { // VVT
             throw this._error(`The real type «${realType}» of value for param «${
                 paramText}» found in Schema does not match schema data type «${schemaDataType}»`);
         }
