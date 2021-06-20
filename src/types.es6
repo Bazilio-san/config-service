@@ -26,7 +26,14 @@ function numberValidator (newVal, schemaItem, error = {}, isFractional = false) 
             return null;
         }
     } else if (rT === 'string' && newVal) {
-        val = isFractional ? parseFloat(newVal) : Number(newVal);
+        if (isFractional) {
+            val = parseFloat(val);
+        } else {
+            if (typeof val === 'string') {
+                val = val.replace(/L$/i, '');
+            }
+            val = Number(val);
+        }
         if (Number.isNaN(val)) {
             error.reason = `Failed to convert string to number: «${newVal}»`;
             return null;
@@ -45,6 +52,9 @@ function numberValidator (newVal, schemaItem, error = {}, isFractional = false) 
         const { precision, type } = schemaItem;
         if (type === 'float') {
             val = Math.fround(val);
+            if (typeof newVal === 'string') {
+                newVal = newVal.replace(/f$/i, '');
+            }
             if (`${val}`.startsWith(`${newVal}`)) {
                 val = typeof newVal === 'string' ? parseFloat(newVal) : newVal;
             }
@@ -242,10 +252,7 @@ module.exports = {
     },
     double: {
         jsTypes: ['null', 'number', 'string'],
-        validator: (newVal, schemaItem, error = {}) => {
-            const validated = numberValidator(newVal, schemaItem, error, true);
-            return validated;
-        }
+        validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true)
     },
     money: {
         jsTypes: ['null', 'number', 'string'],
