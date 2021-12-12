@@ -5,7 +5,7 @@ const fs = require('fs');
 const __ = require('./lib.es6');
 const API = require('./API.es6');
 
-const addSocketListeners = ({ socket, debug, prefix, configService }) => {
+const addSocketListeners = ({ socket, io, debug, prefix, configService }) => {
     const debugSocket = typeof debug === 'function'
         ? debug('config-service:socket')
         : () => {};
@@ -36,6 +36,17 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
                 return socket.callBack(fn, args2);
             }
         };
+    }
+
+    if (configService.accessToken) {
+        io.use((socket_, next) => {
+            const token = socket.handshake.auth.token;
+            if (configService.accessToken !== token) {
+                next(new Error(`Authentication error. Invalid token: ${token}`));
+                return;
+            }
+            next();
+        });
     }
 
     socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
@@ -84,6 +95,7 @@ module.exports = class REST extends API {
             serviceUrlPath = '/config-service';
         }
         this.serviceUrlPath = serviceUrlPath;
+        this.accessToken = serviceOptions.accessToken;
         this.testPathRe = new RegExp(`^${this.serviceUrlPath}([^\\d\\w ]|)`);
         this.rest = this.rest.bind(this);
 
@@ -213,6 +225,17 @@ module.exports = class REST extends API {
             next();
             return;
         }
+
+        if (this.accessToken) {
+            const inToken = (req.headers.authorization || '').replace(/^Bearer +/, '');
+            if (!inToken) {
+                return res.status(400).send('missing authorization header');
+            }
+            if (inToken !== this.accessToken) {
+                return res.status(401).send('Invalid token');
+            }
+        }
+
         const { query } = req;
 
         const {
