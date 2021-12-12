@@ -73,6 +73,8 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
     });
 };
 
+const isIoBroadcastDecoratorSymbol = Symbol.for('isIoBroadcastDecorator');
+
 module.exports = class REST extends API {
     constructor (serviceOptions = {}) {
         super(serviceOptions);
@@ -87,33 +89,41 @@ module.exports = class REST extends API {
 
         // SOCKET IO
 
-        const { prefix = 'cs', debug, isBroadcast, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions;
+        const { prefix = 'cs', debug, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions;
 
         this.initSocket = ({ socket }) => addSocketListeners({ socket, debug, prefix, configService: this });
-        this.initSocketBroadcast = () => {};
-        if (isBroadcast) {
-            const debugIO = typeof debug === 'function'
-                ? debug('config-service:io')
-                : () => {};
-            const emitId = `broadcast/${prefix}/param-changed`;
+        const debugIO = typeof debug === 'function'
+            ? debug('config-service:io')
+            : () => {};
+        const emitId = `broadcast/${prefix}/param-changed`;
 
-            this.initSocketBroadcast = (io) => {
-                let broadcast = (data) => {
-                    const [path, value, schemaItem, , isJustInitialized] = data;
-                    debugIO(`[${emitId}]: path: ${path}, value: ${value}`);
-                    io.emit(emitId, { path, value, schemaItem, isJustInitialized });
-                };
-                if (broadcastThrottleTimeoutMills) {
-                    broadcast = this.throttle(broadcast, broadcastThrottleTimeoutMills);
-                }
-                this.onChange = (...args) => {
-                    broadcast(args);
-                    if (typeof this.onChange === 'function') {
-                        return this.onChange(args);
-                    }
-                };
+        this.initSocketBroadcast = (io) => {
+            let broadcast = (data) => {
+                const [path, value, schemaItem, , isJustInitialized] = data;
+                debugIO(`[${emitId}]: path: ${path}, value: ${value}`);
+                io.emit(emitId, { path, value, schemaItem, isJustInitialized });
             };
-        }
+            if (broadcastThrottleTimeoutMills) {
+                broadcast = this.throttle(broadcast, broadcastThrottleTimeoutMills);
+            }
+            const configService = this;
+
+            function broadcastDecorator (onChange) {
+                function wrapper (...args) {
+                    broadcast(args);
+                    if (typeof onChange === 'function') {
+                        return onChange.apply(configService, args);
+                    }
+                }
+
+                wrapper[isIoBroadcastDecoratorSymbol] = true;
+                return wrapper;
+            }
+
+            if (!this.onChange || !this.onChange[isIoBroadcastDecoratorSymbol]) {
+                this.onChange = broadcastDecorator(this.onChange);
+            }
+        };
     }
 
     /**
