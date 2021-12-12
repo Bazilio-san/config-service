@@ -76,7 +76,7 @@ module.exports = class Schema extends Utils {
             translatedProperties,
             onChange
         } = serviceOptions;
-        this.onChange = typeof onChange === 'function' ? onChange : () => {
+        this.onChange = typeof onChange === 'function' ? onChange : (...args) => {
         };
         this.i18n = i18n;
         this.i18nNS = '';
