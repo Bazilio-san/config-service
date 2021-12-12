@@ -104,7 +104,7 @@ module.exports = class REST extends API {
                 io.emit(emitId, { path, value, schemaItem, isJustInitialized });
             };
             if (broadcastThrottleTimeoutMills) {
-                broadcast = this.throttle(broadcast, broadcastThrottleTimeoutMills);
+                broadcast = __.throttle(broadcast, broadcastThrottleTimeoutMills);
             }
             const configService = this;
 
