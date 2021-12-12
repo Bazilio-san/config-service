@@ -40,8 +40,9 @@ const addSocketListeners = ({ socket, io, debug, prefix, configService }) => {
 
     if (configService.accessToken) {
         io.use((socket_, next) => {
-            const token = socket.handshake.auth.token;
-            if (configService.accessToken !== token) {
+            const { handshake: { headers: { authorization } = {} } = {} } = socket || {};
+            const inToken = (authorization || '').replace(/^Bearer +/, '');
+            if (configService.accessToken !== inToken) {
                 next(new Error(`Authentication error. Invalid token: ${token}`));
                 return;
             }
