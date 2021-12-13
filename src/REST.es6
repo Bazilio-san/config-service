@@ -38,17 +38,17 @@ const addSocketListeners = ({ socket, io, debug, prefix, configService }) => {
         };
     }
 
-    if (configService.accessToken) {
-        io.use((socket_, next) => {
-            const { handshake: { headers: { authorization } = {} } = {} } = socket || {};
-            const inToken = (authorization || '').replace(/^Bearer +/, '');
-            if (configService.accessToken !== inToken) {
-                next(new Error(`Authentication error. Invalid token: ${token}`));
-                return;
-            }
-            next();
-        });
-    }
+    // if (configService.accessToken) {
+    //     io.use((socket_, next) => {
+    //         const { handshake: { headers: { authorization } = {} } = {} } = socket || {};
+    //         const inToken = (authorization || '').replace(/^Bearer +/, '');
+    //         if (configService.accessToken !== inToken) {
+    //             next(new Error(`Authentication error. Invalid token: ${token}`));
+    //             return;
+    //         }
+    //         next();
+    //     });
+    // }
 
     socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
         const lng = (request.lng || '').substr(0, 2).toLowerCase();
