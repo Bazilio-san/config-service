@@ -104,7 +104,7 @@ module.exports = class REST extends API {
 
         const { prefix = 'cs', debug, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions;
 
-        this.initSocket = ({ socket }) => addSocketListeners({ socket, debug, prefix, configService: this });
+        this.initSocket = ({ socket, io }) => addSocketListeners({ socket, io, debug, prefix, configService: this });
         const debugIO = typeof debug === 'function'
             ? debug('config-service:io')
             : () => {};
