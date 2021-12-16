@@ -32,7 +32,7 @@ Quick Start
 **Install in your app directory, and create default directory structure:**
 
 ```shell
-$ npm install config-service
+$ npm install config-srv
 $ mkdir config
 $ cd config
 $ mkdir service
@@ -127,7 +127,7 @@ $ vi example-api.js
 ```
 
 ```js
-const configService = require('config-service')();
+const configService = require('config-srv')();
 
 // Get the Schema and use it
 // to build the client-side parameter editing interface
@@ -257,7 +257,7 @@ const webServer = require('http').Server(app);
 
 app.use(express.json()); // to support JSON-encoded bodies
 
-const { rest } = require('config-service')();
+const { rest } = require('config-srv')();
 
 // Use config-service as middleware
 app.use(rest);
@@ -669,7 +669,7 @@ const userTypes = {
     },
 }
 
-const configService = require('config-service')({ userTypes });
+const configService = require('config-srv')({ userTypes });
 // ...
 
 ```
@@ -808,7 +808,7 @@ const serviceOptions = {
     writeMissingTranslate: true
 };
 
-const configService = require('config-service')(serviceOptions);
+const configService = require('config-srv')(serviceOptions);
 const schemaTranslated = configService.getSchema(null, 'ru');
 
 console.log(JSON.stringify(schemaTranslated, undefined, 2));

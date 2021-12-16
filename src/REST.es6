@@ -102,7 +102,7 @@ module.exports = class REST extends API {
 
         // SOCKET IO
 
-        const { prefix = 'cs', debug, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions;
+        const { prefix = 'cs', debug, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions || {};
 
         this.initSocket = ({ socket, io }) => addSocketListeners({ socket, io, debug, prefix, configService: this });
         const debugIO = typeof debug === 'function'
