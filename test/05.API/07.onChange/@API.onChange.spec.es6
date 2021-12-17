@@ -8,7 +8,7 @@ const {
 
 let testValue;
 
-const onChange = (paramPath, newValue, schemaItem, cs, isJustInitialized) => {
+const onChange = ({ paramPath, newValue, schemaItem, csInstance, isJustInitialized }) => {
     testValue = `${paramPath} / ${newValue} / ${schemaItem.id} / ${isJustInitialized}`;
 };
 

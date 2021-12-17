@@ -353,11 +353,21 @@ module.exports = class Schema extends Utils {
                             newVal = newVal.value;
                             onChange = newVal[_onChange_];
                         }
-                        const validated = cs.validateNewValue(newVal, schemaItem);
-                        if (validated !== undefined) {
-                            this[_value_] = validated;
-                            if (onChange && typeof onChange === 'function') {
-                                onChange(this.path, validated, schemaItem, cs, isJustInitialized);
+                        const newValue = cs.validateNewValue(newVal, schemaItem);
+                        if (newValue !== undefined) {
+                            const oldValue = this[_value_];
+                            if (oldValue !== newValue) {
+                                this[_value_] = newValue;
+                                if (onChange && typeof onChange === 'function') {
+                                    onChange({
+                                        paramPath: this.path,
+                                        oldValue,
+                                        newValue,
+                                        schemaItem,
+                                        csInstance: cs,
+                                        isJustInitialized
+                                    });
+                                }
                             }
                         }
                     },
@@ -630,10 +640,10 @@ module.exports = class Schema extends Utils {
      * @private
      */
     _getTranslationTemplate ({
-        schemaValue = this.schema,
-        container = {},
-        pathArr = []
-    }, options) {
+                                 schemaValue = this.schema,
+                                 container = {},
+                                 pathArr = []
+                             }, options) {
         if (schemaValue && schemaValue[_isRootNode_]) {
             this.__setOneTranslatedTemplateNode(schemaValue, container, pathArr, options);
             schemaValue = schemaValue.value;
