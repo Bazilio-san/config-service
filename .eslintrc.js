@@ -16,6 +16,7 @@ module.exports = {
   },
   // Rules order is important, please avoid shuffling them
   extends: [
+    'plugin:json/recommended',
     'airbnb-base'
   ],
   plugins: [],

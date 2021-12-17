@@ -1,11 +1,11 @@
 {
-    "div10": "ACTUAL value",
-    "div11": {
-        "div21": {
-            "div31": {
-                "div41": "ACTUAL string"
-            }
-        }
-    },
-    "no_in_schema": "This value is not in the schema"
+  "div10": "ACTUAL value",
+  "div11": {
+    "div21": {
+      "div31": {
+        "div41": "ACTUAL string"
+      }
+    }
+  },
+  "no_in_schema": "This value is not in the schema"
 }

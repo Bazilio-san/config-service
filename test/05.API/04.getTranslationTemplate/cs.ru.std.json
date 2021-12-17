@@ -1,91 +1,91 @@
 {
-    "__root__title": "ЗАГОЛОВОК __root__",
-    "config1": {
-        "title": "ЗАГОЛОВОК config1",
-        "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
-        "div11": {
-            "title": "ЗАГОЛОВОК config1.div11",
-            "div21": {
-                "title": "ЗАГОЛОВОК config1.div11.div21",
-                "div31": {
-                    "title": "ЗАГОЛОВОК config1.div11.div21.div31",
-                    "div41": {
-                        "title": "ЗАГОЛОВОК config1.div11.div21.div31.div41"
-                    }
-                }
-            }
-        },
-        "div10": {
-            "title": "ЗАГОЛОВОК config1.div10"
-        },
-        "div13": {
-            "title": "div13 ORIGINAL TITLE - There are no translations for this title",
-            "v_section_empty": {
-                "title": "div1 [section empty] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_json": {
-                "title": "div1 [json] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_array": {
-                "title": "div1 [array] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_string": {
-                "title": "div1 [string] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_text": {
-                "title": "div1 [text] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_email": {
-                "title": "div1 [email] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_date": {
-                "title": "div1 [date] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_time": {
-                "title": "div1 [time] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_datetime": {
-                "title": "div1 [datetime] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_number": {
-                "title": "div1 [number] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_int": {
-                "title": "div1 [int] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_float": {
-                "title": "div1 [float] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_money": {
-                "title": "div1 [money] ORIGINAL TITLE - There are no translations for this title"
-            },
-            "v_boolean": {
-                "title": "div1 [boolean] ORIGINAL TITLE - There are no translations for this title"
-            }
-        }
-    },
-    "config-2": {
-        "title": "ЗАГОЛОВОК config-2",
-        "div21": {
-            "title": "ЗАГОЛОВОК config-2.div21"
-        },
-        "div22": {
-            "title": "ЗАГОЛОВОК config-2.div22"
-        },
-        "c0_s0": {
-            "title": "There are no values in the scheme and no in the config"
-        },
-        "c1_s0": {
-            "title": "There are no values in the scheme but in the config"
-        }
-    },
-    "config__3": {
-        "title": "ЗАГОЛОВОК config 3",
+  "__root__title": "ЗАГОЛОВОК __root__",
+  "config1": {
+    "title": "ЗАГОЛОВОК config1",
+    "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
+    "div11": {
+      "title": "ЗАГОЛОВОК config1.div11",
+      "div21": {
+        "title": "ЗАГОЛОВОК config1.div11.div21",
         "div31": {
-            "title": "ЗАГОЛОВОК config 3.div31"
-        },
-        "div32": {
-            "title": "ЗАГОЛОВОК config 3.div32"
+          "title": "ЗАГОЛОВОК config1.div11.div21.div31",
+          "div41": {
+            "title": "ЗАГОЛОВОК config1.div11.div21.div31.div41"
+          }
         }
+      }
+    },
+    "div10": {
+      "title": "ЗАГОЛОВОК config1.div10"
+    },
+    "div13": {
+      "title": "div13 ORIGINAL TITLE - There are no translations for this title",
+      "v_section_empty": {
+        "title": "div1 [section empty] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_json": {
+        "title": "div1 [json] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_array": {
+        "title": "div1 [array] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_string": {
+        "title": "div1 [string] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_text": {
+        "title": "div1 [text] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_email": {
+        "title": "div1 [email] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_date": {
+        "title": "div1 [date] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_time": {
+        "title": "div1 [time] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_datetime": {
+        "title": "div1 [datetime] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_number": {
+        "title": "div1 [number] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_int": {
+        "title": "div1 [int] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_float": {
+        "title": "div1 [float] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_money": {
+        "title": "div1 [money] ORIGINAL TITLE - There are no translations for this title"
+      },
+      "v_boolean": {
+        "title": "div1 [boolean] ORIGINAL TITLE - There are no translations for this title"
+      }
     }
+  },
+  "config-2": {
+    "title": "ЗАГОЛОВОК config-2",
+    "div21": {
+      "title": "ЗАГОЛОВОК config-2.div21"
+    },
+    "div22": {
+      "title": "ЗАГОЛОВОК config-2.div22"
+    },
+    "c0_s0": {
+      "title": "There are no values in the scheme and no in the config"
+    },
+    "c1_s0": {
+      "title": "There are no values in the scheme but in the config"
+    }
+  },
+  "config__3": {
+    "title": "ЗАГОЛОВОК config 3",
+    "div31": {
+      "title": "ЗАГОЛОВОК config 3.div31"
+    },
+    "div32": {
+      "title": "ЗАГОЛОВОК config 3.div32"
+    }
+  }
 }

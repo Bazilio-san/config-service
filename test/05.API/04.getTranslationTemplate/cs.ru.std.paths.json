@@ -1,121 +1,121 @@
 {
-    "__root__title": "ЗАГОЛОВОК __root__",
-    "t": "cs:__root__title",
-    "config1": {
-        "title": "ЗАГОЛОВОК config1",
-        "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
-        "t": "cs:config1.title",
-        "div10": {
-            "title": "ЗАГОЛОВОК config1.div10",
-            "t": "cs:config1.div10.title"
-        },
-        "div11": {
-            "title": "ЗАГОЛОВОК config1.div11",
-            "t": "cs:config1.div11.title",
-            "div21": {
-                "title": "ЗАГОЛОВОК config1.div11.div21",
-                "t": "cs:config1.div11.div21.title",
-                "div31": {
-                    "title": "ЗАГОЛОВОК config1.div11.div21.div31",
-                    "t": "cs:config1.div11.div21.div31.title",
-                    "div41": {
-                        "title": "ЗАГОЛОВОК config1.div11.div21.div31.div41",
-                        "t": "cs:config1.div11.div21.div31.div41.title"
-                    }
-                }
-            }
-        },
-        "div13": {
-            "title": "div13 ORIGINAL TITLE - There are no translations for this title",
-            "t": "cs:config1.div13.title",
-            "v_section_empty": {
-                "title": "div1 [section empty] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_section_empty.title"
-            },
-            "v_json": {
-                "title": "div1 [json] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_json.title"
-            },
-            "v_array": {
-                "title": "div1 [array] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_array.title"
-            },
-            "v_string": {
-                "title": "div1 [string] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_string.title"
-            },
-            "v_text": {
-                "title": "div1 [text] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_text.title"
-            },
-            "v_email": {
-                "title": "div1 [email] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_email.title"
-            },
-            "v_date": {
-                "title": "div1 [date] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_date.title"
-            },
-            "v_time": {
-                "title": "div1 [time] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_time.title"
-            },
-            "v_datetime": {
-                "title": "div1 [datetime] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_datetime.title"
-            },
-            "v_number": {
-                "title": "div1 [number] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_number.title"
-            },
-            "v_int": {
-                "title": "div1 [int] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_int.title"
-            },
-            "v_float": {
-                "title": "div1 [float] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_float.title"
-            },
-            "v_money": {
-                "title": "div1 [money] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_money.title"
-            },
-            "v_boolean": {
-                "title": "div1 [boolean] ORIGINAL TITLE - There are no translations for this title",
-                "t": "cs:config1.div13.v_boolean.title"
-            }
-        }
+  "__root__title": "ЗАГОЛОВОК __root__",
+  "t": "cs:__root__title",
+  "config1": {
+    "title": "ЗАГОЛОВОК config1",
+    "descr": "ОПИСАНИЕ ЗАГОЛОВКА",
+    "t": "cs:config1.title",
+    "div10": {
+      "title": "ЗАГОЛОВОК config1.div10",
+      "t": "cs:config1.div10.title"
     },
-    "config-2": {
-        "title": "ЗАГОЛОВОК config-2",
-        "t": "cs:config-2.title",
-        "div21": {
-            "title": "ЗАГОЛОВОК config-2.div21",
-            "t": "cs:config-2.div21.title"
-        },
-        "div22": {
-            "title": "ЗАГОЛОВОК config-2.div22",
-            "t": "cs:config-2.div22.title"
-        },
-        "c0_s0": {
-            "title": "There are no values in the scheme and no in the config",
-            "t": "cs:config-2.c0_s0.title"
-        },
-        "c1_s0": {
-            "title": "There are no values in the scheme but in the config",
-            "t": "cs:config-2.c1_s0.title"
-        }
-    },
-    "config__3": {
-        "title": "ЗАГОЛОВОК config 3",
-        "t": "cs:config__3.title",
+    "div11": {
+      "title": "ЗАГОЛОВОК config1.div11",
+      "t": "cs:config1.div11.title",
+      "div21": {
+        "title": "ЗАГОЛОВОК config1.div11.div21",
+        "t": "cs:config1.div11.div21.title",
         "div31": {
-            "title": "ЗАГОЛОВОК config 3.div31",
-            "t": "cs:config__3.div31.title"
-        },
-        "div32": {
-            "title": "ЗАГОЛОВОК config 3.div32",
-            "t": "cs:config__3.div32.title"
+          "title": "ЗАГОЛОВОК config1.div11.div21.div31",
+          "t": "cs:config1.div11.div21.div31.title",
+          "div41": {
+            "title": "ЗАГОЛОВОК config1.div11.div21.div31.div41",
+            "t": "cs:config1.div11.div21.div31.div41.title"
+          }
         }
+      }
+    },
+    "div13": {
+      "title": "div13 ORIGINAL TITLE - There are no translations for this title",
+      "t": "cs:config1.div13.title",
+      "v_section_empty": {
+        "title": "div1 [section empty] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_section_empty.title"
+      },
+      "v_json": {
+        "title": "div1 [json] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_json.title"
+      },
+      "v_array": {
+        "title": "div1 [array] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_array.title"
+      },
+      "v_string": {
+        "title": "div1 [string] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_string.title"
+      },
+      "v_text": {
+        "title": "div1 [text] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_text.title"
+      },
+      "v_email": {
+        "title": "div1 [email] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_email.title"
+      },
+      "v_date": {
+        "title": "div1 [date] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_date.title"
+      },
+      "v_time": {
+        "title": "div1 [time] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_time.title"
+      },
+      "v_datetime": {
+        "title": "div1 [datetime] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_datetime.title"
+      },
+      "v_number": {
+        "title": "div1 [number] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_number.title"
+      },
+      "v_int": {
+        "title": "div1 [int] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_int.title"
+      },
+      "v_float": {
+        "title": "div1 [float] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_float.title"
+      },
+      "v_money": {
+        "title": "div1 [money] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_money.title"
+      },
+      "v_boolean": {
+        "title": "div1 [boolean] ORIGINAL TITLE - There are no translations for this title",
+        "t": "cs:config1.div13.v_boolean.title"
+      }
     }
+  },
+  "config-2": {
+    "title": "ЗАГОЛОВОК config-2",
+    "t": "cs:config-2.title",
+    "div21": {
+      "title": "ЗАГОЛОВОК config-2.div21",
+      "t": "cs:config-2.div21.title"
+    },
+    "div22": {
+      "title": "ЗАГОЛОВОК config-2.div22",
+      "t": "cs:config-2.div22.title"
+    },
+    "c0_s0": {
+      "title": "There are no values in the scheme and no in the config",
+      "t": "cs:config-2.c0_s0.title"
+    },
+    "c1_s0": {
+      "title": "There are no values in the scheme but in the config",
+      "t": "cs:config-2.c1_s0.title"
+    }
+  },
+  "config__3": {
+    "title": "ЗАГОЛОВОК config 3",
+    "t": "cs:config__3.title",
+    "div31": {
+      "title": "ЗАГОЛОВОК config 3.div31",
+      "t": "cs:config__3.div31.title"
+    },
+    "div32": {
+      "title": "ЗАГОЛОВОК config 3.div32",
+      "t": "cs:config__3.div32.title"
+    }
+  }
 }
