@@ -114,8 +114,8 @@ module.exports = class REST extends API {
 
     this.initSocketBroadcast = (io) => {
       let broadcast = (data) => {
-        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem } = data;
-        const response = { paramPath, oldValue, newValue, isJustInitialized };
+        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem, callerId } = data;
+        const response = { paramPath, oldValue, newValue, isJustInitialized, callerId };
         if (extended && schemaItem.type !== 'section') {
           response.schemaItem = this.cloneDeep(schemaItem, { pureObj: true, removeSymbols: true });
         }
