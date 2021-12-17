@@ -1,10 +1,12 @@
 {
   "name": "config-srv",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/instance.js",
   "scripts": {
-    "test": "mocha --file './test/init.es6' 'test/**/**spec.es6'"
+    "test": "mocha --file './test/init.js' 'test/**/**spec.js'",
+    "lint": "eslint --ext .js,.json5,.es6 ./",
+    "lint:fix": "eslint --fix --ext .js,.json5,.es6 ./"
   },
   "keywords": [
     "configuration management",

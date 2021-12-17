@@ -10,7 +10,7 @@
             <env name="CS_ERROR_SHOW_STACK" value="1"/>
         </envs>
         <ui>bdd</ui>
-        <extra-mocha-options>--file &quot;./test/init.es6&quot; 'test/**/**spec.es6'</extra-mocha-options>
+        <extra-mocha-options>--file &quot;./test/init.js&quot; 'test/**/**spec.js'</extra-mocha-options>
         <test-kind>PATTERN</test-kind>
         <test-pattern/>
         <method v="2"/>

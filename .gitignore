@@ -6,7 +6,7 @@ thumbs.db
 
 /_misc/
 /profiling/
-/t.es6
+/t.js
 
 /deploy/config.yml
 /deploy/branch

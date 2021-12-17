@@ -20,9 +20,7 @@ module.exports = {
   ],
   plugins: [],
 
-  globals: {
-    process: true
-  },
+  globals: { process: true },
 
   rules: {
     'no-param-reassign': 'off',
@@ -44,19 +42,15 @@ module.exports = {
     // 'linebreak-style': 'off',
     'linebreak-style': ['error', 'unix'],
     'object-curly-spacing': ['error', 'always'],
-    "object-curly-newline": [
-      "error",
+    'object-curly-newline': [
+      'error',
       {
-        "ObjectExpression": {
-          "multiline": true
-        },
-        "ObjectPattern": {
-          "multiline": true
-        },
-        "ImportDeclaration": "never",
-        "ExportDeclaration": {
-          "multiline": true,
-          "minProperties": 3
+        ObjectExpression: { multiline: true },
+        ObjectPattern: { multiline: true },
+        ImportDeclaration: 'never',
+        ExportDeclaration: {
+          multiline: true,
+          minProperties: 3
         }
       }
     ],

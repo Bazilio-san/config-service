@@ -12,7 +12,7 @@ Parameters:
 - User interface: `bbd`
 - Extra Mocha options:
 
-        --file "./test/init.es6" 'test/**/**spec.es6'
+        --file "./test/init.js" 'test/**/**spec.js'
 
 - Tests: mark "File pattern" and leave the field blank
 
@@ -20,6 +20,6 @@ Parameters:
 
 - Extra Mocha options:
 
-        --file "./test/init.es6" 'test/REST/**/**spec.es6'
+        --file "./test/init.js" 'test/REST/**/**spec.js'
 
 
