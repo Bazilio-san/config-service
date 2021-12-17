@@ -227,12 +227,14 @@ module.exports = class REST extends API {
     }
 
     if (this.accessToken) {
-      const inToken = (req.headers.authorization || '').replace(/^Bearer +/, '');
+      const inToken = (req.headers.authorization || '').replace(/^Bearer +/i, '');
       if (!inToken) {
-        return res.status(400).send('missing authorization header');
+        res.status(400).send('missing authorization header');
+        return;
       }
       if (inToken !== this.accessToken) {
-        return res.status(401).send('Invalid token');
+        res.status(401).send('Invalid token');
+        return;
       }
     }
 
