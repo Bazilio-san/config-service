@@ -85,7 +85,7 @@ function cloneDeep (obj, options = {}) {
     options.removeSymbols = false; // If true, cloned objects will not contain Symbol properties
   }
   if (!options.hash) {
-    options.hash = new WeakMap(); // If true, cloned objects will not contain a constructor
+    options.hash = new WeakMap();
   }
   const { removeProps, pureObj, removeSymbols, hash } = options;
 
