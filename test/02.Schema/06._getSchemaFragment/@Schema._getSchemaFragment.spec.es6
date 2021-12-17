@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const lib = require('../../../src/lib.es6');
+const lib = require('../../../src/lib.js');
 const {
     fnError,
     clearTestEnv,

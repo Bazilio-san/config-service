@@ -1,8 +1,8 @@
 {
   "name": "config-srv",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "API and REST interface for editing a structured set of parameters",
-  "main": "src/instance.es6",
+  "main": "src/instance.js",
   "scripts": {
     "test": "mocha --file './test/init.es6' 'test/**/**spec.es6'"
   },

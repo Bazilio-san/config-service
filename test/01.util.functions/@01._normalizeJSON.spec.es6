@@ -1,4 +1,4 @@
-const Utils = require('../../src/Utils.es6');
+const Utils = require('../../src/Utils.js');
 
 const instance = new Utils();
 

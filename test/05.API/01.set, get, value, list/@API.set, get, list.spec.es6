@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-expressions */
 
-const lib = require('../../../src/lib.es6');
+const lib = require('../../../src/lib.js');
 const {
     prepareTestEnv,
     clearTestEnv,

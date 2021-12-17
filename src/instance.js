@@ -1,4 +1,4 @@
-const REST = require('./REST.es6');
+const REST = require('./REST.js');
 
 let globalInstance;
 

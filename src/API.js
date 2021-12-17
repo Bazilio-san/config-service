@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this, max-len, max-classes-per-file, no-prototype-builtins, no-bitwise */
 
-const __ = require('./lib.es6');
-const Params = require('./Params.es6');
+const __ = require('./lib.js');
+const Params = require('./Params.js');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
 const _parentSchemaItem_ = Symbol.for('_parentSchemaItem_');

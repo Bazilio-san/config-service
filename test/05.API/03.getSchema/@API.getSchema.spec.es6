@@ -1,4 +1,4 @@
-const lib = require('../../../src/lib.es6');
+const lib = require('../../../src/lib.js');
 
 const { prepareTestEnv, clearTestEnv, fnError } = require('../../test-utils.es6')({ __dirname });
 

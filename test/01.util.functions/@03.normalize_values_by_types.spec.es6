@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-const Utils = require('../../src/Utils.es6');
+const Utils = require('../../src/Utils.js');
 
 const csu = new Utils();
 

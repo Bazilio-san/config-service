@@ -2,8 +2,8 @@
 
 const path = require('path');
 const fs = require('fs');
-const __ = require('./lib.es6');
-const API = require('./API.es6');
+const __ = require('./lib.js');
+const API = require('./API.js');
 
 const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) => {
   const debugSocket = typeof debug === 'function'

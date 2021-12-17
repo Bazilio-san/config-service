@@ -2,8 +2,8 @@
 
 const path = require('path');
 const fs = require('fs');
-const __ = require('./lib.es6');
-const Utils = require('./Utils.es6');
+const __ = require('./lib.js');
+const Utils = require('./Utils.js');
 
 /*
 The symbol properties of the Schema object are copied by the __. CloneDeep () function

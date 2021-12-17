@@ -6,11 +6,11 @@ const path = require('path');
 const { errorLogger, loggerFinish } = require('../example/logger-service.es6');
 const i18n = require('../example/i18n/i18n.es6')();
 
-const Utils = require('../src/Utils.es6');
-const Schema = require('../src/Schema.es6');
-const Params = require('../src/Params.es6');
-const API = require('../src/API.es6');
-const REST = require('../src/REST.es6');
+const Utils = require('../src/Utils.js');
+const Schema = require('../src/Schema.js');
+const Params = require('../src/Params.js');
+const API = require('../src/API.js');
+const REST = require('../src/REST.js');
 
 const serviceOptions = {
     errorLogger,

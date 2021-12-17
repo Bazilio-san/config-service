@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const { cloneDeep, each } = require('../../src/lib.es6');
+const { cloneDeep, each } = require('../../src/lib.js');
 const { cu, initWS, get, post, stopWS } = require('./init-test-web-server.es6');
 
 const expected = require('../resources/with-actual-values/expected-config--get.es6');

@@ -3,7 +3,7 @@ const {
     clearTestEnv
 } = require('../../test-utils.es6')({ __dirname });
 
-const __ = require('../../../src/lib.es6');
+const __ = require('../../../src/lib.js');
 const expectedNewDefaults = require('../../03.Defaults/expected-defaults.es6');
 const expectedNewConfig = require('./expected-new-config.es6');
 const expectedNewSchema = require('../../resources/with-actual-values/schema---av.es6');

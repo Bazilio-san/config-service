@@ -2,8 +2,8 @@
 
 const path = require('path');
 const fs = require('fs');
-const __ = require('./lib.es6');
-const Schema = require('./Schema.es6');
+const __ = require('./lib.js');
+const Schema = require('./Schema.js');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
 const _v_ = Symbol.for('_v_');

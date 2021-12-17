@@ -1,1 +1,1 @@
-midule.exports = require('./src/instance.es6');
+midule.exports = require('./src/instance.js');

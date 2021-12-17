@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions,import/no-dynamic-require */
-const __ = require('../../../../src/lib.es6');
+const __ = require('../../../../src/lib.js');
 const {
     prepareTestEnv,
     clrRequire,

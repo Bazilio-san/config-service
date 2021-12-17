@@ -10,7 +10,7 @@ const {
     niError
 } = require('../../test-utils.es6')({ __dirname });
 
-const __ = require('../../../src/lib.es6');
+const __ = require('../../../src/lib.js');
 
 describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () => {
     describe('_readNamedConfig, _saveNamedConfig, _reloadConfig', () => {

@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
-const Utils = require('../../src/Utils.es6');
+const Utils = require('../../src/Utils.js');
 
 const csu = new Utils();
 
-const lib = require('../../src/lib.es6');
+const lib = require('../../src/lib.js');
 
 const schemaDataTypes = [
     'section',

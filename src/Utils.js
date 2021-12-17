@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this, max-len */
 
 const path = require('path');
-const __ = require('./lib.es6');
-const standardTypes = require('./types.es6');
+const __ = require('./lib.js');
+const standardTypes = require('./types.js');
 
-const { DEFAULT_SCHEMA_DIR, DEFAULT_CONFIG_DIR } = require('./constants.es6');
+const { DEFAULT_SCHEMA_DIR, DEFAULT_CONFIG_DIR } = require('./constants.js');
 
-const ConfigServiceError = require('./ConfigServiceError.es6');
+const ConfigServiceError = require('./ConfigServiceError.js');
 
 module.exports = class Utils {
   constructor (serviceOptions = {}) {

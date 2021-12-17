@@ -1,4 +1,4 @@
-const { cloneDeep } = require('../../src/lib.es6');
+const { cloneDeep } = require('../../src/lib.js');
 const { cu, initWS, get } = require('./init-test-web-server.es6');
 
 const expectedSchema = cloneDeep(require('../resources/with-actual-values/schema---av.es6'));

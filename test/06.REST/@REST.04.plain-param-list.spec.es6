@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-const lib = require('../../src/lib.es6');
+const lib = require('../../src/lib.js');
 const { cu, get } = require('./init-test-web-server.es6');
 
 const expectedListFull = lib.cloneDeep(require('../05.API/08.plainParamsList/list-full.json'));

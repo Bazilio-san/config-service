@@ -20,7 +20,7 @@ const tu = require('../test/test-utils.es6')({ __dirname });
 
 tu.prepareTestEnv(false);
 
-const REST = require('../src/REST.es6');
+const REST = require('../src/REST.js');
 
 const serviceOptions = {
   errorLogger,
