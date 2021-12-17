@@ -8,7 +8,8 @@ const API = require('./API.js');
 const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) => {
   const debugSocket = typeof debug === 'function'
     ? debug('config-service:socket')
-    : () => {};
+    : () => {
+    };
 
   if (typeof socket.applyFn !== 'function') {
     socket.getCallback = (args) => {
@@ -107,7 +108,8 @@ module.exports = class REST extends API {
     this.initSocket = ({ socket, io }) => addSocketListeners({ socket, io, debug, prefix, configService: this });
     const debugIO = typeof debug === 'function'
       ? debug('config-service:io')
-      : () => {};
+      : () => {
+      };
     const emitId = `broadcast/${prefix}/param-changed`;
 
     this.initSocketBroadcast = (io) => {
@@ -121,7 +123,7 @@ module.exports = class REST extends API {
         io.emit(emitId, response);
       };
       if (throttleMills) {
-        broadcast = __.throttle(broadcast, broadcastThrottleTimeoutMills);
+        broadcast = __.throttle(broadcast, throttleMills);
       }
       const configService = this;
 
