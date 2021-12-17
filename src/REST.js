@@ -102,7 +102,7 @@ module.exports = class REST extends API {
 
     // SOCKET IO
 
-    const { prefix = 'cs', debug, broadcastThrottleTimeoutMills } = serviceOptions.socketIoOptions || {};
+    const { prefix = 'cs', debug, broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
 
     this.initSocket = ({ socket, io }) => addSocketListeners({ socket, io, debug, prefix, configService: this });
     const debugIO = typeof debug === 'function'
@@ -112,10 +112,15 @@ module.exports = class REST extends API {
 
     this.initSocketBroadcast = (io) => {
       let broadcast = (data) => {
-        debugIO(`[${emitId}]: path: ${data.paramPath}, value: ${data.newValue}`);
-        io.emit(emitId, data);
+        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem } = data;
+        const response = { paramPath, oldValue, newValue, isJustInitialized };
+        if (extended && schemaItem.type !== 'section') {
+          response.schemaItem = this.cloneDeep(schemaItem, { pureObj: true, removeSymbols: true });
+        }
+        debugIO(`[${emitId}]: path: ${paramPath}, value: ${newValue}`);
+        io.emit(emitId, response);
       };
-      if (broadcastThrottleTimeoutMills) {
+      if (throttleMills) {
         broadcast = __.throttle(broadcast, broadcastThrottleTimeoutMills);
       }
       const configService = this;
@@ -227,12 +232,14 @@ module.exports = class REST extends API {
     }
 
     if (this.accessToken) {
-      const inToken = (req.headers.authorization || '').replace(/^Bearer +/, '');
+      const inToken = (req.headers.authorization || '').replace(/^Bearer +/i, '');
       if (!inToken) {
-        return res.status(400).send('missing authorization header');
+        res.status(400).send('missing authorization header');
+        return;
       }
       if (inToken !== this.accessToken) {
-        return res.status(401).send('Invalid token');
+        res.status(401).send('Invalid token');
+        return;
       }
     }
 
