@@ -554,7 +554,7 @@ In this case, the service will work with the following structure:
         │   ├── named_config_2.json
         │   └── ...
         └── schema.js
-
+    
     # If you specify the relative path in `NODE_CONFIG_SERVICE_DIR`,
     # then the directory of named configurations will be located relative
     # to the directory where` schema.js` is
@@ -889,7 +889,7 @@ console.log(JSON.stringify(templateEn, undefined, 4));
 
 
 
-Options when creating a service
+Constructor arguments
 -------------------------------
 
 <table>
@@ -969,6 +969,12 @@ Options when creating a service
         <td>Path in the URL of REST API</td>
     </tr>
     <tr>
+        <td>accessToken</td>
+        <td>string</td>
+        <td></td>
+        <td>Access token</td>
+    </tr>
+    <tr>
         <td>noThrow</td>
         <td>boolean|object</td>
         <td></td>
@@ -980,6 +986,7 @@ If an object is passed, then you can specify separately the methods for which th
     </tr>
     </tbody>
 </table>
+
 
 
 
