@@ -74,7 +74,7 @@ const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) 
   socket.on(`${prefix}/set`, async (request, ...args) => {
     const { propPath, paramValue } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
-    const isSet = configService.set(propPath, paramValue);
+    const isSet = configService.set(propPath, paramValue, { callerId: socket.id });
     socket.applyFn(args, isSet);
   });
 

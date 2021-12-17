@@ -10,6 +10,7 @@ const _v_ = Symbol.for('_v_');
 const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
 const _onChange_ = Symbol.for('_onChange_');
+const _callerId_ = Symbol.for('_callerId_');
 
 /**
  * Initialization:
@@ -145,12 +146,12 @@ module.exports = class Params extends Schema {
         schemaItem.value = currentValue;
       }
       delete schemaItem[_onChange_];
+      delete schemaItem[_callerId_];
     }
   }
 
   /**
    * Fills the Schema with actual values
-   * @private
    */
   _fillSchemaWithValues (paramPath, newValues, options = {}) {
     options.callFrom = options.callFrom || '_fillSchemaWithValues';
@@ -162,6 +163,7 @@ module.exports = class Params extends Schema {
     if (options.onChange !== undefined) {
       schemaItem[_onChange_] = options.onChange;
     }
+    schemaItem[_callerId_] = options.callerId;
     this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
     if (absentPaths.size) {
       // console.log(`Missed:\n${[...absentPaths].join('\n')}`);

@@ -15,6 +15,7 @@ const _parentSchemaItem_ = Symbol.for('_parentSchemaItem_');
 const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
 const _value_ = Symbol.for('_value_');
+const _callerId_ = Symbol.for('_callerId_');
 const _initialized_ = Symbol.for('_initialized_');
 const _lng_ = Symbol.for('_lng_');
 const _onChange_ = Symbol.for('_onChange_');
@@ -128,22 +129,10 @@ module.exports = class Schema extends Utils {
    */
   _traverseSchema (schemaFragment, options, itemCallback, valueCallback, propertyCallback) {
     const cs = this;
-    const {
-      pathArr = [],
-      itMustBeAn
-    } = options || {};
-
+    const { pathArr = [], itMustBeAn } = options || {};
     // eslint-disable-next-line camelcase,prefer-const
-    const {
-      id,
-      value,
-      type,
-      [_isRootNode_]: isRoot
-    } = schemaFragment || {};
-    let {
-      [_isSection_]: isSection,
-      [_isProp_]: isProp
-    } = schemaFragment || {};
+    const { id, value, type, [_isRootNode_]: isRoot } = schemaFragment || {};
+    let { [_isSection_]: isSection, [_isProp_]: isProp } = schemaFragment || {};
     isSection = isSection || itMustBeAn === 'ITEM';
     isProp = isProp || itMustBeAn === 'PROPERTY';
 
@@ -364,7 +353,8 @@ module.exports = class Schema extends Utils {
                     newValue,
                     schemaItem,
                     csInstance: cs,
-                    isJustInitialized
+                    isJustInitialized,
+                    callerId: this[_callerId_]
                   });
                 }
               }
