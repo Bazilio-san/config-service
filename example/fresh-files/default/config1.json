@@ -1,10 +1,10 @@
 {
-    "div11": {
-        "div21": {
-            "div31": {
-                "div41": "actual string"
-            }
-        }
-    },
-    "no_in_schema": "100-00-00 - This value is not in the schema. It remains in the config, but there is no access to it."
+  "div11": {
+    "div21": {
+      "div31": {
+        "div41": "actual string"
+      }
+    }
+  },
+  "no_in_schema": "100-00-00 - This value is not in the schema. It remains in the config, but there is no access to it."
 }

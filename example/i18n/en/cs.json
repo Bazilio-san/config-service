@@ -1,40 +1,40 @@
 {
-    "__root__title": "ROOT TITLE",
-    "config1": {
-        "title": "TITLE config1",
-        "descr": "DESCRIPTION HEADER",
-        "div10": {
-            "title": "TITLE config1.div10"
-        },
-        "div11": {
-            "title": "TITLE config1.div11",
-            "div21": {
-                "title": "TITLE config1.div11.div21",
-                "div31": {
-                    "title": "TITLE config1.div11.div21.div31",
-                    "div41": {
-                        "title": "TITLE config1.div11.div21.div31.div41"
-                    }
-                }
-            }
-        }
+  "__root__title": "ROOT TITLE",
+  "config1": {
+    "title": "TITLE config1",
+    "descr": "DESCRIPTION HEADER",
+    "div10": {
+      "title": "TITLE config1.div10"
     },
-    "config-2": {
-        "title": "TITLE config-2",
-        "div21": {
-            "title": "TITLE config-2.div21"
-        },
-        "div22": {
-            "title": "TITLE config-2.div22"
-        }
-    },
-    "config3": {
-        "title": "TITLE config 3",
+    "div11": {
+      "title": "TITLE config1.div11",
+      "div21": {
+        "title": "TITLE config1.div11.div21",
         "div31": {
-            "title": "TITLE config 3.div31"
-        },
-        "div32": {
-            "title": "TITLE config 3.div32"
+          "title": "TITLE config1.div11.div21.div31",
+          "div41": {
+            "title": "TITLE config1.div11.div21.div31.div41"
+          }
         }
+      }
     }
+  },
+  "config-2": {
+    "title": "TITLE config-2",
+    "div21": {
+      "title": "TITLE config-2.div21"
+    },
+    "div22": {
+      "title": "TITLE config-2.div22"
+    }
+  },
+  "config3": {
+    "title": "TITLE config 3",
+    "div31": {
+      "title": "TITLE config 3.div31"
+    },
+    "div32": {
+      "title": "TITLE config 3.div32"
+    }
+  }
 }
