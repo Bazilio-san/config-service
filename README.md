@@ -1000,15 +1000,16 @@ For this purpose, callback functions are passed to the service constructor as pa
     <tbody>
     <tr>
         <td>
-            <b>onChange</b> (<em>paramPath</em>, <em>newValue</em>, <em>schemaItem</em>, <em>csInstance</em>, <em>isJustInitialized</em>)
+            <b>onChange</b> ({<em>paramPath</em>, <em>oldValue</em>, <em>newValue</em>, <em>schemaItem</em>, <em>csInstance</em>, <em>isJustInitialized</em>})
         </td>
         <td>
             <ul>
                 <li><em>paramPath</em> {String} - contains the path to the updated parameter</li>
-                <li><em>newValue</em> {*} - value of updated  parameter</li>
+                <li><em>oldValue</em> {any} - old value of updated  parameter</li>
+                <li><em>newValue</em> {any} - value of updated  parameter</li>
                 <li><em>schemaItem</em> {Object} - reference to a fragment of the schema containing the changed value.
                     It contains additional information that may be useful when processing an event.</li>
-                <li><em>cs</em> {Schema} - reference to a Schema instance</li>
+                <li><em>csInstance</em> {Schema} - reference to a Schema instance</li>
                 <li><em>isJustInitialized</em> {Boolean} - An indication that this is the initialization of the parameter value
                     when creating an instance of the class. When the value is set via <b>set()</b>, this flag will be <b>false</b></li>
                 <br>

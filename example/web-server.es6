@@ -29,8 +29,8 @@ const serviceOptions = {
     i18nNS: 'cs',
     translatedProperties: ['descr'],
     _afLibEcho: echo,
-    onChange: (paramPath, newValue, schemaItem, instance) => {
-        instance.testOnChange = paramPath + newValue;
+    onChange: ({ paramPath, newValue, schemaItem, csInstance }) => {
+        csInstance.testOnChange = paramPath + newValue;
     },
     onSaveNamedConfig: (configName, instance) => {
         instance.testOnSaveNamedConfig = configName;
