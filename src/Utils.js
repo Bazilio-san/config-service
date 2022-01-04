@@ -20,7 +20,7 @@ module.exports = class Utils {
      * @param {Object} [errorLogger] - An object that provides the 'error' method,
      * which saves an error message to the log
      */
-    this.errorLogger = errorLogger && typeof errorLogger === 'function' ? errorLogger : null;
+    this.errorLogger = typeof errorLogger?.error === 'function' ? errorLogger : null;
     this.registerTypes(userTypes);
     this.lib = __;
   }
