@@ -73,9 +73,9 @@ const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) 
   });
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
-    const { propPath, paramValue } = request;
+    const { propPath, paramValue, callerId = socket.id } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
-    const isSet = configService.set(propPath, paramValue, { callerId: socket.id });
+    const isSet = configService.set(propPath, paramValue, { callerId });
     socket.applyFn(args, isSet);
   });
 
@@ -114,8 +114,8 @@ module.exports = class REST extends API {
 
     this.initSocketBroadcast = (io) => {
       let broadcast = (data) => {
-        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem } = data;
-        const response = { paramPath, oldValue, newValue, isJustInitialized };
+        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem, callerId } = data;
+        const response = { paramPath, oldValue, newValue, isJustInitialized, callerId };
         if (extended && schemaItem.type !== 'section') {
           response.schemaItem = this.cloneDeep(schemaItem, { pureObj: true, removeSymbols: true });
         }
