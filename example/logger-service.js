@@ -6,11 +6,10 @@ let globalLogger;
 
 function getLogger () {
   if (!globalLogger) {
-    const { logger } = getAFLogger({
+    globalLogger = getAFLogger({
       minLevel: 'silly',
       name: 'config-service'
     });
-    globalLogger = logger;
   }
   return globalLogger;
 }

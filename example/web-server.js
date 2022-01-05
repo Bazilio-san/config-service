@@ -9,7 +9,7 @@ const app = require('express')();
 const webServer = require('http').Server(app);
 const echo = require('af-echo');
 
-const { errorLogger, loggerFinish } = require('./logger-service.js');
+const { fileLogger } = require('./logger-service.js');
 const i18n = require('./i18n/i18n.js')();
 
 if (!process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR) {
@@ -23,8 +23,8 @@ tu.prepareTestEnv(false);
 const REST = require('../src/REST.js');
 
 const serviceOptions = {
-  errorLogger,
-  loggerFinish,
+  errorLogger: fileLogger.error,
+  loggerFinish: fileLogger.loggerFinish,
   i18n,
   i18nNS: 'cs',
   translatedProperties: ['descr'],

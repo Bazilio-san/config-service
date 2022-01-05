@@ -7,7 +7,7 @@ process.env.SUPPRESS_NO_CONFIG_WARNING = 1;
 
 const { clearTestEnv } = require('./test-utils.js')({ __dirname });
 
-const { loggerFinish } = require('../example/logger-service.js');
+const { fileLogger } = require('../example/logger-service.js');
 
 describe('_INIT: Testing environment should be set properly', () => {
   it('NODE_ENV should be "testing"', () => {
@@ -26,5 +26,5 @@ describe('_INIT: Testing environment should be set properly', () => {
 
 after(() => {
   clearTestEnv();
-  loggerFinish(0);
+  fileLogger.loggerFinish(0);
 });

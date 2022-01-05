@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 const echo = require('af-echo');
 const path = require('path');
 
-const { errorLogger, loggerFinish } = require('../example/logger-service.js');
+const { fileLogger } = require('../example/logger-service.js');
 const i18n = require('../example/i18n/i18n.js')();
 
 const Utils = require('../src/Utils.js');
@@ -13,8 +13,8 @@ const API = require('../src/API.js');
 const REST = require('../src/REST.js');
 
 const serviceOptions = {
-  errorLogger,
-  loggerFinish,
+  errorLogger: fileLogger.error,
+  loggerFinish: fileLogger.loggerFinish,
   i18n,
   i18nNS: 'cs',
   translatedProperties: ['descr'],
