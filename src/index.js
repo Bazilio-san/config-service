@@ -6,11 +6,14 @@ const REST = require('./REST.js');
 
 let globalRESTInstance;
 
-const getRESTInstance = (serviceOptions) => {
-  if (globalRESTInstance && globalRESTInstance instanceof REST) {
-    return globalRESTInstance;
+const getRESTInstance = (serviceOptions, forceNew = false) => {
+  if (forceNew) {
+    return new REST(serviceOptions);
   }
-  return new REST(serviceOptions);
+  if (!globalRESTInstance || !(globalRESTInstance instanceof REST)) {
+    globalRESTInstance = new REST(serviceOptions);
+  }
+  return globalRESTInstance;
 };
 
 module.exports = {
