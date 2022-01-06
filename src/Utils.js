@@ -252,11 +252,8 @@ module.exports = class Utils {
 
   /**
    * Expose method cloneDeep from lib.
-   *
-   * @param {Array} args
-   * @return {Object}
    */
-  cloneDeep (...args) {
-    return __.cloneDeep(...args);
+  cloneDeep (obj, options) {
+    return __.cloneDeep(obj, options);
   }
 };

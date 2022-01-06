@@ -5,7 +5,7 @@ const fs = require('fs');
 const __ = require('./lib.js');
 const API = require('./API.js');
 
-const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) => {
+const addSocketListeners = ({ socket, debug, prefix, configService }) => {
   const debugSocket = typeof debug === 'function'
     ? debug('config-service:socket')
     : () => {
@@ -39,17 +39,19 @@ const addSocketListeners = ({ socket, /* io, */ debug, prefix, configService }) 
     };
   }
 
-  // if (configService.accessToken) {
-  //     io.use((socket_, next) => {
-  //         const { handshake: { headers: { authorization } = {} } = {} } = socket || {};
-  //         const inToken = (authorization || '').replace(/^Bearer +/, '');
-  //         if (configService.accessToken !== inToken) {
-  //             next(new Error(`Authentication error. Invalid token: ${token}`));
-  //             return;
-  //         }
-  //         next();
-  //     });
-  // }
+  if (configService.accessToken) {
+    const inToken = (socket?.handshake?.headers?.authorization ?? '').replace(/^Bearer +/, '');
+    if (configService.accessToken !== inToken) {
+      const msg = 'Authentication error. Invalid token';
+      socket.prependAny(async (event, ...packetDecoded) => {
+        if (event.startsWith(`${prefix}/`)) {
+          debugSocket(`${msg}: ${inToken}`);
+          socket.applyFn(packetDecoded, msg);
+        }
+      });
+      return;
+    }
+  }
 
   socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
     const lng = (request.lng || '').substr(0, 2).toLowerCase();
@@ -105,7 +107,7 @@ module.exports = class REST extends API {
 
     const { prefix = 'cs', debug, broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
 
-    this.initSocket = ({ socket, io }) => addSocketListeners({ socket, io, debug, prefix, configService: this });
+    this.initSocket = ({ socket }) => addSocketListeners({ socket, debug, prefix, configService: this });
     const debugIO = typeof debug === 'function'
       ? debug('config-service:io')
       : () => {
