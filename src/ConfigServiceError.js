@@ -12,7 +12,7 @@ class ConfigServiceError extends Error {
     this.name = 'ConfigServiceError';
 
     const { _afLibEcho, errorLogger } = instance || {};
-    const isTesting = process.env.NODE_ENV === 'testing';
+    const isTesting = process.env.NODE_ENV === 'test';
     if (isTesting) {
       // eslint-disable-next-line no-console
       console.log('\x1b[103;30m==================== expected test error ======================\x1b[0m');
@@ -21,7 +21,7 @@ class ConfigServiceError extends Error {
       _afLibEcho.mErr(err, {
         msg,
         errorLogger,
-        noStack: isTesting && !process.env.CS_ERROR_SHOW_STACK
+        noStack: isTesting && !process.env.CS_ERROR_SHOW_STACK,
       });
     } else if (errorLogger) {
       errorLogger.error(msg);

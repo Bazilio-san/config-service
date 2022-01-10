@@ -53,11 +53,38 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
     }
   }
 
+  /**
+   * @param {any[]} args
+   * @param {any} result
+   * @returns {ISocketReturn<any>}
+   */
+  function applyResult (args, result) {
+    const ret = { result };
+    socket.applyFn(args, { result });
+    return ret;
+  }
+
+  /**
+   * @param {any[]} args
+   * @param {string} error
+   * @returns {ISocketReturn<string>}
+   */
+  function applyError (args, error) {
+    const ret = { error };
+    socket.applyFn(args, { error });
+    return ret;
+  }
+
   socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
     const lng = (request.lng || '').substr(0, 2).toLowerCase();
     debugSocket(`GET SCHEMA: lng = ${lng}`);
-    const schema = configService.getSchema(request.propPath, lng);
-    socket.applyFn(args, schema);
+    let schema;
+    try {
+      schema = configService.getSchema(request.propPath, lng);
+    } catch (err) {
+      socket.applyFn(args, schema || null);
+    }
+    socket.applyFn(args, schema || null);
   });
 
   socket.on(`${prefix}/get-ex`, async (request, ...args) => {
@@ -117,7 +144,9 @@ module.exports = class REST extends API {
     this.initSocketBroadcast = (io) => {
       let broadcast = (data) => {
         const { paramPath, oldValue, newValue, isJustInitialized, schemaItem, callerId } = data;
-        const response = { paramPath, oldValue, newValue, isJustInitialized, callerId };
+        const response = {
+          paramPath, oldValue, newValue, isJustInitialized, callerId,
+        };
         if (extended && schemaItem.type !== 'section') {
           response.schemaItem = this.cloneDeep(schemaItem, { pureObj: true, removeSymbols: true });
         }
@@ -166,8 +195,8 @@ module.exports = class REST extends API {
         ...err,
         message,
         name: 'ConfigServiceError',
-        help: `${this.serviceUrlPath}/help`
-      }
+        help: `${this.serviceUrlPath}/help`,
+      },
     });
   }
 
@@ -255,12 +284,12 @@ module.exports = class REST extends API {
       set: setValue,
       list: getConfigList,
       lng,
-      'translation-template': translationTemplate
+      'translation-template': translationTemplate,
     } = query;
     let {
       'get-schema': getSchema,
       'plain-params-list': plainParamsList,
-      'plain-params-list-ex': plainParamsListEx
+      'plain-params-list-ex': plainParamsListEx,
     } = query;
 
     if (getValue !== undefined) {

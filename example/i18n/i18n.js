@@ -27,7 +27,7 @@ module.exports = () => {
       backend: {
         loadPath: `${__dirname}/{lng}/{ns}.json`,
         addPath: `${__dirname}/{ns}.missing.json`,
-        jsonIndent: 4
+        jsonIndent: 4,
       },
       saveMissingTo: 'all',
       detection: {
@@ -42,12 +42,12 @@ module.exports = () => {
         lookupFromPathIndex: 0,
 
         // cache user language
-        caches: false // ['cookie']
+        caches: false, // ['cookie']
       },
       interpolation: {
         prefix: '{',
-        suffix: '}'
-      }
+        suffix: '}',
+      },
       // eslint-disable-next-line no-unused-vars
     }, () => null);
 

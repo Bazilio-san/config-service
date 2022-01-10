@@ -22,5 +22,5 @@ module.exports = {
   Params,
   API,
   REST,
-  getRESTInstance
+  getRESTInstance,
 };

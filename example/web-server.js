@@ -16,7 +16,7 @@ if (!process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR) {
   process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = path.resolve(path.join(__dirname, './config/service'));
 }
 
-const tu = require('../test/test-utils.js')({ __dirname });
+const tu = require('../__tests__/test-utils.js')({ __dirname });
 
 tu.prepareTestEnv(false);
 
@@ -34,7 +34,7 @@ const serviceOptions = {
   },
   onSaveNamedConfig: (configName, instance) => {
     instance.testOnSaveNamedConfig = configName;
-  }
+  },
 };
 
 if (process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH) {

@@ -1,4 +1,4 @@
-/test/
+/__tests__/
 /example/
 /.run/
 /.editorconfig

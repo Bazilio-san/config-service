@@ -8,7 +8,7 @@ function getLogger () {
   if (!globalLogger) {
     globalLogger = getAFLogger({
       minLevel: 'silly',
-      name: 'config-service'
+      name: 'config-service',
     });
   }
   return globalLogger;

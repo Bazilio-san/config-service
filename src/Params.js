@@ -116,7 +116,7 @@ module.exports = class Params extends Schema {
       [_onChange_]: onChange,
       [_isSection_]: isSection,
       [_isProp_]: isProp,
-      path: paramPath
+      path: paramPath,
     } = schemaItem || {};
     if (isSection && Array.isArray(value)) {
       if (__.canDeepDive(currentValue)) {
@@ -242,7 +242,7 @@ module.exports = class Params extends Schema {
       paramPath: paramPath_,
       configName,
       pathParent,
-      lastParamName
+      lastParamName,
     } = this._parseParamPathFragment(paramPath, options);
     const schemaItem = this._getSchemaFragment(pathArr, this.schema, options);
     return {
@@ -252,7 +252,7 @@ module.exports = class Params extends Schema {
       lastParamName: schemaItem[_isRootNode_] ? '__root__' : lastParamName,
       configName,
       schemaItem,
-      schemaDataType: schemaItem.type
+      schemaDataType: schemaItem.type,
     };
   }
 
