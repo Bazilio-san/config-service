@@ -1,6 +1,6 @@
 {
   "name": "config-srv",
-  "version": "2.0.19",
+  "version": "2.0.20",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/index.js",
   "scripts": {
@@ -40,7 +40,7 @@
   ],
   "devDependencies": {
     "af-echo": "^0.0.16",
-    "af-logger": "^2.0.15",
+    "af-logger": "^2.0.17",
     "chai": "^4.3.4",
     "eslint": "^8.4.1",
     "eslint-config-airbnb-base": "^15.0.0",
