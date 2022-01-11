@@ -53,38 +53,65 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
     }
   }
 
+  /**
+   * @param {any[]} args
+   * @param {any} result
+   * @returns {ISocketReturn<any>}
+   */
+  function applyResult (args, result) {
+    const ret = { result };
+    socket.applyFn(args, { result });
+    return ret;
+  }
+
+  /**
+   * @param {any[]} args
+   * @param {string} error
+   * @returns {ISocketReturn<string>}
+   */
+  function applyError (args, error) {
+    const ret = { error };
+    socket.applyFn(args, { error });
+    return ret;
+  }
+
+  function doit (fnName, argsFn, args) {
+    let result;
+    try {
+      result = configService[fnName](argsFn);
+      socket.applyFn(args, { result });
+    } catch (err) {
+      socket.applyFn(args, { error: err.message });
+    }
+  }
+
   socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
     const lng = (request.lng || '').substr(0, 2).toLowerCase();
     debugSocket(`GET SCHEMA: lng = ${lng}`);
-    const schema = configService.getSchema(request.propPath, lng);
-    socket.applyFn(args, schema || null);
+    doit('getSchema', [request.propPath, lng], args);
   });
 
   socket.on(`${prefix}/get-ex`, async (request, ...args) => {
     const { propPath } = request;
     debugSocket(`GET EX: propPath = ${propPath}`);
-    const data = configService.getEx(propPath);
-    socket.applyFn(args, data || null);
+    doit('getEx', [propPath], args);
   });
 
   socket.on(`${prefix}/get`, async (request, ...args) => {
     const { propPath } = request;
     debugSocket(`GET: propPath = ${propPath}`);
-    const data = configService.get(propPath);
-    socket.applyFn(args, data || null);
+    doit('get', [propPath], args);
   });
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
     const { propPath, paramValue, callerId = socket.id } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
-    const isSet = configService.set(propPath, paramValue, { callerId });
-    socket.applyFn(args, isSet || null);
+    doit('get', [propPath, paramValue, { callerId }], args);
   });
 
   socket.on(`${prefix}/params-list`, async ({ node, isExtended = false }, ...args) => {
-    const paramList = configService.plainParamsList(node, { isExtended });
     debugSocket(`GET: plainParamsList / node = ${node}`);
-    socket.applyFn(args, [paramList]);
+    doit('get', [node, { isExtended }], args);
   });
 };
 
