@@ -53,29 +53,7 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
     }
   }
 
-  /**
-   * @param {any[]} args
-   * @param {any} result
-   * @returns {ISocketReturn<any>}
-   */
-  function applyResult (args, result) {
-    const ret = { result };
-    socket.applyFn(args, { result });
-    return ret;
-  }
-
-  /**
-   * @param {any[]} args
-   * @param {string} error
-   * @returns {ISocketReturn<string>}
-   */
-  function applyError (args, error) {
-    const ret = { error };
-    socket.applyFn(args, { error });
-    return ret;
-  }
-
-  function doit (fnName, argsFn, args) {
+  function exec (fnName, argsFn, args) {
     let result;
     try {
       result = configService[fnName](argsFn);
@@ -88,30 +66,30 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
   socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
     const lng = (request.lng || '').substr(0, 2).toLowerCase();
     debugSocket(`GET SCHEMA: lng = ${lng}`);
-    doit('getSchema', [request.propPath, lng], args);
+    exec('getSchema', [request.propPath, lng], args);
   });
 
   socket.on(`${prefix}/get-ex`, async (request, ...args) => {
     const { propPath } = request;
     debugSocket(`GET EX: propPath = ${propPath}`);
-    doit('getEx', [propPath], args);
+    exec('getEx', [propPath], args);
   });
 
   socket.on(`${prefix}/get`, async (request, ...args) => {
     const { propPath } = request;
     debugSocket(`GET: propPath = ${propPath}`);
-    doit('get', [propPath], args);
+    exec('get', [propPath], args);
   });
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
     const { propPath, paramValue, callerId = socket.id } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
-    doit('get', [propPath, paramValue, { callerId }], args);
+    exec('get', [propPath, paramValue, { callerId }], args);
   });
 
   socket.on(`${prefix}/params-list`, async ({ node, isExtended = false }, ...args) => {
     debugSocket(`GET: plainParamsList / node = ${node}`);
-    doit('get', [node, { isExtended }], args);
+    exec('get', [node, { isExtended }], args);
   });
 };
 
