@@ -56,7 +56,7 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
   function exec (fnName, argsFn, args) {
     let result;
     try {
-      result = configService[fnName](argsFn);
+      result = configService[fnName](...argsFn);
       socket.applyFn(args, { result });
     } catch (err) {
       socket.applyFn(args, { error: err.message });
@@ -84,12 +84,12 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
   socket.on(`${prefix}/set`, async (request, ...args) => {
     const { propPath, paramValue, callerId = socket.id } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
-    exec('get', [propPath, paramValue, { callerId }], args);
+    exec('set', [propPath, paramValue, { callerId }], args);
   });
 
   socket.on(`${prefix}/params-list`, async ({ node, isExtended = false }, ...args) => {
     debugSocket(`GET: plainParamsList / node = ${node}`);
-    exec('get', [node, { isExtended }], args);
+    exec('plainParamsList', [node, { isExtended }], args);
   });
 };
 
