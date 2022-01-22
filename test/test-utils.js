@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-expressions, max-len,no-console */
 const fse = require('fs-extra');
-const echo = require('af-echo');
 const path = require('path');
 
-const { fileLogger } = require('../example/logger-service.js');
+const { logger, fileLogger } = require('../example/logger-service.js');
 const i18n = require('../example/i18n/i18n.js')();
 
 const Utils = require('../src/Utils.js');
@@ -13,13 +12,12 @@ const API = require('../src/API.js');
 const REST = require('../src/REST.js');
 
 const serviceOptions = {
-  errorLogger: fileLogger.error,
+  logger,
   loggerFinish: fileLogger.loggerFinish,
   i18n,
   i18nNS: 'cs',
   translatedProperties: ['descr'],
-  writeMissingTranslate: true,
-  _afLibEcho: echo
+  writeMissingTranslate: true
 };
 
 const SCHEMA_DIR = './example/config/service';

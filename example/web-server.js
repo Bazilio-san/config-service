@@ -7,9 +7,8 @@ process.env.NODE_CONFIG_DIR = path.resolve(`${__dirname}/config`);
 const express = require('express');
 const app = require('express')();
 const webServer = require('http').Server(app);
-const echo = require('af-echo');
 
-const { fileLogger } = require('./logger-service.js');
+const { logger, fileLogger, echo, color } = require('./logger-service.js');
 const i18n = require('./i18n/i18n.js')();
 
 if (!process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR) {
@@ -23,12 +22,11 @@ tu.prepareTestEnv(false);
 const REST = require('../src/REST.js');
 
 const serviceOptions = {
-  errorLogger: fileLogger.error,
+  logger,
   loggerFinish: fileLogger.loggerFinish,
   i18n,
   i18nNS: 'cs',
   translatedProperties: ['descr'],
-  _afLibEcho: echo,
   onChange: ({ paramPath, newValue, csInstance }) => {
     csInstance.testOnChange = paramPath + newValue;
   },
@@ -59,7 +57,7 @@ const httpPort = 8683;
 const httpHost = 'localhost';
 
 function g (m) {
-  echo.echo(m, { colorNum: echo.Green, bold: true });
+  echo.echo(m, { colorNum: color.greenN, bold: true });
 }
 
 webServer.listen(httpPort, httpHost, () => {

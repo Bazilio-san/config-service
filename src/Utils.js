@@ -10,17 +10,12 @@ const ConfigServiceError = require('./ConfigServiceError.js');
 
 module.exports = class Utils {
   constructor (serviceOptions = {}) {
-    const { errorLogger, _afLibEcho, userTypes } = serviceOptions;
+    const { logger, userTypes } = serviceOptions;
     /**
-     * @param {Object} [_afLibEcho] - An object that provides the 'mErr' method, which prints an error message
-     * to the console and passes the message to errorLogger
+     * @param {LoggerEx} [logger] - An object that provides the 'mErr' method,
+     * which prints an error message to the console
      */
-    this._afLibEcho = _afLibEcho;
-    /**
-     * @param {Object} [errorLogger] - An object that provides the 'error' method,
-     * which saves an error message to the log
-     */
-    this.errorLogger = typeof errorLogger?.error === 'function' ? errorLogger : null;
+    this.logger = logger;
     this.registerTypes(userTypes);
     this.lib = __;
   }

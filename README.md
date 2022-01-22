@@ -922,7 +922,7 @@ Constructor arguments
         <td>If 'true', then a file of missing translations will be generated</td>
     </tr>
     <tr>
-        <td>errorLogger</td>
+        <td>logger</td>
         <td>object</td>
         <td></td>
         <td>An object that provides the 'error' method, which saves an error message to the log</td>
