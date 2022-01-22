@@ -42,11 +42,11 @@ const addSocketListeners = ({ socket, debug, prefix, configService }) => {
   if (configService.accessToken) {
     const inToken = (socket?.handshake?.headers?.authorization ?? '').replace(/^Bearer +/, '');
     if (configService.accessToken !== inToken) {
-      const msg = 'Authentication error. Invalid token';
+      const error = 'Authentication error. Invalid token';
       socket.prependAny(async (event, ...packetDecoded) => {
         if (event.startsWith(`${prefix}/`)) {
-          debugSocket(`${msg}: ${inToken}`);
-          socket.applyFn(packetDecoded, msg);
+          debugSocket(`${error}: ${inToken}`);
+          socket.applyFn(packetDecoded, { error });
         }
       });
       return;
