@@ -53,41 +53,65 @@ const addSocketListeners = ({ socket, debug, prefix, configService, ignoreSocket
     }
   }
 
-  function exec (fnName, argsFn, args) {
+  function exec (fnName, csMethodArgs, socketArgs) {
     let result;
     try {
-      result = configService[fnName](...argsFn);
-      socket.applyFn(args, { result });
+      result = configService[fnName](...csMethodArgs);
+      socket.applyFn(socketArgs, { result });
     } catch (err) {
-      socket.applyFn(args, { error: err.message });
+      socket.applyFn(socketArgs, { error: err.message });
     }
   }
 
+  function checkRequestArgs (request, args, method) {
+    if (typeof request === 'function') {
+      socket.applyFn([request, ...args], { error: `Arguments of "${method}" method is not specified` });
+      return false;
+    }
+    return true;
+  }
+
   socket.on(`${prefix}/get-schema`, async (request = {}, ...args) => {
+    if (!checkRequestArgs(request, args, 'get-schema')) {
+      return;
+    }
     const lng = (request.lng || '').substr(0, 2).toLowerCase();
     debugSocket(`GET SCHEMA: lng = ${lng}`);
     exec('getSchema', [request.propPath, lng], args);
   });
 
   socket.on(`${prefix}/get-ex`, async (request, ...args) => {
+    if (!checkRequestArgs(request, args, 'get-ex')) {
+      return;
+    }
     const { propPath } = request;
     debugSocket(`GET EX: propPath = ${propPath}`);
     exec('getEx', [propPath], args);
   });
 
   socket.on(`${prefix}/get`, async (request, ...args) => {
+    if (!checkRequestArgs(request, args, 'get')) {
+      return;
+    }
     const { propPath } = request;
     debugSocket(`GET: propPath = ${propPath}`);
     exec('get', [propPath], args);
   });
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
+    if (!checkRequestArgs(request, args, 'set')) {
+      return;
+    }
     const { propPath, paramValue, callerId = socket.id } = request;
     debugSocket(`SET: ${propPath} = ${JSON.stringify(paramValue)}`);
     exec('set', [propPath, paramValue, { callerId }], args);
   });
 
-  socket.on(`${prefix}/params-list`, async ({ node, isExtended = false }, ...args) => {
+  socket.on(`${prefix}/params-list`, async (request, ...args) => {
+    if (!checkRequestArgs(request, args, 'params-list')) {
+      return;
+    }
+    const { node, isExtended = false } = request;
     debugSocket(`GET: plainParamsList / node = ${node}`);
     exec('plainParamsList', [node, { isExtended }], args);
   });
