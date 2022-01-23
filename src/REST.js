@@ -5,7 +5,7 @@ const fs = require('fs');
 const __ = require('./lib.js');
 const API = require('./API.js');
 
-const addSocketListeners = ({ socket, debug, prefix, configService, ignoreAuth }) => {
+const addSocketListeners = ({ socket, debug, prefix, configService, ignoreSocketAuth }) => {
   const debugSocket = typeof debug === 'function'
     ? debug('config-service:socket')
     : () => {
@@ -39,7 +39,7 @@ const addSocketListeners = ({ socket, debug, prefix, configService, ignoreAuth }
     };
   }
 
-  if (configService.accessToken && !ignoreAuth) {
+  if (configService.accessToken && !ignoreSocketAuth) {
     const inToken = (socket?.handshake?.headers?.authorization || socket?.handshake?.auth?.token || '').replace(/^Bearer +/, '');
     if (configService.accessToken !== inToken) {
       const error = 'Authentication error. Invalid token';
@@ -112,7 +112,7 @@ module.exports = class REST extends API {
 
     const { prefix = 'cs', debug, broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
 
-    this.initSocket = ({ socket }, ignoreAuth = false) => addSocketListeners({ socket, debug, prefix, ignoreAuth, configService: this });
+    this.initSocket = ({ socket }, ignoreSocketAuth = false) => addSocketListeners({ socket, debug, prefix, ignoreSocketAuth, configService: this });
     const debugIO = typeof debug === 'function'
       ? debug('config-service:io')
       : () => {
