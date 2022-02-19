@@ -5,12 +5,7 @@ const fs = require('fs');
 const __ = require('./lib.js');
 const API = require('./API.js');
 
-const addSocketListeners = ({ socket, debug, prefix, configService, ignoreSocketAuth }) => {
-  const debugSocket = typeof debug === 'function'
-    ? debug('config-service:socket')
-    : () => {
-    };
-
+const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignoreSocketAuth }) => {
   if (typeof socket.applyFn !== 'function') {
     socket.getCallback = (args) => {
       if (!args) {
@@ -134,13 +129,18 @@ module.exports = class REST extends API {
 
     // SOCKET IO
 
-    const { prefix = 'cs', debug, broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
+    const { prefix = 'cs', broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
+    let debugIO = () => {};
+    let debugSocket = () => {};
+    this.debugHTTP = () => {};
+    if (typeof this.debug === 'function') {
+      debugIO = this.debug('config-service:io');
+      debugSocket = this.debug('config-service:socket');
+      this.debugHTTP = this.debug('config-service:http');
+    }
 
-    this.initSocket = ({ socket }, ignoreSocketAuth = false) => addSocketListeners({ socket, debug, prefix, ignoreSocketAuth, configService: this });
-    const debugIO = typeof debug === 'function'
-      ? debug('config-service:io')
-      : () => {
-      };
+    this.initSocket = ({ socket }, ignoreSocketAuth = false) => addSocketListeners({ socket, debugSocket, prefix, ignoreSocketAuth, configService: this });
+
     const emitId = `broadcast/${prefix}/param-changed`;
 
     this.initSocketBroadcast = (io) => {
@@ -209,7 +209,8 @@ module.exports = class REST extends API {
    * @private
    */
   _httpCall (method, options) {
-    const { res, args } = options;
+    const { args, req, res } = options;
+    this.debugHTTP(`Called method: ${method}`);
     try {
       const json = method.apply(this, args);
       res.type('json');

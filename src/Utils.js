@@ -10,11 +10,12 @@ const ConfigServiceError = require('./ConfigServiceError.js');
 
 module.exports = class Utils {
   constructor (serviceOptions = {}) {
-    const { logger, userTypes } = serviceOptions;
+    const { logger, userTypes, debug } = serviceOptions;
     /**
      * @param {LoggerEx} [logger] - An object that provides the 'mErr' method,
      * which prints an error message to the console
      */
+    this.debug = debug;
     this.logger = logger;
     this.registerTypes(userTypes);
     this.lib = __;
