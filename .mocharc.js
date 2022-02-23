@@ -1,1 +1,1 @@
-require('chai/register-expect');  // Using Expect style
+require('chai/register-expect.js');  // Using Expect style

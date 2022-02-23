@@ -49,9 +49,7 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   }
 
   let { fromService = '' } = socket;
-  if (fromService) {
-    fromService = ` :: from: ${fromService}`;
-  }
+  fromService = ` :: socket${ fromService ? ` :: from: ${fromService}` : ''}`;
 
   function debug (str) {
     if (debugSocket?.enabled) {
@@ -215,9 +213,7 @@ module.exports = class REST extends API {
     const { args, req, res } = options;
     if (this.debugHTTP?.enabled) {
       let fromService = req.get?.('fromService');
-      if (fromService) {
-        fromService = ` :: from: ${fromService}`;
-      }
+      fromService = ` :: HTTP${ fromService ? ` :: from: ${fromService}` : ''}`;
       this.debugHTTP(`Called method: ${method}${fromService}`);
     }
     this.debugHTTP(`Called method: ${method}`);
