@@ -27,6 +27,14 @@ module.exports = class API extends Params {
     }
   }
 
+  _addFrom (options, fnName) {
+    if (!options.callFrom) {
+      options.callFrom = fnName;
+    } else {
+      options.callFrom += ` > ${fnName}`;
+    }
+  }
+
   /**
    * Save a parameter value at a given path
    *
@@ -42,7 +50,7 @@ module.exports = class API extends Params {
    */
   set (paramPath, paramValue, options = {}) {
     try {
-      options.callFrom = options.callFrom || 'set';
+      this._addFrom(options, 'set');
       const {
         pathArr,
         configName
@@ -78,7 +86,7 @@ module.exports = class API extends Params {
    */
   getEx (paramPath, options = {}) {
     try {
-      options.callFrom = options.callFrom || 'getEx';
+      this._addFrom(options, 'getEx');
       const {
         paramPath: paramPath_,
         pathArr,
@@ -116,7 +124,7 @@ module.exports = class API extends Params {
    */
   get (paramPath, options = {}) {
     try {
-      options.callFrom = options.callFrom || 'get';
+      this._addFrom(options, 'get');
       return this._getValues(paramPath, options);
     } catch (err) {
       if (!this.noThrow.get) {
@@ -134,7 +142,7 @@ module.exports = class API extends Params {
    */
   value (paramPath, options = {}) {
     try {
-      options.callFrom = options.callFrom || 'value';
+      this._addFrom(options, 'value');
       return this._getValues(paramPath, options);
     } catch (err) {
       if (!this.noThrow.value) {
@@ -156,7 +164,7 @@ module.exports = class API extends Params {
    */
   getSchema (paramPath, lng, options = {}) {
     try {
-      options.callFrom = options.callFrom || 'getSchema';
+      this._addFrom(options, 'getSchema');
       const localizedSchema = this._getSchemaByLanguage(lng);
       if (!paramPath) {
         return localizedSchema;
@@ -209,17 +217,17 @@ module.exports = class API extends Params {
    */
   plainParamsList (paramPath, options = {}) {
     try {
-        options.callFrom = options.callFrom || 'plainParamsList';
-        const { schemaItem } = this._parseParamPath(paramPath, options);
-        const propList = [];
-        const traverseOptions = {};
-        const propertyCallback = (propertyTypeSchemaItem) => {
-          const { path, value } = propertyTypeSchemaItem;
-          const prop = options.isExtended
-            ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
-            : { path, value };
+      this._addFrom(options, 'plainParamsList');
+      const { schemaItem } = this._parseParamPath(paramPath, options);
+      const propList = [];
+      const traverseOptions = {};
+      const propertyCallback = (propertyTypeSchemaItem) => {
+        const { path, value } = propertyTypeSchemaItem;
+        const prop = options.isExtended
+          ? this.cloneDeep(propertyTypeSchemaItem, { removeSymbols: true, pureObj: true })
+          : { path, value };
         propList.push(prop);
-        };
+      };
       this.traverseSchema(schemaItem, traverseOptions, null, null, propertyCallback);
       return propList;
     } catch (err) {
@@ -258,6 +266,7 @@ module.exports = class API extends Params {
    */
   getTranslationTemplate (options) {
     try {
+      this._addFrom(options, 'getTranslationTemplate');
       options.root = {};
       return this._getTranslationTemplate({ container: options.root }, options);
     } catch (err) {
