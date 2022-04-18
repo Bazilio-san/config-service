@@ -212,8 +212,8 @@ module.exports = class REST extends API {
   _httpCall (method, options) {
     const { args, req, res } = options;
     if (this.debugHTTP?.enabled) {
-      let fromService = req.get?.('fromService');
-      fromService = ` :: HTTP${ fromService ? ` :: from: ${fromService}` : ''}`;
+      let fromService = req.get?.('fromService') || 'Service = undefined';
+      fromService = ` :: HTTP :: from${fromService}`;
       this.debugHTTP(`Called method: ${method}${fromService}`);
     }
     this.debugHTTP(`Called method: ${method}`);
