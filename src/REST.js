@@ -5,6 +5,11 @@ const fs = require('fs');
 const __ = require('./lib.js');
 const API = require('./API.js');
 
+const log = (msg) => {
+  // eslint-disable-next-line no-console
+  console.log(`\x1b[94m[config-service]:\x1b[0m${msg}`);
+};
+
 const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignoreSocketAuth }) => {
   if (typeof socket.applyFn !== 'function') {
     socket.getCallback = (args) => {
@@ -49,7 +54,7 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   }
 
   let { fromService = '' } = socket;
-  fromService = ` :: socket${ fromService ? ` :: from: ${fromService}` : ''}`;
+  fromService = ` :: socket :: ${fromService ? `from: ${fromService}` : 'fromService = undefined'}`;
 
   function debug (str) {
     if (debugSocket?.enabled) {
@@ -58,7 +63,7 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   }
 
   function exec (fnName, csMethodArgs, socketArgs) {
-    debug(`${fnName}${fromService} :: args: ${JSON.stringify(csMethodArgs)}`);
+    log(`${fnName}${fromService} :: args: ${JSON.stringify(csMethodArgs)}`);
 
     let result;
     try {
@@ -73,7 +78,7 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     if (typeof request === 'function') {
       const error = `Arguments of "${method}" method is not specified`;
       socket.applyFn([request, ...args], { error });
-      debug(`ERROR :: ${error} ${fromService} :: args: ${JSON.stringify(args)}`);
+      log(`ERROR :: ${error} ${fromService} :: args: ${JSON.stringify(args)}`);
       return false;
     }
     return true;
@@ -211,11 +216,9 @@ module.exports = class REST extends API {
    */
   _httpCall (method, options) {
     const { args, req, res } = options;
-    if (this.debugHTTP?.enabled) {
-      let fromService = req.get?.('fromService') || 'Service = undefined';
-      fromService = ` :: HTTP :: from${fromService}`;
-      this.debugHTTP(`Called method: ${method}${fromService}`);
-    }
+    const fromService = req.get?.('fromService') || 'Service = undefined';
+    log(`Called HTTP method: ${method}${fromService ? `from: ${fromService}` : 'fromService = undefined'}`);
+
     this.debugHTTP(`Called method: ${method}`);
     try {
       const json = method.apply(this, args);

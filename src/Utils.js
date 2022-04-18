@@ -252,4 +252,12 @@ module.exports = class Utils {
   cloneDeep (obj, options) {
     return __.cloneDeep(obj, options);
   }
+
+  /**
+   * Expose method cloneDeep from lib.
+   */
+  log (msg) {
+    // eslint-disable-next-line no-console
+    console.log(`\x1b[94m[config-service]:\x1b[0m${msg}`);
+  }
 };
