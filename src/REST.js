@@ -217,7 +217,7 @@ module.exports = class REST extends API {
   _httpCall (method, options) {
     const { args, req, res } = options;
     const fromService = req.get?.('fromService') || 'Service = undefined';
-    log(`Called HTTP method: ${method}${fromService ? `from: ${fromService}` : 'fromService = undefined'}`);
+    log(`Called HTTP method: ${method}${fromService ? `\nfrom: ${fromService}` : 'fromService = undefined'}`);
 
     this.debugHTTP(`Called method: ${method}`);
     try {
