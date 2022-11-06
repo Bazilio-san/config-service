@@ -217,9 +217,12 @@ module.exports = class REST extends API {
   _httpCall (method, options) {
     const { args, req, res } = options;
     const fromService = req.get?.('fromService') || 'Service = undefined';
-    log(`Called HTTP method: ${method}${fromService ? `\nfrom: ${fromService}` : 'fromService = undefined'}`);
 
-    this.debugHTTP(`Called method: ${method}`);
+    const methodName = String(method).trim().split(/\s*\(/)[0] || '[failed to get method name]';
+    const msg = `Called HTTP method: ${methodName} ${fromService ? `\nfrom: ${fromService}` : 'fromService = undefined'}`;
+    log(msg);
+
+    this.debugHTTP(msg);
     try {
       const json = method.apply(this, args);
       res.type('json');
