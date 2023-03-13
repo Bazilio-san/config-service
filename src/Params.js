@@ -197,7 +197,7 @@ module.exports = class Params extends Schema {
     }
     let jsonStr;
     try {
-      jsonStr = JSON.stringify(configValue, undefined, this.jsonStringifySpace);
+      jsonStr = this.jsonStringifyCompact(configValue, this.jsonStringifySpace);
     } catch (err) {
       throw this._error(`Could not save named configuration «${
         this._expectedConfigDir}/${configName}.json»`, err); // Not covered with tests
