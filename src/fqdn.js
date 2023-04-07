@@ -47,7 +47,7 @@ const getFQDN = (h, withError, onlyDomain) => {
 
 const fqdnCache = {};
 
-export const getFQDNCached = async (...args) => {
+const getFQDNCached = async (...args) => {
   const hostNameOrIP = args[0] || os.hostname() || '-';
   minimizeCache(fqdnCache, 20);
   if (!fqdnCache[hostNameOrIP]) {
@@ -60,4 +60,11 @@ export const getFQDNCached = async (...args) => {
     }
   }
   return fqdnCache[hostNameOrIP]?.value || null;
+};
+
+module.exports = {
+  fqdnCache,
+  minimizeCache,
+  getFQDN,
+  getFQDNCached
 };

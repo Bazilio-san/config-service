@@ -68,6 +68,7 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     fromService = ` :: socket :: from: ${fromService}`;
   }
 
+  // eslint-disable-next-line no-unused-vars
   function debug (str) {
     if (debugSocket?.enabled) {
       debugSocket(str);

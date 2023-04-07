@@ -258,8 +258,8 @@ module.exports = class Utils {
    */
   jsonStringifyCompact (obj, indent = 2) {
     return JSON.stringify(obj, (key, value) => {
-      if (Array.isArray(value) && !value.some(x => x && typeof x === 'object')) {
-        return `\uE000${JSON.stringify(value.map(v => typeof v === 'string' ? v.replace(/"/g, '\uE001') : v))}\uE000`;
+      if (Array.isArray(value) && !value.some((x) => x && typeof x === 'object')) {
+        return `\uE000${JSON.stringify(value.map((v) => (typeof v === 'string' ? v.replace(/"/g, '\uE001') : v)))}\uE000`;
       }
       return value;
     }, indent)
