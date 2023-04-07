@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const __ = require('./lib.js');
 const API = require('./API.js');
+const { getFQDNCached } = require('./fqdn');
 
 const log = (msg) => {
   // eslint-disable-next-line no-console
@@ -54,7 +55,18 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   }
 
   let { fromService = '' } = socket;
-  fromService = ` :: socket :: ${fromService ? `from: ${fromService}` : 'fromService = undefined'}`;
+  if (!fromService || fromService === 'undefined') {
+    const { address } = socket.handshake || {};
+    if (address) {
+      getFQDNCached(socket.handshake?.address).then((resolved) => {
+        fromService = ` :: socket :: from: ${fromService ? '<not specified>' : fromService} resolved by "${address}" -> "${resolved}"`;
+      });
+    } else {
+      fromService = ` :: socket :: from: ${fromService ? '<not specified>' : fromService}`;
+    }
+  } else {
+    fromService = ` :: socket :: from: ${fromService}`;
+  }
 
   function debug (str) {
     if (debugSocket?.enabled) {
