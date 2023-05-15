@@ -254,21 +254,6 @@ module.exports = class Utils {
   }
 
   /**
-   * Similar to JSON.stringify, but arrays are formed in a compact form
-   */
-  jsonStringifyCompact (obj, indent = 2) {
-    return JSON.stringify(obj, (key, value) => {
-      if (Array.isArray(value) && !value.some((x) => x && typeof x === 'object')) {
-        return `\uE000${JSON.stringify(value.map((v) => (typeof v === 'string' ? v.replace(/"/g, '\uE001') : v)))}\uE000`;
-      }
-      return value;
-    }, indent)
-      .replace(/"\uE000([^\uE000]+)\uE000"/g, (match) => match.substring(2, match.length - 2)
-        .replace(/\\"/g, '"')
-        .replace(/\uE001/g, '\\"'));
-  }
-
-  /**
    * Expose method cloneDeep from lib.
    */
   log (msg) {
