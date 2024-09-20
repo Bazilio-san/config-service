@@ -2,6 +2,7 @@ const Utils = require('./Utils.js');
 const Schema = require('./Schema.js');
 const Params = require('./Params.js');
 const API = require('./API.js');
+const typesX = require('./types.js');
 const REST = require('./REST.js');
 
 let globalRESTInstance;
@@ -22,5 +23,6 @@ module.exports = {
   Params,
   API,
   REST,
-  getRESTInstance
+  getRESTInstance,
+  types: typesX,
 };
