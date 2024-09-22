@@ -321,6 +321,7 @@ module.exports = class REST extends API {
     } = query;
     let {
       'get-schema': getSchema,
+      'get-schema-async': getSchemaAsync,
       'plain-params-list': plainParamsList,
       'plain-params-list-ex': plainParamsListEx
     } = query;
@@ -353,6 +354,12 @@ module.exports = class REST extends API {
         getSchema = '';
       }
       return this._httpCall(this.getSchema, { args: [getSchema, lng], req, res });
+    }
+    if (getSchemaAsync !== undefined) {
+      if (getSchemaAsync === '.') {
+        getSchemaAsync = '';
+      }
+      return this._httpCall(this.getSchemaAsync, { args: [getSchemaAsync, lng], req, res });
     }
     if (getConfigList !== undefined) {
       return this._httpCall(this.list, { args: [], req, res });

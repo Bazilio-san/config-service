@@ -19,6 +19,7 @@ module.exports = class API extends Params {
         get: true,
         value: true,
         getSchema: true,
+        getSchemaAsync: true,
         plainParamsList: true,
         getTranslationTemplate: true
       };
@@ -191,7 +192,7 @@ module.exports = class API extends Params {
       await this.reloadSchema();
       return this.getSchema();
     } catch (err) {
-      if (!this.noThrow.getSchema) {
+      if (!this.noThrow.getSchemaAsync) {
         throw err;
       }
     }
