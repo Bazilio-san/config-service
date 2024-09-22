@@ -984,6 +984,12 @@ If an object is passed, then you can specify separately the methods for which th
 { set: true, get: true }</pre>
 </td>
     </tr>
+    <tr>
+        <td>getSchemaCallback</td>
+        <td>function</td>
+        <td></td>
+        <td>Async function to load schema. If not specified, the schema is loaded from the file</td>
+    </tr>
     </tbody>
 </table>
 

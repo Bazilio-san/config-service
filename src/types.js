@@ -16,7 +16,7 @@ const MIN_LONG = -9223372036854775808;
 // eslint-disable-next-line no-loss-of-precision
 const MAX_LONG = 9223372036854775807;
 
-function numberValidator (newVal, schemaItem, error = {}, isFractional = false) {
+const numberValidator = (newVal, schemaItem, error = {}, isFractional = false) => {
   if (newVal == null) {
     return null;
   }
@@ -65,9 +65,9 @@ function numberValidator (newVal, schemaItem, error = {}, isFractional = false) 
     }
   }
   return val === 0 ? 0 : val;
-}
+};
 
-function booleanValidator (newVal, schemaItem, error = {}) {
+const booleanValidator = (newVal, schemaItem, error = {}) => {
   if (newVal == null) {
     return null;
   }
@@ -98,7 +98,7 @@ function booleanValidator (newVal, schemaItem, error = {}) {
   }
   error.reason = `The expected type is «boolean» or «number» (-1|1|0) or a string ( «true»| «false»). Received type: «${rT}»`;
   return null;
-}
+};
 
 module.exports = {
   json: {
