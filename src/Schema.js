@@ -55,6 +55,7 @@ const _onChange_ = Symbol.for('_onChange_');
  * @property {String}          [title] - Default property title (in the absence of translation)
  * @property {String}          [t]     - title text resource ID
  * @property {schemaValueType} [value] - Property value or underlying structure
+ * @property {any} [i18nOptions]
  */
 
 /**
@@ -615,7 +616,7 @@ module.exports = class Schema extends Utils {
               current = current[left];
             } else {
               if (i18n && i18n.exists(propVal, { lng })) {
-                trans = i18n.t(propVal, { lng });
+                trans = i18n.t(propVal, { lng, ...(schemaItem.i18nOptions || {}) });
               }
               current[left] = trans;
               if (addPaths) {
