@@ -35,9 +35,10 @@ module.exports = class Params extends Schema {
     const { onSaveNamedConfig, jsonStringifySpace, useInit } = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
-    this.defaults = this._getDefaults();
     if (!useInit) {
-      this._reloadConfig().then(() => 0);
+      this._reloadConfig().then(() => {
+        this.defaults = this._getDefaults();
+      });
     }
   }
 
@@ -45,6 +46,7 @@ module.exports = class Params extends Schema {
     await super.init();
     const noReloadSchema = true;
     await this._reloadConfig(noReloadSchema);
+    this.defaults = this._getDefaults();
   }
 
   // ============================ GET VALUES =============================
@@ -320,9 +322,9 @@ module.exports = class Params extends Schema {
    * @param {String[]} pathArr
    * @return {Object} - reference configuration object
    */
-  _getDefaults (schemaValue, valuesContainer = {}, pathArr = []) {
+  _getDefaults (schemaValue = undefined, valuesContainer = {}, pathArr = []) {
     if (!schemaValue) {
-      schemaValue = this.schema.value;
+      schemaValue = this.schema?.value;
     }
 
     if (Array.isArray(schemaValue)) {
