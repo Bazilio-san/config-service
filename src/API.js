@@ -185,6 +185,18 @@ module.exports = class API extends Params {
     }
   }
 
+  async getSchemaAsync (paramPath, lng, options = {}) {
+    try {
+      this._addFrom(options, 'getSchemaAsync');
+      await this.reloadSchema();
+      return this.getSchema();
+    } catch (err) {
+      if (!this.noThrow.getSchema) {
+        throw err;
+      }
+    }
+  }
+
   /**
    * Returns a list of named configuration IDs
    * @return {String[]}

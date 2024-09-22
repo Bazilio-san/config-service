@@ -104,6 +104,13 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     }
   });
 
+  socket.on(`${prefix}/get-schema-async`, async (request = {}, ...args) => {
+    if (checkRequestArgs(request, args, 'get-schema')) {
+      const lng = (request.lng || '').substring(0, 2).toLowerCase();
+      exec('getSchemaAsync', [request.propPath, lng], args);
+    }
+  });
+
   socket.on(`${prefix}/get-ex`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'get-ex')) {
       exec('getEx', [request.propPath], args);
