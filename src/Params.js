@@ -304,7 +304,7 @@ module.exports = class Params extends Schema {
       await this.reloadSchema();
     }
     for (let i = 0; i < this.configNames.length; i++) {
-      const configName = this.configName[i];
+      const configName = this.configNames[i];
       const configValue = this._readNamedConfig(configName);
       await this._updateAndSaveNamedConfig(configName, configValue);
     }
