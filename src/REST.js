@@ -78,10 +78,16 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   function exec (fnName, csMethodArgs, socketArgs) {
     log(`${fnName}${fromService} :: args: ${JSON.stringify(csMethodArgs)}`);
 
-    let result;
     try {
-      result = configService[fnName](...csMethodArgs);
-      socket.applyFn(socketArgs, { result });
+      const method = configService[fnName];
+      if (method?.constructor?.name === 'AsyncFunction') {
+        method.apply(this, csMethodArgs).then((result) => {
+          socket.applyFn(socketArgs, { result });
+        });
+      } else {
+        const result = method.apply(this, csMethodArgs);
+        socket.applyFn(socketArgs, { result });
+      }
     } catch (err) {
       socket.applyFn(socketArgs, { error: err.message });
     }
@@ -244,9 +250,16 @@ module.exports = class REST extends API {
 
     this.debugHTTP(msg);
     try {
-      const json = method.apply(this, args);
-      res.type('json');
-      res.send(json);
+      if (method?.constructor?.name === 'AsyncFunction') {
+        method.apply(this, args).then((json) => {
+          res.type('json');
+          res.send(json);
+        });
+      } else {
+        const json = method.apply(this, args);
+        res.type('json');
+        res.send(json);
+      }
     } catch (err) {
       this._httpErr500(res, err.message, err);
     }
