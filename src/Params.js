@@ -280,7 +280,7 @@ module.exports = class Params extends Schema {
   async _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, options = {}) {
     options.callFrom = options.callFrom || '_updateAndSaveNamedConfig'; // function name to substitute in error message
     if (refreshSchema) {
-      await this._reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
+      await this.reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
     }
     this._fillSchemaWithValues(configName, configValue, options);
     this._saveNamedConfig(configName);
@@ -299,7 +299,7 @@ module.exports = class Params extends Schema {
       throw this._error(`The expected configuration directory is a file: ${this._expectedConfigDir}`);
     }
     if (!noReloadSchema) {
-      await this._reloadSchema();
+      await this.reloadSchema();
     }
     for (let i = 0; i < this.configNames.length; i++) {
       const configName = this.configName[i];

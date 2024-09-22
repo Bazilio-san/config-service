@@ -102,12 +102,12 @@ module.exports = class Schema extends Utils {
     this.getSchemaCallback = getSchemaCallback;
     this.useInit = typeof getSchemaCallback === 'function';
     if (!this.useInit) {
-      this._reloadSchema().then(() => 0);
+      this.reloadSchema().then(() => 0);
     }
   }
 
   async init () {
-    await this._reloadSchema();
+    await this.reloadSchema();
   }
 
   /**
@@ -455,7 +455,7 @@ module.exports = class Schema extends Utils {
    *
    * This flushes the Schema translation cache
    */
-  async _reloadSchema () {
+  async reloadSchema () {
     const schema = typeof this.getSchemaCallback === 'function'
       ? await this.getSchemaCallback()
       : this._loadSchemaFromFile();

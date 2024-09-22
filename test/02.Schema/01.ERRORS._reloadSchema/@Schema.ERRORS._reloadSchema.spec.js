@@ -10,7 +10,7 @@ const {
 
 const configDir = Schema.getConfigDir();
 
-describe('Schema: ERRORS: _reloadSchema()', () => {
+describe('Schema: ERRORS: reloadSchema()', () => {
   before(() => {
     const schemaDir = Schema.getSchemaDir();
     mkd(schemaDir);

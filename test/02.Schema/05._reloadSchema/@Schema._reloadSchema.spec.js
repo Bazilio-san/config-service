@@ -11,7 +11,7 @@ const {
 
 const schemaDir = Schema.getSchemaDir();
 
-describe('Schema: _reloadSchema()', () => {
+describe('Schema: reloadSchema()', () => {
   let instance;
   before(() => {
     prepareTestEnv(false);
@@ -23,7 +23,7 @@ describe('Schema: _reloadSchema()', () => {
   it('When reloading a modified Schema, changes should be visible', async () => {
     expect(instance.schema.value[0].value[0].type).to.eql('string');
     cpc('./schema2.js', `${schemaDir}/schema.js`);
-    await instance._reloadSchema();
+    await instance.reloadSchema();
     expect(instance.schema.value[0].value[0].type).to.eql('array');
   });
 
