@@ -190,7 +190,9 @@ module.exports = class API extends Params {
     try {
       this._addFrom(options, 'getSchemaAsync');
       await this.reloadSchema();
-      return this.getSchema();
+      // noinspection UnnecessaryLocalVariableJS
+      const res = this.getSchema(paramPath, lng, options);
+      return res;
     } catch (err) {
       if (!this.noThrow.getSchemaAsync) {
         throw err;

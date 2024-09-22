@@ -81,11 +81,11 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     try {
       const method = configService[fnName];
       if (method?.constructor?.name === 'AsyncFunction') {
-        method.apply(this, csMethodArgs).then((result) => {
+        method.apply(configService, csMethodArgs).then((result) => {
           socket.applyFn(socketArgs, { result });
         });
       } else {
-        const result = method.apply(this, csMethodArgs);
+        const result = method.apply(configService, csMethodArgs);
         socket.applyFn(socketArgs, { result });
       }
     } catch (err) {

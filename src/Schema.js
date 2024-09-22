@@ -469,6 +469,7 @@ module.exports = class Schema extends Utils {
     }
 
     this.pathsOfSchemaItems.clear();
+    this.clearSchemaCache();
 
     this.schema = this._normalizeNewSchema(schema);
     this.configNames = this.schema.value.map(({ id }) => id);
