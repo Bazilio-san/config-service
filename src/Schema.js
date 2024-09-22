@@ -510,6 +510,7 @@ module.exports = class Schema extends Utils {
 
     if (i18n) {
       const translationOptions = {
+        ...(schemaItem.i18nOptions || {}),
         id: schemaItem.id,
         lng
       };
@@ -604,6 +605,12 @@ module.exports = class Schema extends Utils {
       const propVal = schemaItem[propName];
       let trans = schemaItem[lastPart];
       if (propVal) {
+        const translationOptions = {
+          ...(schemaItem.i18nOptions || {}),
+          id: schemaItem.id,
+          lng
+        };
+
         if (propVal !== standardPath && (!onlyStandardPaths || isRoot)) {
           let current = root;
           const trPath = (isRoot ? propVal.replace(/^[^:]+:/, '') : propVal).split(/[:.]/);
@@ -616,7 +623,7 @@ module.exports = class Schema extends Utils {
               current = current[left];
             } else {
               if (i18n && i18n.exists(propVal, { lng })) {
-                trans = i18n.t(propVal, { lng, ...(schemaItem.i18nOptions || {}) });
+                trans = i18n.t(propVal, translationOptions);
               }
               current[left] = trans;
               if (addPaths) {
@@ -626,7 +633,7 @@ module.exports = class Schema extends Utils {
           }
         } else {
           if (i18n && i18n.exists(propVal, { lng })) {
-            trans = i18n.t(propVal, { lng });
+            trans = i18n.t(propVal, translationOptions);
           }
           if (!container[_id]) {
             container[_id] = {};
