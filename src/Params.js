@@ -32,10 +32,10 @@ function fnFoo () {
 module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
-    const { onSaveNamedConfig, jsonStringifySpace, useInit } = serviceOptions;
+    const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
-    if (!useInit) {
+    if (!this.useInit) {
       this._reloadConfig().then(() => {
         this.defaults = this._getDefaults();
       });
