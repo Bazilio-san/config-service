@@ -76,7 +76,7 @@ module.exports = class Schema extends Utils {
       i18nNS = '',
       translatedProperties,
       onChange,
-      useInit
+      getSchemaCallback
     } = serviceOptions;
     this.onChange = typeof onChange === 'function' ? onChange : () => { };
     this.i18n = i18n;
@@ -98,7 +98,9 @@ module.exports = class Schema extends Utils {
     }
     this.pathsOfSchemaItems = new Map();
     this.schemaByLanguageCache = new Map();
-    if (!useInit) {
+    this.getSchemaCallback = getSchemaCallback;
+    this.useInit = typeof getSchemaCallback === 'function';
+    if (!this.useInit) {
       this._reloadSchema().then(() => 0);
     }
   }
