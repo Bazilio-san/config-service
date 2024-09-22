@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this, max-len, max-classes-per-file, no-prototype-builtins, no-bitwise */
+/* eslint-disable class-methods-use-this, max-len, max-classes-per-file, no-prototype-builtins, no-bitwise,no-await-in-loop */
 
 const path = require('path');
 const fs = require('fs');
@@ -32,11 +32,19 @@ function fnFoo () {
 module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
-    const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
+    const { onSaveNamedConfig, jsonStringifySpace, useInit } = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
     this.defaults = this._getDefaults();
-    this._reloadConfig();
+    if (!useInit) {
+      this._reloadConfig().then(() => 0);
+    }
+  }
+
+  async init () {
+    await super.init();
+    const noReloadSchema = true;
+    await this._reloadConfig(noReloadSchema);
   }
 
   // ============================ GET VALUES =============================
@@ -269,10 +277,10 @@ module.exports = class Params extends Schema {
    * @param {Object} options
    *                            new one remain if the refreshSchema flag is specified
    */
-  _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, options = {}) {
+  async _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, options = {}) {
     options.callFrom = options.callFrom || '_updateAndSaveNamedConfig'; // function name to substitute in error message
     if (refreshSchema) {
-      this._reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
+      await this._reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
     }
     this._fillSchemaWithValues(configName, configValue, options);
     this._saveNamedConfig(configName);
@@ -280,7 +288,7 @@ module.exports = class Params extends Schema {
 
   // =============================== INIT ==================================
 
-  _reloadConfig () {
+  async _reloadConfig (noReloadSchema = false) {
     this.configDir = Schema.getConfigDir();
 
     this._expectedConfigDir = this._expectedPath(this.configDir);
@@ -290,11 +298,14 @@ module.exports = class Params extends Schema {
     if (!fs.lstatSync(this.configDir).isDirectory()) {
       throw this._error(`The expected configuration directory is a file: ${this._expectedConfigDir}`);
     }
-    this._reloadSchema();
-    this.configNames.forEach((configName) => {
+    if (!noReloadSchema) {
+      await this._reloadSchema();
+    }
+    for (let i = 0; i < this.configNames.length; i++) {
+      const configName = this.configName[i];
       const configValue = this._readNamedConfig(configName);
-      this._updateAndSaveNamedConfig(configName, configValue);
-    });
+      await this._updateAndSaveNamedConfig(configName, configValue);
+    }
   }
 
   // #######################################################################################################

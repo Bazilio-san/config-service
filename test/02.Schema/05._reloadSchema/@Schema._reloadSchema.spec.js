@@ -20,10 +20,10 @@ describe('Schema: _reloadSchema()', () => {
     instance = newInstance('Schema');
   });
 
-  it('When reloading a modified Schema, changes should be visible', () => {
+  it('When reloading a modified Schema, changes should be visible', async () => {
     expect(instance.schema.value[0].value[0].type).to.eql('string');
     cpc('./schema2.js', `${schemaDir}/schema.js`);
-    instance._reloadSchema();
+    await instance._reloadSchema();
     expect(instance.schema.value[0].value[0].type).to.eql('array');
   });
 

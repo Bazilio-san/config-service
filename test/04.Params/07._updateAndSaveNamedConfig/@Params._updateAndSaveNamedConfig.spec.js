@@ -3,7 +3,7 @@ const {
   prepareTestEnv,
   clearTestEnv,
   Params,
-  clrRequire
+  clrRequire,
 
 } = require('../../test-utils.js')({ __dirname });
 
@@ -16,36 +16,36 @@ const expectedWithRefresh = require('./expected-ansver-with-refresh-schema.js');
 
 describe('Params: _updateAndSaveNamedConfig()', () => {
   let instance;
-  before(() => {
+  before(async () => {
     instance = prepareTestEnv('Params');
-        instance._updateAndSaveNamedConfig(configName, newConfig);
+    await instance._updateAndSaveNamedConfig(configName, newConfig);
     // Значения, загруженные из предыдущего конфига, отсутствующие в новом, остаются, если флаг refreshSchema = false
   });
 
-  it('_updateAndSaveNamedConfig(): Checking a new value in a configuration OBJECT (refreshSchema = false)', () => {
-        instance._updateAndSaveNamedConfig(configName, newConfig, false);
-        const config = instance._getValues();
-        expect(config.config1).to.eql(expected);
+  it('_updateAndSaveNamedConfig(): Checking a new value in a configuration OBJECT (refreshSchema = false)', async () => {
+    await instance._updateAndSaveNamedConfig(configName, newConfig, false);
+    const config = instance._getValues();
+    expect(config.config1).to.eql(expected);
   });
 
   it('_updateAndSaveNamedConfig(): Checking a new value in the configuration FILE', () => {
     clrRequire(configFile);
     // eslint-disable-next-line import/no-dynamic-require
     const content = require(configFile);
-        expect(content).to.eql(expected);
+    expect(content).to.eql(expected);
   });
 
-  it('_updateAndSaveNamedConfig(): Checking a new value in a configuration OBJECT (refreshSchema = true)', () => {
-        instance._updateAndSaveNamedConfig(configName, newConfig, true);
-        const config = instance._getValues();
-        expect(config.config1).to.eql(expectedWithRefresh);
+  it('_updateAndSaveNamedConfig(): Checking a new value in a configuration OBJECT (refreshSchema = true)', async () => {
+    await instance._updateAndSaveNamedConfig(configName, newConfig, true);
+    const config = instance._getValues();
+    expect(config.config1).to.eql(expectedWithRefresh);
   });
 
   it('_updateAndSaveNamedConfig(): Checking a new value in the configuration FILE', () => {
     clrRequire(configFile);
     // eslint-disable-next-line import/no-dynamic-require
     const content = require(configFile);
-        expect(content).to.eql(expectedWithRefresh);
+    expect(content).to.eql(expectedWithRefresh);
   });
 
   after(clearTestEnv);
