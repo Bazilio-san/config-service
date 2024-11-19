@@ -1,9 +1,8 @@
 /* eslint-disable class-methods-use-this, max-len, max-classes-per-file, no-prototype-builtins, no-bitwise,no-await-in-loop */
 
-const path = require('path');
-const fs = require('fs');
 const __ = require('./lib.js');
 const Schema = require('./Schema.js');
+const { getConfigService } = require('./save-service');
 const scheduleUpdate = require('./db-storage/update-settings.js');
 const ee = require('./ee');
 
@@ -35,6 +34,7 @@ module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
     const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
+    this.configService = getConfigService(serviceOptions);
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
   }
@@ -57,6 +57,7 @@ module.exports = class Params extends Schema {
    * @param {String[]} pathArr
    * @return {Object}
    */
+  // TODO
   _getValuesFromSchemaFragment (schemaFragment = this.schema, valuesContainer = {}, pathArr = []) {
     let container = valuesContainer;
     let schemaValue = schemaFragment;
@@ -180,23 +181,12 @@ module.exports = class Params extends Schema {
   // ============================ PARAMETERS =============================
 
   /**
-   * Returns the full path to a named configuration file by its name
-   *
-   * @private
-   * @param {string} configName
-   * @return {string}
-   */
-  _getConfigFileName (configName) {
-    return `${this.configDir + path.sep + configName}.json`;
-  }
-
-  /**
    * Saving named configuration data to a file
    * Data must be pre-checked and normalized and stored in the configuration object.
    *
    * @param {String} configName
    */
-  _saveNamedConfig (configName) {
+  async _saveNamedConfig (configName) {
     let configValue = this._getValues(configName);
     // The named configuration must be an object !!!
     if (!__.isObject(configValue)) {
@@ -209,25 +199,15 @@ module.exports = class Params extends Schema {
       throw this._error(`Could not save named configuration «${
         this._expectedConfigDir}/${configName}.json»`, err); // Not covered with tests
     }
-    fs.writeFileSync(this._getConfigFileName(configName), jsonStr);
+    await this.configService.saveConfig(configName, jsonStr);
     this.onSaveNamedConfig(configName, this);
   }
 
   /**
    * re-/loading named configuration file.
    */
-  _readNamedConfig (configName) {
-    const configFileName = this._getConfigFileName(configName);
-    let configValue = {};
-    if (fs.existsSync(configFileName)) {
-      try {
-        this._deleteRequireCacheFor(configFileName);
-        // eslint-disable-next-line import/no-dynamic-require
-        configValue = require(configFileName);
-      } catch (err) {
-        throw this._error(`Could not load named configuration file «${this._expectedConfigDir}/${configName}.json»`, err);
-      }
-    }
+  async _readNamedConfig (configName) {
+    const configValue = await this.configService.getConfig(configName);
     return configValue;
   }
 
@@ -286,25 +266,16 @@ module.exports = class Params extends Schema {
   }
 
   // =============================== INIT ==================================
-
+  // TODO
   async _reloadConfig (noReloadSchema = false) {
-    this.configDir = Schema.getConfigDir();
-
-    this._expectedConfigDir = this._expectedPath(this.configDir);
-    if (!fs.existsSync(this.configDir)) {
-      throw this._error(`Missing configuration directory: ${this._expectedConfigDir}`);
-    }
-    if (!fs.lstatSync(this.configDir).isDirectory()) {
-      throw this._error(`The expected configuration directory is a file: ${this._expectedConfigDir}`);
-    }
     if (!noReloadSchema) {
       await this.reloadSchema();
     }
-    for (let i = 0; i < this.configNames.length; i++) {
-      const configName = this.configNames[i];
-      const configValue = this._readNamedConfig(configName);
+    const primiseArr = this.configNames.map(async (configName) => {
+      const configValue = await this._readNamedConfig(configName);
       await this._updateAndSaveNamedConfig(configName, configValue);
-    }
+    });
+    await Promise.all(primiseArr);
   }
 
   // #######################################################################################################

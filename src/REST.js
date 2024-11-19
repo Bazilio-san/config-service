@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const util = require('util');
 const __ = require('./lib.js');
 const API = require('./API.js');
 const { getFQDNCached } = require('./fqdn');
@@ -142,12 +143,12 @@ const isIoBroadcastDecoratorSymbol = Symbol.for('isIoBroadcastDecorator');
 module.exports = class REST extends API {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
-    let { serviceUrlPath } = serviceOptions;
-    serviceUrlPath = (`/${serviceUrlPath || ''}`).replace(/[/\\]+/g, '/').replace(/\/+$/, '');
-    if (!serviceUrlPath.replace('/', '')) {
-      serviceUrlPath = '/config-service';
+    const { serviceUrlPath, saveType = 'file' } = serviceOptions;
+    let urlPath = (`/${serviceUrlPath || ''}`).replace(/[/\\]+/g, '/').replace(/\/+$/, '');
+    if (!urlPath.replace('/', '')) {
+      urlPath = '/config-service';
     }
-    this.serviceUrlPath = serviceUrlPath;
+    this.serviceUrlPath = urlPath;
     this.accessToken = serviceOptions.accessToken;
     this.testPathRe = new RegExp(`^${this.serviceUrlPath}([^\\d\\w ]|)`);
     this.rest = this.rest.bind(this);
@@ -265,10 +266,12 @@ module.exports = class REST extends API {
    * @param {Number} code - HTTP code that accompanies the response
    * @private
    */
-  _help (res, code = 500) {
+  async _help (res, code = 500) {
     res.header('Content-Type', 'text/markdown');
     const readMe = path.resolve(path.join(__dirname, 'help.md'));
-    res.status(code).send(fs.readFileSync(readMe));
+    const readFile = util.promisify(fs.readFile);
+    const result = await readFile(readMe);
+    res.status(code).send(result);
   }
 
   /**

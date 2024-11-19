@@ -28,14 +28,6 @@ module.exports = class API extends Params {
     }
   }
 
-  _addFrom (options, fnName) {
-    if (!options.callFrom) {
-      options.callFrom = fnName;
-    } else {
-      options.callFrom += ` > ${fnName}`;
-    }
-  }
-
   /**
    * Save a parameter value at a given path
    *
@@ -49,6 +41,7 @@ module.exports = class API extends Params {
    * @param {Object} options
    * @return {boolean}
    */
+  // TODO
   set (paramPath, paramValue, options = {}) {
     try {
       this._addFrom(options, 'set');
@@ -288,6 +281,19 @@ module.exports = class API extends Params {
       if (!this.noThrow.getTranslationTemplate) {
         throw err;
       }
+    }
+  }
+
+  /**
+   * @param {getTranslationTemplateOptionsType} options
+   * @param {string} fnName
+   * @private
+   */
+  _addFrom (options, fnName) {
+    if (!options.callFrom) {
+      options.callFrom = fnName;
+    } else {
+      options.callFrom += ` > ${fnName}`;
     }
   }
 };
