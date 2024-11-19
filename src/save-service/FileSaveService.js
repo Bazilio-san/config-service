@@ -13,22 +13,21 @@ module.exports = class FileSaveService extends SaveService {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  async saveConfig (configFileName, jsonStr) {
+  async saveConfig (configName, jsonStr) {
     const writeFile = util.promisify(fs.writeFile);
-    await writeFile(configFileName, jsonStr);
+    const configPath = this._getConfigPath(configName);
+    await writeFile(configPath, jsonStr);
   }
 
   // eslint-disable-next-line class-methods-use-this
   async getConfig (configName) {
     const readFile = util.promisify(fs.readFile);
     let configValue = null;
-    const configFileName = this._getConfigFileName(configName);
-    if (fs.existsSync(configFileName)) {
+    const configPath = this._getConfigPath(configName);
+    if (fs.existsSync(configPath)) {
       try {
-        this._deleteRequireCacheFor(configFileName);
-        // eslint-disable-next-line import/no-dynamic-require
-        // configValue = require(configFileName);
-        configValue = await readFile(configFileName);
+        this._deleteRequireCacheFor(configPath);
+        configValue = await readFile(configPath);
       } catch (err) {
         throw this._error(`Could not load named configuration file «${this._expectedConfigDir}/${configName}.json»`, err);
       }
@@ -43,7 +42,7 @@ module.exports = class FileSaveService extends SaveService {
    * @param {string} configName
    * @return {string}
    */
-  _getConfigFileName (configName) {
+  _getConfigPath (configName) {
     return `${this.configDir + path.sep + configName}.json`;
   }
 

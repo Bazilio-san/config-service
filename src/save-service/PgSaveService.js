@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const SaveService = require("./SaveService");
+const SaveService = require('./SaveService');
 
 const _5_MIN = 5 * 60_000; // 5 min
 const _3_HOURS = 3_600_000 * 3; // 3 ч
@@ -20,20 +20,16 @@ const defaultOptions = {
   max: 10,
   port: 5432,
   statement_timeout: _3_HOURS, // number of milliseconds before a statement in query will time out, default is no timeout
-  query_timeout: _3_HOURS, // number of milliseconds until the request call times out, no timeout by default
+  query_timeout: _3_HOURS // number of milliseconds until the request call times out, no timeout by default
 };
 
 /**
  * Класс отвечает за запись и чтение данных из базы дынных.
  */
 module.exports = class PgSaveService extends SaveService {
-  options = null;
-
-  poolCachePg = null;
-
-  constructor(options) {
+  constructor (options) {
     super();
-    this.options = {...defaultOptions, ...options};
+    this.options = { ...defaultOptions, ...options };
     this.getPoolPg();
   }
 
@@ -50,7 +46,7 @@ module.exports = class PgSaveService extends SaveService {
       ON CONFLICT ("configName")
       DO UPDATE SET "configValue" = $1
       `;
-    const res = await this.queryPg(sql, [configValue]);
+    await this.queryPg(sql, [configValue]);
   }
 
   /**
@@ -71,26 +67,27 @@ module.exports = class PgSaveService extends SaveService {
    * Close PoolPg instance
    *
    */
-  async closePoolPg (){
+  async closePoolPg () {
     const pool = this.poolCachePg;
     if (!pool) return;
     const fns = (pool._clients || [])
       .filter((client) => client?._connected && typeof client?.end === 'function')
       .map((client) => client.end());
     await Promise.all(fns);
-  };
+  }
 
   /**
    * Return PoolPg instance
    *
    * @private
    */
-  async getPoolPg ()  {
+  async getPoolPg () {
     if (!this.poolCachePg) {
-      this.poolCachePg = this.initPoolPg(this.options)
+      this.poolCachePg = this.initPoolPg(this.options);
     }
-    return await this.poolCachePg;
-  };
+    const poolPg = await this.poolCachePg;
+    return poolPg;
+  }
 
   /**
    * Initialize PoolPg
@@ -103,7 +100,7 @@ module.exports = class PgSaveService extends SaveService {
     this.initListeners(pool);
     await pool.connect();
     return pool;
-  };
+  }
 
   /**
    * Initialize PoolPg listeners
@@ -111,7 +108,8 @@ module.exports = class PgSaveService extends SaveService {
    * @param {IPoolPg} pool
    * @private
    */
-  initListeners(pool) {
+  // eslint-disable-next-line class-methods-use-this
+  initListeners (pool) {
     pool.on('error', (error, client) => {
       client.release(true);
       console.error(error);
@@ -139,11 +137,10 @@ module.exports = class PgSaveService extends SaveService {
   ) {
     try {
       const pool = await this.getPoolPg();
-      //INSERT INTO ${TABLE.TEST_DATA} ("id", "configValue")
       const res = await pool.query(sqlText, Array.isArray(sqlValues) ? sqlValues : undefined);
-      return res;
+      return res?.rows?.[0]?.configValue ?? '';
     } catch (error) {
       console.error(error);
     }
-  };
-}
+  }
+};
