@@ -13,8 +13,8 @@ const div11 = config1.value[1];
 
 describe('Schema: _getSchemaFragment()', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('Schema');
+  before(async () => {
+    instance = await prepareTestEnv('Schema');
   });
 
   it('ERROR: Schema is either not an object or an empty object', () => {

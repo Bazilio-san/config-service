@@ -19,33 +19,38 @@ describe('Schema: ERRORS: _validateSchemaItem()', () => {
     rm(`${schemaDir}/schema.js`);
   });
 
-  it('ERROR: Parameter ID not specified', () => {
+  it('ERROR: Parameter ID not specified', async () => {
     cpSchemaCtx('./schema-no-id.js');
-    expect(niError('Schema')).to.have.string('Parameter ID not specified for');
+    const result = await niError('Schema');
+    expect(result).to.have.string('Parameter ID not specified for');
   });
 
-  it('ERROR: Parameter type not specified', () => {
+  it('ERROR: Parameter type not specified', async () => {
     cpSchemaCtx('./schema-no-type.js');
-    expect(niError('Schema')).to.have.string('Parameter type not specified for');
+    const result = await niError('Schema');
+    expect(result).to.have.string('Parameter type not specified for');
   });
 
-  it('ERROR: Invalid type for parameter', () => {
+  it('ERROR: Invalid type for parameter', async () => {
     cpSchemaCtx('./schema-bad-type.js');
-    expect(niError('Schema')).to.match(/Invalid type .+ for parameter/);
+    const result = await niError('Schema');
+    expect(result).to.match(/Invalid type .+ for parameter/);
   });
 
-  it('ERROR: The real type does not match (1)', () => {
+  it('ERROR: The real type does not match (1)', async () => {
     cpSchemaCtx('./schema-section-not-is-array.js');
-    expect(niError('Schema')).to.match(/The real type .+ of value for param .+ found in Schema does not match/);
+    const result = await niError('Schema');
+    expect(result).to.match(/The real type .+ of value for param .+ found in Schema does not match/);
   });
 
-  it('ERROR: The real type does not match (2)', () => {
+  it('ERROR: The real type does not match (2)', async () => {
     cpSchemaCtx('./schema-real-type-not-match.js');
-    expect(niError('Schema')).to.match(/The real type .+ of value for param .+ found in Schema does not match/);
+    const result = await niError('Schema');
+    expect(result).to.match(/The real type .+ of value for param .+ found in Schema does not match/);
   });
 
-  it('ERROR: Invalid type', () => {
-    const instance = prepareTestEnv('Schema');
+  it('ERROR: Invalid type', async () => {
+    const instance = await prepareTestEnv('Schema');
     instance.schema.value[0].value[0].type = 'foo';
     expect(fnError(instance, '_validateSchemaItem', instance.schema.value[0].value[0], ['config1', 'div10']))
       .to.match(/Invalid type/);

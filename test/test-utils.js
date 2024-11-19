@@ -26,44 +26,40 @@ const CONFIG_DIR = 'testing';
 process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = SCHEMA_DIR;
 process.env.NODE_CONFIG_SERVICE_DIR = CONFIG_DIR;
 
-function newInstance (type, addOptions = {}) {
+const classes = { Utils, Schema, Params, API, REST };
+
+const newInstance = async (type, addOptions = {}) => {
   if (addOptions.writeMissingTranslate === undefined) {
-        addOptions.writeMissingTranslate = false;
+    addOptions.writeMissingTranslate = false;
   }
-    Object.entries(addOptions).forEach(([key, val]) => {
-        serviceOptions[key] = val;
-    });
-    if (typeof type === 'string') {
-      switch (type) {
-        case 'Schema':
-          return new Schema(serviceOptions);
-        case 'API':
-          return new API(serviceOptions);
-        case 'RESY':
-          return new REST(serviceOptions);
-        default:
-          return new Params(serviceOptions);
-      }
-    } else if (type instanceof Utils) {
-      // eslint-disable-next-line new-cap
-      return new type(serviceOptions);
-    }
-    return new Params(serviceOptions);
-}
+  Object.entries(addOptions).forEach(([key, val]) => {
+    serviceOptions[key] = val;
+  });
+  if (type instanceof Utils) {
+    // eslint-disable-next-line new-cap
+    return new type(serviceOptions);
+  }
+  if (!classes[type]) {
+    type = 'Params';
+  }
+  const instance = new classes[type](serviceOptions);
+  await instance.init();
+  return instance;
+};
 
 function rm (dirPath) {
   if (dirPath.indexOf('.') === 0) {
     dirPath = path.resolve(path.join(process.cwd(), dirPath));
   }
-    fse.removeSync(dirPath);
+  fse.removeSync(dirPath);
 }
 
 function mkd (dirPath) {
   if (dirPath.indexOf('.') === 0) {
     dirPath = path.resolve(path.join(process.cwd(), dirPath));
   }
-    // fse.removeSync(dirPath);
-    fse.mkdirpSync(dirPath);
+  // fse.removeSync(dirPath);
+  fse.mkdirpSync(dirPath);
 }
 
 function r (resource) {
@@ -77,7 +73,7 @@ function cpf (src, dest) {
   if (dest.indexOf('.') === 0) {
     dest = path.resolve(path.join(process.cwd(), dest));
   }
-    fse.copySync(src, dest, { overwrite: true });
+  fse.copySync(src, dest, { overwrite: true });
 }
 
 function cpr (src, dest) {
@@ -114,19 +110,19 @@ function clearTestEnv () {
   rm(schemaDir);
 }
 
-function niError (type, doBefore, fnName, ...args) {
+const niError = async (type, doBefore, fnName, ...args) => {
   let errMsg = 'There was no error';
   let instance;
   try {
     if (doBefore === undefined) {
-      instance = newInstance(type);
+      instance = await newInstance(type);
     } else if (typeof doBefore === 'string') { // doBefore -> fnName;
-      instance = newInstance(type);
-            instance[doBefore](fnName, ...args);
+      instance = await newInstance(type);
+      instance[doBefore](fnName, ...args);
     } else if (typeof doBefore === 'function') {
-      instance = newInstance(type);
+      instance = await newInstance(type);
       doBefore(instance);
-            instance[fnName](...args);
+      instance[fnName](...args);
     } else {
       return 'Unrecognized signature passed to niError function';
     }
@@ -134,7 +130,7 @@ function niError (type, doBefore, fnName, ...args) {
     errMsg = err.message;
   }
   return errMsg;
-}
+};
 
 module.exports = (context) => ({
   pr: (src) => path.resolve(path.join(context.__dirname, src)),
@@ -168,28 +164,30 @@ module.exports = (context) => ({
   fnError (instance, fnName, ...args) {
     let errMsg = 'There was no error';
     try {
-            instance[fnName](...args);
+      instance[fnName](...args);
     } catch (err) {
       errMsg = err.message;
     }
     return errMsg;
   },
 
-  prepareTestEnv (isNewInstance = true, schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, addOptions = {}) {
-        process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = schemaDir;
-        process.env.NODE_CONFIG_SERVICE_DIR = configDir;
-        const configPath = Params.getConfigDir();
-        clearTestEnv();
-        mkd(Params.getSchemaDir());
-        mkd(configPath);
-        cpSchemaFromResources('schema.js');
-        ['config1', 'config-2'].forEach((configName) => {
-          cpr(`${configName}.json`, `${configPath}/${configName}.json`);
-          clrRequire(`${configPath}/${configName}.json`);
-        });
-        if (isNewInstance === false) {
-          return null;
-        }
-        return newInstance(isNewInstance, addOptions);
+  async prepareTestEnv (isNewInstance = true, schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, addOptions = {}) {
+    process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = schemaDir;
+    process.env.NODE_CONFIG_SERVICE_DIR = configDir;
+    const configPath = Params.getConfigDir();
+    clearTestEnv();
+    mkd(Params.getSchemaDir());
+    mkd(configPath);
+    cpSchemaFromResources('schema.js');
+    ['config1', 'config-2'].forEach((configName) => {
+      cpr(`${configName}.json`, `${configPath}/${configName}.json`);
+      clrRequire(`${configPath}/${configName}.json`);
+    });
+    if (isNewInstance === false) {
+      return null;
+    }
+    // noinspection UnnecessaryLocalVariableJS
+    const instance = await newInstance(isNewInstance, addOptions);
+    return instance;
   }
 });

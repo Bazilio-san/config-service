@@ -16,14 +16,16 @@ describe('Params: INIT ERRORS', () => {
       cpSchemaFromResources('schema.js');
     });
 
-    it('ERROR: Missing configuration directory', () => {
-            expect(niError('Params')).to.have.string('Missing configuration directory');
+    it('ERROR: Missing configuration directory', async () => {
+      const result = await niError('Params');
+      expect(result).to.have.string('Missing configuration directory');
     });
 
-    it('ERROR: The expected configuration directory is a file', () => {
+    it('ERROR: The expected configuration directory is a file', async () => {
       cpc('./testing', configDir);
-            expect(niError('Params')).to.have.string('The expected configuration directory is a file');
-            rm(configDir);
+      const result = await niError('Params');
+      expect(result).to.have.string('The expected configuration directory is a file');
+      rm(configDir);
     });
 
     after(clearTestEnv);

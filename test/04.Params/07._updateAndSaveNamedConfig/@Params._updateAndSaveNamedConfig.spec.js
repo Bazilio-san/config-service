@@ -3,7 +3,7 @@ const {
   prepareTestEnv,
   clearTestEnv,
   Params,
-  clrRequire,
+  clrRequire
 
 } = require('../../test-utils.js')({ __dirname });
 
@@ -17,7 +17,7 @@ const expectedWithRefresh = require('./expected-ansver-with-refresh-schema.js');
 describe('Params: _updateAndSaveNamedConfig()', () => {
   let instance;
   before(async () => {
-    instance = prepareTestEnv('Params');
+    instance = await prepareTestEnv('Params');
     await instance._updateAndSaveNamedConfig(configName, newConfig);
     // Значения, загруженные из предыдущего конфига, отсутствующие в новом, остаются, если флаг refreshSchema = false
   });

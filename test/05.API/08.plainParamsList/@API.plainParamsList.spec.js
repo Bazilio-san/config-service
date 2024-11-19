@@ -8,23 +8,23 @@ const expectedListEx = lib.cloneDeep(require('./list_extended.json'));
 
 describe('API: plainParamsList()', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('API');
+  before(async () => {
+    instance = await prepareTestEnv('API');
   });
 
   it(`plainParamsList full`, () => {
     const testValue = instance.plainParamsList();
-        expect(testValue).to.eql(expectedListFull);
+    expect(testValue).to.eql(expectedListFull);
   });
 
   it(`plainParamsList ('config1')`, () => {
     const testValue = instance.plainParamsList('config1');
-        expect(testValue).to.eql(expectedList);
+    expect(testValue).to.eql(expectedList);
   });
 
   it(`plainParamsList`, () => {
     const testValue = instance.plainParamsList('config1', { isExtended: true });
-        expect(testValue).to.eql(expectedListEx);
+    expect(testValue).to.eql(expectedListEx);
   });
 
   after(clearTestEnv);

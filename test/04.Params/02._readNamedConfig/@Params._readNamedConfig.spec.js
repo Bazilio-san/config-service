@@ -15,8 +15,8 @@ const __ = require('../../../src/lib.js');
 describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () => {
   describe('_readNamedConfig, _saveNamedConfig, _reloadConfig', () => {
     let instance;
-    before(() => {
-      instance = prepareTestEnv('Params');
+    before(async () => {
+      instance = await prepareTestEnv('Params');
     });
 
     // _reloadConfig is indirectly tested
@@ -41,7 +41,7 @@ describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () =
       cpc('./schema_small.js', `${Params.getSchemaDir()}/schema.js`);
       cpc('./config_02.json', configFile);
 
-      instance = newInstance('Params');
+      instance = await newInstance('Params');
 
       // The first version of the named configuration is read
 
@@ -65,18 +65,19 @@ describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () =
     });
 
     // eslint-disable-next-line max-len
-    it('ERROR: Could not load named configuration file (When creating a new service instance, named configurations should not be cached)', () => {
+    it('ERROR: Could not load named configuration file (When creating a new service instance, named configurations should not be cached)', async () => {
       cpc('./config-file-bad.json.txt', `${Params.getConfigDir()}/config_02.json`);
-      expect(niError('Params')).to.have.string('Could not load named configuration file');
+      const result = await niError('Params');
+      expect(result).to.have.string('Could not load named configuration file');
     });
 
     after(clearTestEnv);
   });
   describe('Overriding service directories should work properly', () => {
     let instance;
-    before(() => {
+    before(async () => {
       const absConfigDir = path.resolve(path.join(process.cwd(), 'example/_cfg_'));
-      instance = prepareTestEnv('Params', './example/_schema_', absConfigDir);
+      instance = await prepareTestEnv('Params', './example/_schema_', absConfigDir);
     });
     it('Checking for presence of a Schema in an overridden directory', () => {
       const schemaFile = path.resolve(path.join(process.cwd(), 'example/_schema_/schema.js'));

@@ -7,8 +7,8 @@ const {
 
 describe('Schema: _isLang()', () => {
   let instance;
-  before(() => {
-    prepareTestEnv(false);
+  before(async () => {
+    await prepareTestEnv(false);
   });
   [
     [{}, 'ru', false],

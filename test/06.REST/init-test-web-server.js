@@ -4,9 +4,9 @@ let webApp;
 
 module.exports = {
   cu: '/config-service?',
-  initWS () {
-    const ws = require('../../example/web-server.js');
-    ({ webApp } = ws);
+  async initWS () {
+    const initWebServer = require('../../example/web-server.js');
+    webApp = await initWebServer();
     return webApp.configServiceREST;
   },
   get (url) {

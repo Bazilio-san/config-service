@@ -60,87 +60,87 @@ const changes = [
 
 describe('API: checking values in the set() and get chain()', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('API');
+  before(async () => {
+    instance = await prepareTestEnv('API');
   });
 
-    // ====================== 2 =====================================
-    changes.forEach(([paramPath, newValue], i) => {
-      const n = i + 1;
-      const expected = require(`./result${n}.js`);
-      const expectedSchema = require(`./result-schema${n}.js`);
-      const expectedSchemaRu = require(`./result-schema${n}-ru.js`);
+  // ====================== 2 =====================================
+  changes.forEach(([paramPath, newValue], i) => {
+    const n = i + 1;
+    const expected = require(`./result${n}.js`);
+    const expectedSchema = require(`./result-schema${n}.js`);
+    const expectedSchemaRu = require(`./result-schema${n}-ru.js`);
 
-      const path = paramPath.replace(/^config1\.?/, '');
-      describe(`Change ${n}`, () => {
-        it(`set()`, () => {
-                expect(instance.set(paramPath, newValue)).equals(true);
-        });
+    const path = paramPath.replace(/^config1\.?/, '');
+    describe(`Change ${n}`, () => {
+      it(`set()`, () => {
+        expect(instance.set(paramPath, newValue)).equals(true);
+      });
 
-        it(`get('config1'}`, () => {
-                instance.set(paramPath, newValue);
-                const paramValue = instance.get('config1');
-                expect(paramValue).to.eql(expected);
-        });
+      it(`get('config1'}`, () => {
+        instance.set(paramPath, newValue);
+        const paramValue = instance.get('config1');
+        expect(paramValue).to.eql(expected);
+      });
 
-        it(`get('${paramPath}')`, () => {
-          const paramValue = instance.get(paramPath);
-          const expectedFragment = path ? __.get(expected, path) : expected;
-                expect(paramValue).to.eql(expectedFragment);
-        });
+      it(`get('${paramPath}')`, () => {
+        const paramValue = instance.get(paramPath);
+        const expectedFragment = path ? __.get(expected, path) : expected;
+        expect(paramValue).to.eql(expectedFragment);
+      });
 
-        it(`_getValues()`, () => {
-          const config = instance._getValues();
-                expect(config.config1).to.eql(expected);
-        });
+      it(`_getValues()`, () => {
+        const config = instance._getValues();
+        expect(config.config1).to.eql(expected);
+      });
 
-        it(`getSchema()`, () => {
-          const val = instance.getSchema();
-                expect(val).to.eql(expectedSchema);
-                // const realValue = path ? __.get(expectedSchema, path) : expectedSchema;
-                const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
-                expect(values).to.eql(expected);
-        });
+      it(`getSchema()`, () => {
+        const val = instance.getSchema();
+        expect(val).to.eql(expectedSchema);
+        // const realValue = path ? __.get(expectedSchema, path) : expectedSchema;
+        const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
+        expect(values).to.eql(expected);
+      });
 
-        it(`getSchema(null, 'ru')`, () => {
-          const val = instance.getSchema(null, 'ru');
-                expect(val).to.eql(expectedSchemaRu);
-                const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
-                expect(values).to.eql(expected);
-        });
+      it(`getSchema(null, 'ru')`, () => {
+        const val = instance.getSchema(null, 'ru');
+        expect(val).to.eql(expectedSchemaRu);
+        const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
+        expect(values).to.eql(expected);
+      });
 
-        it(`getSchema('${paramPath}')`, () => {
-          const val = instance.getSchema(paramPath);
-          const values = instance._getValuesFromSchemaFragment(val);
-          const expectedFragment = path ? __.get(expected, path) : expected;
-          const result = path ? values[path.split('.').pop()] : values.config1;
-                expect(result).to.eql(expectedFragment);
-        });
+      it(`getSchema('${paramPath}')`, () => {
+        const val = instance.getSchema(paramPath);
+        const values = instance._getValuesFromSchemaFragment(val);
+        const expectedFragment = path ? __.get(expected, path) : expected;
+        const result = path ? values[path.split('.').pop()] : values.config1;
+        expect(result).to.eql(expectedFragment);
+      });
 
-        it(`getSchema('${paramPath}', 'ru')`, () => {
-          const val = instance.getSchema(paramPath, 'ru');
-          const values = instance._getValuesFromSchemaFragment(val);
-          const expectedFragment = path ? __.get(expected, path) : expected;
-          const result = path ? values[path.split('.').pop()] : values.config1;
-                expect(result).to.eql(expectedFragment);
-        });
+      it(`getSchema('${paramPath}', 'ru')`, () => {
+        const val = instance.getSchema(paramPath, 'ru');
+        const values = instance._getValuesFromSchemaFragment(val);
+        const expectedFragment = path ? __.get(expected, path) : expected;
+        const result = path ? values[path.split('.').pop()] : values.config1;
+        expect(result).to.eql(expectedFragment);
+      });
 
-        it(`localized schema`, () => {
-          const realValue = instance._getSchemaByLanguage('ru');
-          const values = instance._getValuesFromSchemaFragment(realValue).__root__.config1;
-                expect(values).to.eql(expected);
-        });
+      it(`localized schema`, () => {
+        const realValue = instance._getSchemaByLanguage('ru');
+        const values = instance._getValuesFromSchemaFragment(realValue).__root__.config1;
+        expect(values).to.eql(expected);
+      });
 
-        it(`Named configuration file`, () => {
-          clrRequire(`${configDir}/config1.json`);
-          // eslint-disable-next-line import/no-dynamic-require
-          const content = require(`${configDir}/config1.json`);
-                expect(content).to.eql(expected);
-        });
+      it(`Named configuration file`, () => {
+        clrRequire(`${configDir}/config1.json`);
+        // eslint-disable-next-line import/no-dynamic-require
+        const content = require(`${configDir}/config1.json`);
+        expect(content).to.eql(expected);
       });
     });
+  });
 
-    // ====================== 5 =====================================
+  // ====================== 5 =====================================
 
-    after(clearTestEnv);
+  after(clearTestEnv);
 });

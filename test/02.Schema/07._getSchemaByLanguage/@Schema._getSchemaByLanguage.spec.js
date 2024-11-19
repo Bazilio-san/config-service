@@ -8,8 +8,8 @@ const expectedSchemaEn = require('./expected-schema-en---default-values.js');
 
 describe('Schema: Translations should work properly', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('Schema');
+  before(async () => {
+    instance = await prepareTestEnv('Schema');
   });
 
   it('Method _getSchemaByLanguage() should cache the correct translations (ru)', () => {

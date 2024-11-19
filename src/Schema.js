@@ -100,13 +100,10 @@ module.exports = class Schema extends Utils {
     this.pathsOfSchemaItems = new Map();
     this.schemaByLanguageCache = new Map();
     this.getSchemaCallback = getSchemaCallback;
-    this.useInit = typeof getSchemaCallback === 'function';
-    if (!this.useInit) {
-      this.reloadSchema().then(() => 0);
-    }
   }
 
   async init () {
+    await super.init();
     await this.reloadSchema();
   }
 

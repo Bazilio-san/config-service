@@ -8,14 +8,14 @@ const {
 
 describe('API: Suppress throwing of ERRORS', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('API', undefined, undefined, { noThrow: true });
+  before(async () => {
+    instance = await prepareTestEnv('API', undefined, undefined, { noThrow: true });
   });
 
-  it('Do not throw an ERROR if the parameter is absent in the schema...', () => {
-    instance = prepareTestEnv('API');
+  it('Do not throw an ERROR if the parameter is absent in the schema...', async () => {
+    instance = await prepareTestEnv('API');
     const paramValue = instance.get('config1.div11.divfoo');
-        expect(paramValue).equals(undefined);
+    expect(paramValue).equals(undefined);
   });
 
   after(clearTestEnv);

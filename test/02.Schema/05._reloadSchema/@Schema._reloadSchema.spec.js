@@ -13,11 +13,11 @@ const schemaDir = Schema.getSchemaDir();
 
 describe('Schema: reloadSchema()', () => {
   let instance;
-  before(() => {
-    prepareTestEnv(false);
+  before(async () => {
+    await prepareTestEnv(false);
     clrRequire(`${schemaDir}/schema.js`);
     cpc('./schema1.js', `${schemaDir}/schema.js`);
-    instance = newInstance('Schema');
+    instance = await newInstance('Schema');
   });
 
   it('When reloading a modified Schema, changes should be visible', async () => {

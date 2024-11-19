@@ -6,7 +6,7 @@ const {
   prepareTestEnv,
   clearTestEnv,
   fnError,
-  niError,
+  niError
 } = require('../../test-utils.js')({ __dirname });
 
 const expected = require('../../resources/with-actual-values/expected-config--get.js');
@@ -17,7 +17,7 @@ const newValues = [
   ['config1.div13.v_json', { a: 1 }],
   ['config-2.div21', [{ f: 2 }, { g: 3 }]],
   ['config 3.div31', null],
-  ['config1.div10', '!!!НОВАЯ СТРОКА!!!'],
+  ['config1.div10', '!!!НОВАЯ СТРОКА!!!']
 ];
 const unchangedValues = [
   [null, expected],
@@ -29,13 +29,13 @@ const unchangedValues = [
   [['config-2', 'div22'], [10, 20, 30]],
   ['config1.div13.v_int', 456],
   ['config1.div13.v_datetime', '2020-02-28T11:12:13.456'],
-  ['config1.div13.v_float', 456.7890123],
+  ['config1.div13.v_float', 456.7890123]
 ];
 
 describe('API: set(), get(), getEx(), list()', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('API');
+  before(async () => {
+    instance = await prepareTestEnv('API');
     newValues.forEach(([paramPath, newVal]) => {
       instance.set(paramPath, newVal);
     });
@@ -71,29 +71,29 @@ describe('API: set(), get(), getEx(), list()', () => {
 
   describe('ERRORS: set', () => {
     [
-      ['config1', 99999],
+      ['config1', 99999]
     ].forEach(([path, value]) => {
-      it(`ERROR: Cannot set a value for a 'section': '${path}' <- ${value}`, () => {
-        expect(niError('API', 'set', path, value))
-          .to.match(/Cannot set a value .+ for a 'section'/);
+      it(`ERROR: Cannot set a value for a 'section': '${path}' <- ${value}`, async () => {
+        const result = await niError('API', 'set', path, value);
+        expect(result).to.match(/Cannot set a value .+ for a 'section'/);
       });
     });
 
     [
-      ['config1.div13.v_email', 99999],
+      ['config1.div13.v_email', 99999]
     ].forEach(([path, value]) => {
-      it(`ERROR: Invalid type of param: '${path}' <- ${value}`, () => {
-        expect(niError('API', 'set', path, value))
-          .to.match(/The real type .+ of value for .+ not match schema data type/);
+      it(`ERROR: Invalid type of param: '${path}' <- ${value}`, async () => {
+        const result = await niError('API', 'set', path, value);
+        expect(result).to.match(/The real type .+ of value for .+ not match schema data type/);
       });
     });
 
     [
-      ['config1.div13.v_email', '99999'],
+      ['config1.div13.v_email', '99999']
     ].forEach(([path, v]) => {
-      it(`ERROR: Parameter could not be normalized: '${path}' <- ${typeof v === 'number' ? v : `'${v}'`}`, () => {
-        expect(niError('API', 'set', path, v))
-          .to.match(/Validation error/);
+      it(`ERROR: Parameter could not be normalized: '${path}' <- ${typeof v === 'number' ? v : `'${v}'`}`, async () => {
+        const result = await niError('API', 'set', path, v);
+        expect(result).to.match(/Validation error/);
       });
     });
 

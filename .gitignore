@@ -12,6 +12,7 @@ thumbs.db
 /deploy/branch
 
 /sync-bf*.*
+/_tmp
 
 
 /example/i18n/cs.missing.json

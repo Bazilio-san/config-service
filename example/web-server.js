@@ -39,32 +39,41 @@ if (process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH) {
   serviceOptions.serviceUrlPath = process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH;
 }
 
-const cs = new REST(serviceOptions);
+const initWebServer = async () => {
+  if (app.configServiceREST) {
+    return app;
+  }
 
-app.configServiceREST = cs;
+  const cs = new REST(serviceOptions);
+  await cs.init();
 
-const { rest } = cs;
+  app.configServiceREST = cs;
 
-app.use(express.json()); // to support JSON-encoded bodies
-// app.use(express.urlencoded());
+  const { rest } = cs;
 
-app.use(rest);
+  app.use(express.json()); // to support JSON-encoded bodies
+  // app.use(express.urlencoded());
 
-app.use((req, res) => {
-  res.status(501).send('Not Implemented');
-});
-const httpPort = 8683;
-const httpHost = 'localhost';
+  app.use(rest);
 
-function g (m) {
-  echo.echo(m, { colorNum: color.greenN, bold: true });
-}
+  app.use((req, res) => {
+    res.status(501).send('Not Implemented');
+  });
+  const httpPort = 8683;
+  const httpHost = 'localhost';
 
-webServer.listen(httpPort, httpHost, () => {
-  g('\n');
-  g('=======================================================================');
-  g(`Web-Server listening on http://${httpHost}:${httpPort}`);
-  g('=======================================================================\n');
-});
-app.webServer = webServer;
-module.exports.webApp = app;
+  function g (m) {
+    echo.echo(m, { colorNum: color.greenN, bold: true });
+  }
+
+  webServer.listen(httpPort, httpHost, () => {
+    g('\n');
+    g('=======================================================================');
+    g(`Web-Server listening on http://${httpHost}:${httpPort}`);
+    g('=======================================================================\n');
+  });
+  app.webServer = webServer;
+  return app;
+};
+
+module.exports = initWebServer;

@@ -24,20 +24,20 @@ const tests = [
 
 describe('API: getSchema()', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('API');
+  before(async () => {
+    instance = await prepareTestEnv('API');
   });
 
-    tests.forEach(([paramPath, lng, expected, match]) => {
-      it(`Path "${paramPath}" / ${lng}`, () => {
-        if (expected === 'error') {
-                expect(fnError(instance, 'getSchema', paramPath, lng)).to.match(match);
-        } else {
-          const testValue = instance.getSchema(paramPath, lng);
-                expect(testValue).to.eql(expected);
-        }
-      });
+  tests.forEach(([paramPath, lng, expected, match]) => {
+    it(`Path "${paramPath}" / ${lng}`, () => {
+      if (expected === 'error') {
+        expect(fnError(instance, 'getSchema', paramPath, lng)).to.match(match);
+      } else {
+        const testValue = instance.getSchema(paramPath, lng);
+        expect(testValue).to.eql(expected);
+      }
     });
+  });
 
-    after(clearTestEnv);
+  after(clearTestEnv);
 });

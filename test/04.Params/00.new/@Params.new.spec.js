@@ -10,29 +10,29 @@ const expectedNewSchema = require('../../resources/with-actual-values/schema---a
 
 describe('Params: check after constructor call', () => {
   let instance;
-  before(() => {
-    instance = prepareTestEnv('Params');
+  before(async () => {
+    instance = await prepareTestEnv('Params');
   });
 
   it(`new defaults`, () => {
-        expect(instance.defaults).to.eql(expectedNewDefaults);
+    expect(instance.defaults).to.eql(expectedNewDefaults);
   });
 
   it(`new config by _getValues`, () => {
     const config = instance._getValues();
-        expect(config).to.eql(expectedNewConfig);
+    expect(config).to.eql(expectedNewConfig);
   });
 
-    __.each(expectedNewConfig, (expectedValue, configName) => {
-      it(`Check file "${configName}.json"`, () => {
-        const config = instance._readNamedConfig(configName);
-            expect(config).to.eql(expectedValue);
-      });
+  __.each(expectedNewConfig, (expectedValue, configName) => {
+    it(`Check file "${configName}.json"`, () => {
+      const config = instance._readNamedConfig(configName);
+      expect(config).to.eql(expectedValue);
     });
+  });
 
-    it(`new schema`, () => {
-        expect(instance.schema).to.eql(expectedNewSchema);
-    });
+  it(`new schema`, () => {
+    expect(instance.schema).to.eql(expectedNewSchema);
+  });
 
-    after(clearTestEnv);
+  after(clearTestEnv);
 });

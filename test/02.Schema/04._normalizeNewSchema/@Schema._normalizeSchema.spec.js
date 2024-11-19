@@ -12,11 +12,11 @@ const schemaDir = Schema.getSchemaDir();
 
 describe('Schema: _normalizeNewSchema()', () => {
   let instance;
-  before(() => {
-    prepareTestEnv(false);
+  before(async () => {
+    await prepareTestEnv(false);
     clrRequire(`${schemaDir}/schema.js`);
     cpc('./schema-no-default-properties.js', `${schemaDir}/schema.js`);
-    instance = newInstance('Schema');
+    instance = await newInstance('Schema');
   });
 
   it('Missing optional properties should be added', () => {

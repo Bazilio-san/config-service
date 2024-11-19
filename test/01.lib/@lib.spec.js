@@ -25,8 +25,8 @@ const { prepareTestEnv } = require('../test-utils.js')({ __dirname });
 
 describe('Lib: functions should work properly', () => {
   describe('Function "cloneDeep()"', () => {
-    before(() => {
-      instance = prepareTestEnv('Schema');
+    before(async () => {
+      instance = await prepareTestEnv('Schema');
       cloned = lib.cloneDeep(inObj);
     });
     it('in !== out', () => {

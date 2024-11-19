@@ -21,6 +21,10 @@ module.exports = class Utils {
     this.lib = __;
   }
 
+  // eslint-disable-next-line no-empty-function
+  async init () {
+  }
+
   /**
    * Returns the full path to the directory from where the service will take the Schema file
    * @return {String}

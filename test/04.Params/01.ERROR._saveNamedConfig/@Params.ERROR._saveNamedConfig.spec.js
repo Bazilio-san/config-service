@@ -5,13 +5,13 @@ const {
 } = require('../../test-utils.js')({ __dirname });
 
 describe('Params: _saveNamedConfig()', () => {
-  before(() => {
-    prepareTestEnv('Params');
+  before(async () => {
+    await prepareTestEnv('Params');
   });
 
-  it('ERROR: The configuration is not in memory', () => {
-        expect(niError('Params', '_saveNamedConfig', 'foo'))
-            .to.match(/No such parameter/);
+  it('ERROR: The configuration is not in memory', async () => {
+    const result = await niError('Params', '_saveNamedConfig', 'foo');
+    expect(result).to.match(/No such parameter/);
   });
 
   after(clearTestEnv);

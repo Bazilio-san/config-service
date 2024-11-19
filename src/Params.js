@@ -35,11 +35,6 @@ module.exports = class Params extends Schema {
     const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
-    if (!this.useInit) {
-      this._reloadConfig().then(() => {
-        this.defaults = this._getDefaults();
-      });
-    }
   }
 
   async init () {
