@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const __ = require('./lib.js');
 const Utils = require('./Utils.js');
+const ee = require('./ee.js');
 
 /*
 The symbol properties of the Schema object are copied by the __. CloneDeep () function
@@ -353,17 +354,19 @@ module.exports = class Schema extends Utils {
               const oldValue = this[_value_];
               if (oldValue !== newValue) {
                 this[_value_] = newValue;
+                const changes = {
+                  paramPath: this.path,
+                  oldValue,
+                  newValue,
+                  schemaItem,
+                  csInstance: cs,
+                  isJustInitialized,
+                  callerId: this[_callerId_],
+                };
                 if (onChange && typeof onChange === 'function') {
-                  onChange({
-                    paramPath: this.path,
-                    oldValue,
-                    newValue,
-                    schemaItem,
-                    csInstance: cs,
-                    isJustInitialized,
-                    callerId: this[_callerId_],
-                  });
+                  onChange(changes);
                 }
+                ee.emit('cs-leaf-change', changes);
               }
             }
           },

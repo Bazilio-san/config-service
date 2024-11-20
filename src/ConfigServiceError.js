@@ -18,24 +18,31 @@ class ConfigServiceError extends Error {
       console.log('\x1b[103;30m==================== expected test error ======================\x1b[0m');
     }
     if (logger) {
-      logger.mErr(err, {
-        msg,
-        noStack: isTesting && !process.env.CS_ERROR_SHOW_STACK,
-      });
-    } else {
-      let cMsg = `\x1b[31m${msg}`;
-      if (err) {
-        if (err.message) {
-          cMsg += ` >>> \n${err.message}`;
-        }
-        if (err.stack) {
-          cMsg += ` >>> \n${err.stack}`;
-        }
+      if (!err) {
+        logger.error(msg);
+        return;
       }
-      cMsg += `\x1b[0m`;
-      // eslint-disable-next-line no-console
-      console.log(cMsg);
+      if (err?.message) {
+        err.message = `${msg}\n${err?.message}`;
+        logger.error(err);
+        return;
+      }
+      logger.error(`${msg}\n${err}`);
+      return;
     }
+
+    let cMsg = `\x1b[31m${msg}`;
+    if (err) {
+      if (err.message) {
+        cMsg += ` >>> \n${err.message}`;
+      }
+      if (err.stack) {
+        cMsg += ` >>> \n${err.stack}`;
+      }
+    }
+    cMsg += `\x1b[0m`;
+    // eslint-disable-next-line no-console
+    console.log(cMsg);
   }
 }
 

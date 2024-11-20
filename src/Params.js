@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const __ = require('./lib.js');
 const Schema = require('./Schema.js');
+const scheduleUpdate = require('./db-storage/update-settings.js');
+const ee = require('./ee');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
 const _v_ = Symbol.for('_v_');
@@ -356,3 +358,11 @@ module.exports = class Params extends Schema {
     return valuesContainer;
   }
 };
+
+ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
+  const configName = paramPath.split('.')[0];
+  if (!configName) {
+    return;
+  }
+  scheduleUpdate({ configName, paramPath, value: newValue });
+});
