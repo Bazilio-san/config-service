@@ -60,7 +60,7 @@ module.exports = class PgSaveService extends SaveService {
       FROM ${TABLE_NAME}
       WHERE "configName" = '${configName}'`;
     const res = await this.queryPg(sql);
-    return res;
+    return JSON.parse(res);
   }
 
   /**

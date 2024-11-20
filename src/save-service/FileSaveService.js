@@ -2,14 +2,22 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const SaveService = require('./SaveService');
+const Schema = require('../Schema');
 
 /**
  * Класс отвечает за запись и чтение данных из файловой системы.
  */
 module.exports = class FileSaveService extends SaveService {
-  constructor (configDir) {
+  constructor () {
     super();
-    this.configDir = configDir;
+    this.configDir = Schema.getConfigDir();
+    this._expectedConfigDir = this._expectedPath(this.configDir);
+    if (!fs.existsSync(this.configDir)) {
+      throw this._error(`Missing configuration directory: ${this._expectedConfigDir}`);
+    }
+    if (!fs.lstatSync(this.configDir).isDirectory()) {
+      throw this._error(`The expected configuration directory is a file: ${this._expectedConfigDir}`);
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -32,7 +40,11 @@ module.exports = class FileSaveService extends SaveService {
         throw this._error(`Could not load named configuration file «${this._expectedConfigDir}/${configName}.json»`, err);
       }
     }
-    return configValue;
+    return JSON.parse(configValue);
+  }
+
+  _expectedPath (path_) {
+    return path_.replace(process.cwd(), '<proj_root>').replace(/\\/g, '/');
   }
 
   /**
