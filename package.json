@@ -1,6 +1,6 @@
 {
   "name": "config-srv",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "src/*.*"
   ],
   "devDependencies": {
-    "af-logger": "^2.0.23",
+    "af-logger": "^2.0.29",
     "chai": "^4.3.6",
     "eslint-config-af-24": "^2.4.2",
     "express": "^4.21.1",

@@ -229,7 +229,7 @@ acorn@^8.9.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.14.0.tgz#063e2c70cac5fb4f6467f0b11152e04c682795b0"
   integrity sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==
 
-af-logger@^2.0.23:
+af-logger@^2.0.29:
   version "2.0.29"
   resolved "https://registry.yarnpkg.com/af-logger/-/af-logger-2.0.29.tgz#73ed2cd649e11048e41e14d92d8c86e0ebd8dd11"
   integrity sha512-92PpViWirHyk0hioJ17ZMYzdlULcZEMN/257eG/2Ik40Mgv68ayKTTLdmKCoiBTluDahP+DWYtXj6BtOCLnEUg==
