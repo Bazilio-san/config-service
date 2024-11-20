@@ -68,13 +68,6 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     fromService = ` :: socket :: from: ${fromService}`;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function debug (str) {
-    if (debugSocket?.enabled) {
-      debugSocket(str);
-    }
-  }
-
   function exec (fnName, csMethodArgs, socketArgs) {
     log(`${fnName}${fromService} :: args: ${JSON.stringify(csMethodArgs)}`);
 
@@ -227,8 +220,8 @@ module.exports = class REST extends API {
         ...err,
         message,
         name: 'ConfigServiceError',
-        help: `${this.serviceUrlPath}/help`
-      }
+        help: `${this.serviceUrlPath}/help`,
+      },
     });
   }
 
@@ -330,13 +323,13 @@ module.exports = class REST extends API {
       set: setValue,
       list: getConfigList,
       lng,
-      'translation-template': translationTemplate
+      'translation-template': translationTemplate,
     } = query;
     let {
       'get-schema': getSchema,
       'get-schema-async': getSchemaAsync,
       'plain-params-list': plainParamsList,
-      'plain-params-list-ex': plainParamsListEx
+      'plain-params-list-ex': plainParamsListEx,
     } = query;
 
     if (getValue !== undefined) {

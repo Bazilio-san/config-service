@@ -3,7 +3,7 @@ const {
   prepareTestEnv,
   clearTestEnv,
   Params,
-  clrRequire
+  clrRequire,
 
 } = require('../../test-utils.js')({ __dirname });
 

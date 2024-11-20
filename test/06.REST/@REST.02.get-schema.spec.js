@@ -13,7 +13,7 @@ describe(`REST: Method "get-schema" should work properly`, () => {
   [
     `get-schema`,
     `get-schema=`,
-    `get-schema=.`
+    `get-schema=.`,
   ].forEach((query) => {
     it(`"${cu}${query}" --> full schema`, (done) => {
       get(`${cu}${query}`)
@@ -25,7 +25,7 @@ describe(`REST: Method "get-schema" should work properly`, () => {
   [
     ['ru', expectedSchemaRu, 'Russian'],
     ['en', expectedSchemaEn, 'English'],
-    ['foo', expectedSchema, 'unknown lang']
+    ['foo', expectedSchema, 'unknown lang'],
   ].forEach(([lng, expected, name]) => {
     const url = `${cu}get-schema&lng=${lng}`;
     it(`"${url}" --> full schema for ${name}`, (done) => {
@@ -45,7 +45,7 @@ describe(`REST: Method "get-schema" should work properly`, () => {
     ['config-2.div21', 'en', expectedSchemaEn.value[1].value[0]],
     ['config-5', 'en', 'error', /No such parameter/],
     ['config1.div13.foo', 'en', 'error', /No such parameter/],
-    ['config1.div13.v_json.defaultProp1', 'ru', 'error', /No such parameter/]
+    ['config1.div13.v_json.defaultProp1', 'ru', 'error', /No such parameter/],
   ].forEach(([paramPath, lng, expected, match]) => {
     const url = `${cu}get-schema=${paramPath}&lng=${lng}`;
     it(`"${url}"`, (done) => {

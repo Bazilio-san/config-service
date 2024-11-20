@@ -32,7 +32,7 @@ module.exports = class Utils {
   static getSchemaDir () {
     let schemaDir = __.getCmdOrEnv(
       'NODE_CONFIG_SERVICE_SCHEMA_DIR',
-      path.join(process.cwd(), DEFAULT_SCHEMA_DIR)
+      path.join(process.cwd(), DEFAULT_SCHEMA_DIR),
     );
     if (schemaDir.indexOf('.') === 0) {
       schemaDir = path.join(process.cwd(), schemaDir);
@@ -130,7 +130,7 @@ module.exports = class Utils {
         if (types[userTypeName] && !types[userTypeName].validator) {
           types[userTypeName].validator = (
             newValue,
-            defaultValue = null
+            defaultValue = null,
           ) => (newValue === undefined ? defaultValue : newValue);
         }
       });
@@ -246,7 +246,7 @@ module.exports = class Utils {
       pathArr,
       configName,
       pathParent,
-      lastParamName
+      lastParamName,
     };
   }
 

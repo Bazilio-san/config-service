@@ -77,7 +77,7 @@ module.exports = class Schema extends Utils {
       i18nNS = '',
       translatedProperties,
       onChange,
-      getSchemaCallback
+      getSchemaCallback,
     } = serviceOptions;
     this.onChange = typeof onChange === 'function' ? onChange : () => { };
     this.i18n = i18n;
@@ -166,7 +166,7 @@ module.exports = class Schema extends Utils {
         cs._traverseSchema(value, {
           ...(newOptions || options),
           pathArr: [...pathArr],
-          itMustBeAn: type === 'section' ? 'VALUE' : 'PROPERTY'
+          itMustBeAn: type === 'section' ? 'VALUE' : 'PROPERTY',
         }, itemCallback, valueCallback, propertyCallback);
       }
     } else if (itMustBeAn === 'VALUE') {
@@ -186,7 +186,7 @@ module.exports = class Schema extends Utils {
           ...options,
           pathArr: [...pathArr],
           index: i,
-          itMustBeAn: schemaItem.type === 'section' ? 'ITEM' : 'PROPERTY'
+          itMustBeAn: schemaItem.type === 'section' ? 'ITEM' : 'PROPERTY',
         }, itemCallback, valueCallback, propertyCallback);
       });
     }
@@ -211,7 +211,7 @@ module.exports = class Schema extends Utils {
       value,
       defaultValue = null,
       type: schemaDataType,
-      title
+      title,
     } = schemaItem;
     if (pathArr.length && !pathArr[pathArr.length - 1] && paramIndex !== -1) {
       pathArr[pathArr.length - 1] = `[${paramIndex}]`;
@@ -258,7 +258,7 @@ module.exports = class Schema extends Utils {
     // eslint-disable-next-line camelcase
     const {
       type,
-      path: paramPath
+      path: paramPath,
     } = schemaItem;
     if (!this._validateType(realType, type)) {
       throw this._error(`The real type «${realType}» of value for «${paramPath}» not match schema data type «${type}»`);
@@ -298,7 +298,7 @@ module.exports = class Schema extends Utils {
    */
   __newSchemaItemCallback (schemaItem, {
     pathArr = [],
-    index
+    index,
   }) {
     this._validateSchemaItem(schemaItem, pathArr, index);
     const cs = this;
@@ -306,7 +306,7 @@ module.exports = class Schema extends Utils {
       t,
       title,
       type,
-      value
+      value,
     } = schemaItem;
     schemaItem[_lng_] = '';
 
@@ -361,13 +361,13 @@ module.exports = class Schema extends Utils {
                     schemaItem,
                     csInstance: cs,
                     isJustInitialized,
-                    callerId: this[_callerId_]
+                    callerId: this[_callerId_],
                   });
                 }
               }
             }
           },
-          enumerable: true
+          enumerable: true,
         });
       }
     } else {
@@ -385,7 +385,7 @@ module.exports = class Schema extends Utils {
         return this._pathArr.join('.');
       },
       configurable: false,
-      enumerable: true
+      enumerable: true,
     });
     if (type === 'section') {
       schemaItem[_isSection_] = true;
@@ -412,7 +412,7 @@ module.exports = class Schema extends Utils {
         type: 'section',
         title: 'Configuration root',
         t: `${this.i18nNS}__root__title`,
-        value: schema
+        value: schema,
       };
     }
     const schemaClone = __.cloneDeepWithoutUndefined(schema);
@@ -485,11 +485,11 @@ module.exports = class Schema extends Utils {
       i18n,
       lng,
       writeMissingTranslate = false,
-      pathArr = []
+      pathArr = [],
     } = options;
     const {
       t,
-      type
+      type,
     } = schemaItem;
     schemaItem[_lng_] = lng;
     const paramPath = pathArr.join('.');
@@ -502,7 +502,7 @@ module.exports = class Schema extends Utils {
           return originalSchemaItem.value === undefined
             ? originalSchemaItem.defaultValue
             : originalSchemaItem.value;
-        }
+        },
       });
     }
 
@@ -510,7 +510,7 @@ module.exports = class Schema extends Utils {
       const translationOptions = {
         ...(schemaItem.i18nOptions || {}),
         id: schemaItem.id,
-        lng
+        lng,
       };
       if (__.hasProp(schemaItem, 't')) {
         if (writeMissingTranslate) {
@@ -566,7 +566,7 @@ module.exports = class Schema extends Utils {
     const _traverseOptions = {
       i18n: this.i18n,
       lng,
-      writeMissingTranslate: this.writeMissingTranslate
+      writeMissingTranslate: this.writeMissingTranslate,
     };
     this._traverseSchema(schemaClone, _traverseOptions, this.__fnTranslateSchemaItemCallback);
     this.schemaByLanguageCache.set(lng, schemaClone);
@@ -587,7 +587,7 @@ module.exports = class Schema extends Utils {
       root = {},
       lng = '',
       onlyStandardPaths = true,
-      addPaths = false
+      addPaths = false,
     } = options;
     const { i18n } = this;
     const { id } = schemaItem;
@@ -606,7 +606,7 @@ module.exports = class Schema extends Utils {
         const translationOptions = {
           ...(schemaItem.i18nOptions || {}),
           id: schemaItem.id,
-          lng
+          lng,
         };
 
         if (propVal !== standardPath && (!onlyStandardPaths || isRoot)) {
@@ -658,7 +658,7 @@ module.exports = class Schema extends Utils {
   _getTranslationTemplate ({
     schemaValue = this.schema,
     container = {},
-    pathArr = []
+    pathArr = [],
   }, options) {
     if (schemaValue && schemaValue[_isRootNode_]) {
       this.__setOneTranslatedTemplateNode(schemaValue, container, pathArr, options);
@@ -672,7 +672,7 @@ module.exports = class Schema extends Utils {
           this._getTranslationTemplate({
             schemaValue: schemaItem.value,
             container: container[_id],
-            pathArr: [...pathArr, _id]
+            pathArr: [...pathArr, _id],
           }, options);
         }
       });
@@ -694,7 +694,7 @@ module.exports = class Schema extends Utils {
     options.callFrom = options.callFrom || '_getSchemaFragment';
     const {
       paramPath: paramPath_,
-      pathArr
+      pathArr,
     } = this._parseParamPathFragment(paramPath, options);
     if (!schemaItem) {
       schemaItem = this.schema;

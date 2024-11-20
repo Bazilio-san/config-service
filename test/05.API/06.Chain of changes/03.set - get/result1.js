@@ -8,7 +8,7 @@ module.exports = {
       defaultProp3: 'CHANGE 1',
       defaultProp4: 111,
       defaultProp5: null,
-      defaultProp6: false
+      defaultProp6: false,
     },
     v_array: ['CHANGE 1'],
     v_string: 'CHANGE 1',
@@ -24,6 +24,6 @@ module.exports = {
     v_section_empty: {},
     v_date: '2020-02-28',
     v_number: 123,
-    v_int: 456
-  }
+    v_int: 456,
+  },
 };

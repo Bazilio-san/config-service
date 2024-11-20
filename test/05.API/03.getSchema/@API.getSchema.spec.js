@@ -19,7 +19,7 @@ const tests = [
   ['config1.div13.v_json.defaultProp1', 'ru', 'error', /No such parameter/],
   ['config-2.div21', 'en', expectedSchemaEn.value[1].value[0]],
   ['config-5', 'en', 'error', /No such parameter/],
-  ['config1.div13.foo', 'en', 'error', /No such parameter/]
+  ['config1.div13.foo', 'en', 'error', /No such parameter/],
 ];
 
 describe('API: getSchema()', () => {

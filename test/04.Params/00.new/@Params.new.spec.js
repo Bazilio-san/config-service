@@ -1,7 +1,7 @@
 const {
   prepareTestEnv,
   clearTestEnv,
-  toPlainObj
+  toPlainObj,
 } = require('../../test-utils.js')({ __dirname });
 
 const __ = require('../../../src/lib.js');

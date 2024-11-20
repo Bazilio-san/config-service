@@ -122,7 +122,7 @@ function cloneDeep (obj, options = {}) {
   const keys = (removeSymbols ? Object.keys(obj) : [...Object.keys(obj), ...Object.getOwnPropertySymbols(obj)])
     .filter((propName) => !removeProps.includes(propName));
   return Object.assign(result, ...keys.map(
-    (key) => ({ [key]: cloneDeep(obj[key], options) })
+    (key) => ({ [key]: cloneDeep(obj[key], options) }),
   ));
 }
 
@@ -170,7 +170,7 @@ function defineFinalHiddenProperty (obj, propertyName, value) {
     value,
     writable: false,
     configurable: false,
-    enumerable: false
+    enumerable: false,
   });
 }
 
@@ -241,5 +241,5 @@ module.exports = {
   isSchemaItem,
   canDeepDive,
   defineFinalHiddenProperty,
-  throttle
+  throttle,
 };

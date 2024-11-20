@@ -10,7 +10,7 @@ module.exports = {
       dm: -1,
       b: null,
       e: true,
-      f: false
+      f: false,
     },
     null,
     true,
@@ -20,19 +20,19 @@ module.exports = {
     0,
     1,
     1.2,
-    [0, 1, 2]
+    [0, 1, 2],
   ],
   obj: {
     a: 0,
     b: null,
     d: 1,
     e: true,
-    f: false
+    f: false,
   },
   num0: 0,
   num: 1,
   flo: 1.455,
   bt: true,
   bf: false,
-  nl: null
+  nl: null,
 };

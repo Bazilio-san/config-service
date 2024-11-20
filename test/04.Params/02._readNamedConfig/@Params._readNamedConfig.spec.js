@@ -7,7 +7,7 @@ const {
   Params,
   newInstance,
   fnError,
-  niError
+  niError,
 } = require('../../test-utils.js')({ __dirname });
 
 const __ = require('../../../src/lib.js');

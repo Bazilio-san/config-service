@@ -11,7 +11,7 @@ module.exports = {
       b: null,
       c: undefined,
       e: true,
-      f: false
+      f: false,
     },
     null,
     undefined,
@@ -22,7 +22,7 @@ module.exports = {
     0,
     1,
     1.2,
-    [0, 1, 2, undefined]
+    [0, 1, 2, undefined],
   ],
   obj: {
     a: 0,
@@ -30,7 +30,7 @@ module.exports = {
     c: undefined,
     d: 1,
     e: true,
-    f: false
+    f: false,
   },
   num0: 0,
   num: 1,
@@ -38,5 +38,5 @@ module.exports = {
   bt: true,
   bf: false,
   nl: null,
-  ud: undefined
+  ud: undefined,
 };

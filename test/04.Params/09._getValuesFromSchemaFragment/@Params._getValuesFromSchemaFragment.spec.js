@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 const {
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
 } = require('../../test-utils.js')({ __dirname });
 
 const expectedSchema = require('../../resources/with-actual-values/schema---av.js');

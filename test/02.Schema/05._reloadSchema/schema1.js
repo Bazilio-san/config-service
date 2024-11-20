@@ -10,8 +10,8 @@ module.exports = [
         type: 'string',
         title: 'div10 - This title has a translation',
         t: 'cs:config1.div10.title',
-        value: 'строка текст'
-      }
-    ]
-  }
+        value: 'строка текст',
+      },
+    ],
+  },
 ];

@@ -19,8 +19,8 @@ module.exports = {
       v_int: 456,
       v_float: 456.7890123,
       v_money: 456.7891432,
-      v_boolean: true
-    }
+      v_boolean: true,
+    },
   },
   defaultValue: {
     div11: { div21: { div31: { div41: 'default string' } } },
@@ -32,16 +32,16 @@ module.exports = {
         defaultProp2: [
           'a',
           'r',
-          'r'
+          'r',
         ],
         defaultProp3: 'sssss',
         defaultProp4: 555,
         defaultProp5: true,
-        defaultProp6: null
+        defaultProp6: null,
       },
       v_array: [
         111,
-        222
+        222,
       ],
       v_string: 'any string',
       v_text: '\nМного\nстрочный\nтекст',
@@ -53,7 +53,7 @@ module.exports = {
       v_int: 456,
       v_float: 456.7890123,
       v_money: 456.7891432,
-      v_boolean: true
-    }
-  }
+      v_boolean: true,
+    },
+  },
 };

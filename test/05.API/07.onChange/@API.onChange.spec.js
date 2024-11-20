@@ -3,7 +3,7 @@ const {
   serviceOptions,
   API,
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
 } = require('../../test-utils.js')({ __dirname });
 
 let testValue;
@@ -18,7 +18,7 @@ describe('API: Check onChange method call', () => {
     await prepareTestEnv(false);
     const thisServiceOptions = {
       ...serviceOptions,
-      onChange
+      onChange,
     };
     instance = new API(thisServiceOptions);
     await instance.init();

@@ -3,7 +3,7 @@
 const {
   prepareTestEnv,
   clearTestEnv,
-  fnError
+  fnError,
 } = require('../../test-utils.js')({ __dirname });
 
 function functionFoo () {
@@ -78,7 +78,7 @@ describe('Params: validateNewValue()', () => {
     ['int', {}, reErrorRealType],
     ['float', ['555'], reErrorRealType],
     ['money', 'str', /Failed to convert string to number/],
-    ['boolean', [], reErrorRealType]
+    ['boolean', [], reErrorRealType],
   ].forEach(([schemaDataType, value, expected]) => {
     if (expected === undefined) {
       expected = value;

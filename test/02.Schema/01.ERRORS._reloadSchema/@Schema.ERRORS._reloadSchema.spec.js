@@ -5,7 +5,7 @@ const {
   cpSchemaCtx,
   niError,
   SCHEMA_DIR,
-  Schema
+  Schema,
 } = require('../../test-utils.js')({ __dirname });
 
 const configDir = Schema.getConfigDir();

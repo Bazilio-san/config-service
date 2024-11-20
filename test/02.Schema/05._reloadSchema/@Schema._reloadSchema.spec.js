@@ -6,7 +6,7 @@ const {
   prepareTestEnv,
   clearTestEnv,
   clrRequire,
-  newInstance
+  newInstance,
 } = require('../../test-utils.js')({ __dirname });
 
 const schemaDir = Schema.getSchemaDir();

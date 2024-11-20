@@ -15,6 +15,6 @@ module.exports = {
     v_int: 456,
     v_float: 456.7890123,
     v_money: 456.7891432,
-    v_boolean: true
-  }
+    v_boolean: true,
+  },
 };

@@ -1,7 +1,7 @@
 const {
   prepareTestEnv,
   clearTestEnv,
-  niError
+  niError,
 } = require('../../test-utils.js')({ __dirname });
 
 describe('Params: ERRORS: _parseParamPath()', () => {
@@ -15,7 +15,7 @@ describe('Params: ERRORS: _parseParamPath()', () => {
     [1, 2],
     1,
     true,
-    { a: 1 }
+    { a: 1 },
   ].forEach((pathArr) => {
     it(`ERROR: Parameter name not passed to "${String(pathArr)}"`, async () => {
       const result = await niError('Params', '_parseParamPath', pathArr, { callFrom: 'fnFoo' });

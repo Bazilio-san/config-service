@@ -1,7 +1,7 @@
 const {
   prepareTestEnv,
   clearTestEnv,
-  niError
+  niError,
 } = require('../../test-utils.js')({ __dirname });
 
 describe('Params: _saveNamedConfig()', () => {

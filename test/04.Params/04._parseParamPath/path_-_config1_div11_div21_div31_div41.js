@@ -5,13 +5,13 @@ module.exports = {
     'div11',
     'div21',
     'div31',
-    'div41'
+    'div41',
   ],
   pathParent: [
     'config1',
     'div11',
     'div21',
-    'div31'
+    'div31',
   ],
   lastParamName: 'div41',
   configName: 'config1',
@@ -23,6 +23,6 @@ module.exports = {
     title: 'div41 title',
     t: 'cs:config1.div11.div21.div31.div41.title',
     value: 'ACTUAL string',
-    defaultValue: 'default string'
-  }
+    defaultValue: 'default string',
+  },
 };

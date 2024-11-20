@@ -26,9 +26,9 @@ describe('API: initialized with default parameters should work properly', () => 
           title: 'div41 title',
           t: 'cs:config1.div11.div21.div31.div41.title',
           value: 'ACTUAL string',
-          defaultValue: 'default string'
-        }
-      ]
+          defaultValue: 'default string',
+        },
+      ],
     });
   });
 
@@ -48,9 +48,9 @@ describe('API: initialized with default parameters should work properly', () => 
           title: 'div41 title',
           t: 'cs:config1.div11.div21.div31.div41.title',
           value: 'ACTUAL string',
-          defaultValue: 'default string'
-        }
-      ]
+          defaultValue: 'default string',
+        },
+      ],
     });
   });
 
@@ -68,7 +68,7 @@ describe('API: initialized with default parameters should work properly', () => 
     const result = instance.getTranslationTemplate({
       lng: 'ru',
       onlyStandardPaths: true,
-      addPaths: false
+      addPaths: false,
     });
     expect(result).to.eql(csNoi18n);
   });

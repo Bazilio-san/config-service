@@ -19,5 +19,5 @@ module.exports = {
     if (webApp && webApp.webServer && typeof webApp.webServer.close === 'function') {
       webApp.webServer.close();
     }
-  }
+  },
 };

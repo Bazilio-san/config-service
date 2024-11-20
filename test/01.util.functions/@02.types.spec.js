@@ -22,7 +22,7 @@ const schemaDataTypes = [
   'double',
   'money',
   'bool',
-  'boolean'
+  'boolean',
 ];
 
 const realTypes = {
@@ -30,7 +30,7 @@ const realTypes = {
   array: [],
   string: '',
   number: 3,
-  boolean: true
+  boolean: true,
 };
 
 describe('Utils: Type checking methods should works properly', () => {
@@ -115,7 +115,7 @@ describe('Utils: Type checking methods should works properly', () => {
       ['foo', 'boolean', false],
       [null, null, false],
       ['boolean', null, false],
-      ['email', 'number', false]
+      ['email', 'number', false],
     ];
     cases.forEach(([schemaDataType, type, result]) => {
       it(`"${schemaDataType}" schema data type corresponds to type "${type}" - "${result}"`, () => {
@@ -195,7 +195,7 @@ describe('Utils: Type checking methods should works properly', () => {
       ['float', ['555'], false],
       ['double', ['555'], false],
       ['bool', [], false],
-      ['boolean', [], false]
+      ['boolean', [], false],
     ].forEach(([schemaDataType, realValue, expected]) => {
       it(`${realValue} -> ${schemaDataType} -> ${expected}`, () => {
         expect(csu._validateValueByType(realValue, schemaDataType)).to.equals(expected);

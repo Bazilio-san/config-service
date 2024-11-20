@@ -4,7 +4,7 @@ const {
   clearTestEnv,
   cpSchemaFromResources,
   niError,
-  Params
+  Params,
 } = require('../../test-utils.js')({ __dirname });
 
 const configDir = Params.getConfigDir();

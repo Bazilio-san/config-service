@@ -6,7 +6,7 @@ const {
   clearTestEnv,
   clrRequire,
   newInstance,
-  toPlainObj
+  toPlainObj,
 } = require('../../test-utils.js')({ __dirname });
 
 const schemaDir = Schema.getSchemaDir();
@@ -27,7 +27,7 @@ describe('Schema: _normalizeNewSchema()', () => {
       title: 'Title of rule1',
       t: 'cs:rule1.title',
       type: 'section',
-      value: []
+      value: [],
     });
   });
 

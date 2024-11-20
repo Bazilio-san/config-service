@@ -21,7 +21,7 @@ module.exports = class API extends Params {
         getSchema: true,
         getSchemaAsync: true,
         plainParamsList: true,
-        getTranslationTemplate: true
+        getTranslationTemplate: true,
       };
     } else {
       this.noThrow = {};
@@ -54,7 +54,7 @@ module.exports = class API extends Params {
       this._addFrom(options, 'set');
       const {
         pathArr,
-        configName
+        configName,
       } = this._parseParamPathFragment(paramPath, options);
       if (!configName) {
         throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
@@ -92,7 +92,7 @@ module.exports = class API extends Params {
         paramPath: paramPath_,
         pathArr,
         lastParamName,
-        schemaItem
+        schemaItem,
       } = this._parseParamPath(paramPath, options);
       const parentSchemaItem = schemaItem[_parentSchemaItem_];
       const configValuesFromSchema = this._getValues(pathArr);
@@ -100,7 +100,7 @@ module.exports = class API extends Params {
         value: configValuesFromSchema,
         defaultValue: __.get(this.defaults, pathArr),
         paramPath: paramPath_,
-        paramName: lastParamName
+        paramName: lastParamName,
       };
       if (schemaItem[_isRootNode_]) {
         result.isRoot = true;
@@ -172,7 +172,7 @@ module.exports = class API extends Params {
       }
       const {
         paramPath: paramPath_,
-        pathArr
+        pathArr,
       } = this._parseParamPathFragment(paramPath, options);
       const schemaItemLocalized = this._getSchemaFragment(pathArr, localizedSchema, options);
       if (!__.isSchemaItem(schemaItemLocalized)) {

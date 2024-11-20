@@ -17,7 +17,7 @@ const serviceOptions = {
   i18n,
   i18nNS: 'cs',
   translatedProperties: ['descr'],
-  writeMissingTranslate: true
+  writeMissingTranslate: true,
 };
 
 const SCHEMA_DIR = './example/config/service';
@@ -192,5 +192,5 @@ module.exports = (context) => ({
     const instance = await newInstance(isNewInstance, addOptions);
     return instance;
   },
-  toPlainObj
+  toPlainObj,
 });

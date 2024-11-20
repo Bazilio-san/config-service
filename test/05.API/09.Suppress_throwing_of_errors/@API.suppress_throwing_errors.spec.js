@@ -3,7 +3,7 @@
 
 const {
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
 } = require('../../test-utils.js')({ __dirname });
 
 describe('API: Suppress throwing of ERRORS', () => {

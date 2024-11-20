@@ -11,10 +11,10 @@ module.exports = {
         Prop2: ['CHANGE 2'],
         Prop4: {
           Prop1: { a: 'CHANGE 2' },
-          Prop6: false
+          Prop6: false,
         },
-        Prop5: null
-      }
+        Prop5: null,
+      },
     },
     v_string: 'CHANGE 2',
     v_text: 'CHANGE 2',
@@ -27,6 +27,6 @@ module.exports = {
     v_float: 11.111,
     v_money: 11.111,
     v_boolean: false,
-    v_int: 456
-  }
+    v_int: 456,
+  },
 };

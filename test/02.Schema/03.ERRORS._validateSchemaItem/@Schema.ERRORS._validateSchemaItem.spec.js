@@ -6,7 +6,7 @@ const {
   niError,
   fnError,
   Schema,
-  prepareTestEnv
+  prepareTestEnv,
 } = require('../../test-utils.js')({ __dirname });
 
 const configDir = Schema.getConfigDir();

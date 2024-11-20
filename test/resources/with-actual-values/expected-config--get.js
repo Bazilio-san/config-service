@@ -7,7 +7,7 @@ module.exports = {
       v_json: { a: 1 },
       v_array: [
         111,
-        222
+        222,
       ],
       v_string: 'any string',
       v_text: '\nМного\nстрочный\nтекст',
@@ -19,8 +19,8 @@ module.exports = {
       v_int: 456,
       v_float: 456.7890123,
       v_money: 456.7891432,
-      v_boolean: true
-    }
+      v_boolean: true,
+    },
   },
   'config-2': {
     c0_s0: null,
@@ -29,11 +29,11 @@ module.exports = {
     div22: [
       10,
       20,
-      30
-    ]
+      30,
+    ],
   },
   'config 3': {
     div31: null,
-    div32: 'какая-то строка'
-  }
+    div32: 'какая-то строка',
+  },
 };

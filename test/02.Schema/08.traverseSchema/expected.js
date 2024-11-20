@@ -29,7 +29,7 @@ module.exports = {
     'c1_s0',
     'config 3',
     'div31',
-    'div32'
+    'div32',
   ],
   traverseValue: [
     3,
@@ -39,7 +39,7 @@ module.exports = {
     1,
     14,
     4,
-    2
+    2,
   ],
   traverseProperty: [
     'div10 / string',
@@ -62,6 +62,6 @@ module.exports = {
     'c0_s0 / string',
     'c1_s0 / string',
     'div31 / string',
-    'div32 / string'
-  ]
+    'div32 / string',
+  ],
 };

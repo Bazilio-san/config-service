@@ -10,9 +10,9 @@ module.exports = [
         title: 'DIV1 title',
         t: 'config.rules1.DIV1',
         type: 'int',
-        value: 2
-      }
-    ]
+        value: 2,
+      },
+    ],
   },
   {
     id: 'rules',
@@ -25,8 +25,8 @@ module.exports = [
         type: 'int',
         title: 'DIV2 title',
         t: 'config.rules.DIV2',
-        value: [1, 2, 3, 4]
-      }
-    ]
-  }
+        value: [1, 2, 3, 4],
+      },
+    ],
+  },
 ];

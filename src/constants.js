@@ -1,4 +1,4 @@
 module.exports = {
   DEFAULT_SCHEMA_DIR: 'config/service',
-  DEFAULT_CONFIG_DIR: 'config-data'
+  DEFAULT_CONFIG_DIR: 'config-data',
 };

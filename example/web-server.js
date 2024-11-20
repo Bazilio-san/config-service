@@ -32,7 +32,7 @@ const serviceOptions = {
   },
   onSaveNamedConfig: (configName, instance) => {
     instance.testOnSaveNamedConfig = configName;
-  }
+  },
 };
 
 if (process.env.NODE_CONFIG_SERVICE_SERVICE_URL_PATH) {

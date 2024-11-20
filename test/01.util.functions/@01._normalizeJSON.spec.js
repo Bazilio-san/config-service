@@ -14,7 +14,7 @@ describe('Utils: _normalizeJSON()', () => {
   it('Undefined property should be excluded; undefined array items -> null', () => {
     expect(instance._normalizeJSON({
       a: undefined,
-      b: [undefined]
+      b: [undefined],
     })).to.eql({ b: [null] });
   });
 

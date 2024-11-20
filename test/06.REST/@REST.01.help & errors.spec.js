@@ -24,7 +24,7 @@ describe(`REST: help & errors`, () => {
       '/config-service?foo',
       '/config-service?bar=1',
       '/config-service/',
-      '/config-service/foo'
+      '/config-service/foo',
     ].forEach((url) => {
       it(`"${url}" --> 500 + help`, (done) => {
         get(url)
@@ -38,8 +38,8 @@ describe(`REST: help & errors`, () => {
             err: {
               message: 'Invalid request',
               name: 'ConfigServiceError',
-              help: '/config-service/help'
-            }
+              help: '/config-service/help',
+            },
           })
           .end(done);
       });
@@ -49,7 +49,7 @@ describe(`REST: help & errors`, () => {
   describe(`Invalid queries returning 501 (Not Implemented)`, () => {
     [
       '/',
-      '/any/other/path.html'
+      '/any/other/path.html',
     ].forEach((url) => {
       it(`"${url}" --> 500 + help`, (done) => {
         get(url)

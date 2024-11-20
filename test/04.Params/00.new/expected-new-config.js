@@ -10,11 +10,11 @@ module.exports = {
         defaultProp3: 'sssss',
         defaultProp4: 555,
         defaultProp5: true,
-        defaultProp6: null
+        defaultProp6: null,
       },
       v_array: [
         111,
-        222
+        222,
       ],
       v_string: 'any string',
       v_text: '\nМного\nстрочный\nтекст',
@@ -26,24 +26,24 @@ module.exports = {
       v_int: 456,
       v_float: 456.7890123,
       v_money: 456.7891432,
-      v_boolean: true
-    }
+      v_boolean: true,
+    },
   },
   'config-2': {
     div21: [
       'ACTUAL array',
-      123
+      123,
     ],
     div22: [
       10,
       20,
-      30
+      30,
     ],
     c0_s0: null,
-    c1_s0: 'value is ONLY in the CONFIG'
+    c1_s0: 'value is ONLY in the CONFIG',
   },
   'config 3': {
     div31: 'какая-то строка',
-    div32: 'какая-то строка'
-  }
+    div32: 'какая-то строка',
+  },
 };

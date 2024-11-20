@@ -10,8 +10,8 @@ module.exports = [
         type: 'array',
         title: 'div10 - This title has a translation',
         t: 'cs:config1.div10.title',
-        value: [1, 2, 3, 4]
-      }
-    ]
-  }
+        value: [1, 2, 3, 4],
+      },
+    ],
+  },
 ];

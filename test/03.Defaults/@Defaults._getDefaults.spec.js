@@ -2,7 +2,7 @@
 
 const {
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
 } = require('../test-utils.js')({ __dirname });
 
 describe('Defaults: must be valid', () => {

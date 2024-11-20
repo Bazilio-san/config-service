@@ -1,7 +1,7 @@
 const {
   prepareTestEnv,
   clearTestEnv,
-  toPlainObj
+  toPlainObj,
 } = require('../../test-utils.js')({ __dirname });
 
 const expectedSchemaRu = require('./expected-schema-ru---default-values.js');

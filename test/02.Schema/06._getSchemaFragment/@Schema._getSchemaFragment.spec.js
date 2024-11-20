@@ -4,7 +4,7 @@ const {
   fnError,
   clearTestEnv,
   prepareTestEnv,
-  toPlainObj
+  toPlainObj,
 } = require('../../test-utils.js')({ __dirname });
 
 const schemaNormalized = lib.cloneDeep(require('../04._normalizeNewSchema/schema-normalized---default-values.js'));

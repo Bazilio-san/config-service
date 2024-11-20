@@ -55,7 +55,7 @@ const getFQDNCached = async (...args) => {
     if (fqdn) {
       fqdnCache[hostNameOrIP] = {
         created: Date.now(),
-        value: fqdn
+        value: fqdn,
       };
     }
   }
@@ -66,5 +66,5 @@ module.exports = {
   fqdnCache,
   minimizeCache,
   getFQDN,
-  getFQDNCached
+  getFQDNCached,
 };

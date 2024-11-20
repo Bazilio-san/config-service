@@ -20,7 +20,7 @@ class ConfigServiceError extends Error {
     if (logger) {
       logger.mErr(err, {
         msg,
-        noStack: isTesting && !process.env.CS_ERROR_SHOW_STACK
+        noStack: isTesting && !process.env.CS_ERROR_SHOW_STACK,
       });
     } else {
       let cMsg = `\x1b[31m${msg}`;

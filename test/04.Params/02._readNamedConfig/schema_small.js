@@ -10,9 +10,9 @@ module.exports = [
         type: 'string',
         title: 'param_02 - This title has a translation',
         t: 'cs:config1.param_02.title',
-        value: 'строка текст'
-      }
+        value: 'строка текст',
+      },
 
-    ]
-  }
+    ],
+  },
 ];

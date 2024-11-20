@@ -10,9 +10,9 @@ module.exports = [
         title: 'DIV1 title',
         t: 'config.rules1.DIV1',
         type: 'section',
-        value: 'here mast be an array'
-      }
-    ]
+        value: 'here mast be an array',
+      },
+    ],
   },
   {
     id: 'rules1',
@@ -25,8 +25,8 @@ module.exports = [
         // type: 'section',
         title: 'DIV2 title',
         t: 'config.rules.DIV2',
-        value: 333
-      }
-    ]
-  }
+        value: 333,
+      },
+    ],
+  },
 ];

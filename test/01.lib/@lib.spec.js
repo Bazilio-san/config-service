@@ -105,7 +105,7 @@ describe('Lib: functions should work properly', () => {
       [new Set(), false],
       [new Map(), false],
       [NaN, false],
-      [Infinity, false]
+      [Infinity, false],
     ].forEach(([value, expected]) => {
       it(String(value), () => {
         expect(lib.isObject(value)).to.equal(expected);
@@ -134,7 +134,7 @@ describe('Lib: functions should work properly', () => {
       [new Set(), false],
       [new Map(), false],
       [NaN, false],
-      [Infinity, false]
+      [Infinity, false],
     ].forEach(([value, expected]) => {
       it(`${value}`, () => {
         expect(lib.isNonEmptyObject(value)).to.equal(expected);

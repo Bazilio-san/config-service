@@ -5,7 +5,7 @@ const {
   clrRequire,
   clearTestEnv,
   API,
-  toPlainObj
+  toPlainObj,
 } = require('../../../test-utils.js')({ __dirname });
 
 const configDir = API.getConfigDir();
@@ -20,7 +20,7 @@ const change1 = {
       defaultProp3: 'CHANGE 1',
       defaultProp4: 111,
       defaultProp5: null,
-      defaultProp6: false
+      defaultProp6: false,
     },
     v_array: ['CHANGE 1'],
     v_string: 'CHANGE 1',
@@ -30,8 +30,8 @@ const change1 = {
     v_datetime: '2111-11-11T11:11:11.111',
     v_float: 11.111,
     v_money: 11.111,
-    v_boolean: false
-  }
+    v_boolean: false,
+  },
 };
 const chaqnge2 = {
   v_string: 'CHANGE 2',
@@ -45,18 +45,18 @@ const chaqnge2 = {
       Prop2: ['CHANGE 2'],
       Prop4: {
         Prop1: { a: 'CHANGE 2' },
-        Prop6: false
+        Prop6: false,
       },
-      Prop5: null
-    }
-  }
+      Prop5: null,
+    },
+  },
 };
 
 const changes = [
   ['config1', change1],
   ['config1.div13', chaqnge2],
   ['config1.div11.div21.div31', { div41: 'CHANGE 3' }],
-  ['config1.div11.div21.div31.div41', 'CHANGE 4']
+  ['config1.div11.div21.div31.div41', 'CHANGE 4'],
 ];
 
 describe('API: checking values in the set() and get chain()', () => {

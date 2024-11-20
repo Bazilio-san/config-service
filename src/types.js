@@ -13,7 +13,7 @@ const __ = require('./lib.js');
 const MIN_INT = -2147483648;
 const MAX_INT = 2147483647;
 const MIN_LONG = -9223372036854775808;
-// eslint-disable-next-line no-loss-of-precision
+// eslint-disable-next-line no-loss-of-precision,@typescript-eslint/no-loss-of-precision
 const MAX_LONG = 9223372036854775807;
 
 const numberValidator = (newVal, schemaItem, error = {}, isFractional = false) => {
@@ -131,14 +131,14 @@ module.exports = {
         error.reason = `Failed to normalize JSON value Error: ${err.message}`;
         return null;
       }
-    }
+    },
   },
   section: {
     jsTypes: ['null', 'array', 'object'],
     validator: (newVal, schemaItem, error = {}) => {
       error.reason = `Cannot set a value for a 'section'. Path «${schemaItem.path}». Value: «${newVal}»`;
       return undefined;
-    }
+    },
   },
   array: {
     jsTypes: ['null', 'array'],
@@ -151,7 +151,7 @@ module.exports = {
       }
       error.reason = `Type mismatch.  «Array» expected, received: «${typeof newVal}»`;
       return null;
-    }
+    },
   },
   string: {
     jsTypes: ['any'],
@@ -160,7 +160,7 @@ module.exports = {
         return null;
       }
       return (typeof newVal === 'string' ? newVal : JSON.stringify(newVal));
-    }
+    },
   },
   text: {
     jsTypes: ['null', 'string'],
@@ -169,7 +169,7 @@ module.exports = {
         return null;
       }
       return (typeof newVal === 'string' ? newVal : JSON.stringify(newVal));
-    }
+    },
   },
   date: {
     jsTypes: ['null', 'string'],
@@ -179,7 +179,7 @@ module.exports = {
       }
       const dt = __.parseAndValidateDate(newVal, error);
       return dt ? dt.substr(0, 10) : null;
-    }
+    },
   },
   time: {
     jsTypes: ['null', 'string'],
@@ -189,7 +189,7 @@ module.exports = {
       }
       const dt = __.parseAndValidateDate(`2000-01-01T${String(newVal)}`, error);
       return dt ? dt.substr(11) : null;
-    }
+    },
   },
   datetime: {
     jsTypes: ['null', 'string'],
@@ -198,7 +198,7 @@ module.exports = {
         return null;
       }
       return __.parseAndValidateDate(newVal, error);
-    }
+    },
   },
   email: {
     jsTypes: ['null', 'string'],
@@ -218,11 +218,11 @@ module.exports = {
         return null;
       }
       return newVal;
-    }
+    },
   },
   number: {
     jsTypes: ['null', 'number', 'string'],
-    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true)
+    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true),
   },
   int: {
     jsTypes: ['null', 'number', 'string'],
@@ -232,14 +232,14 @@ module.exports = {
         return null;
       }
       return Math.round(Math.max(Math.min(validated, MAX_INT), MIN_INT));
-    }
+    },
   },
   long: {
     jsTypes: ['null', 'number', 'string'],
     validator: (newVal, schemaItem, error = {}) => {
       const validated = numberValidator(newVal, schemaItem, error);
       return validated == null ? null : validated;
-    }
+    },
   },
   float: {
     jsTypes: ['null', 'number', 'string'],
@@ -249,22 +249,22 @@ module.exports = {
         return null;
       }
       return validated;
-    }
+    },
   },
   double: {
     jsTypes: ['null', 'number', 'string'],
-    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true)
+    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true),
   },
   money: {
     jsTypes: ['null', 'number', 'string'],
-    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true)
+    validator: (newVal, schemaItem, error = {}) => numberValidator(newVal, schemaItem, error, true),
   },
   boolean: {
     jsTypes: ['null', 'boolean'],
-    validator: (newVal, schemaItem, error = {}) => booleanValidator(newVal, schemaItem, error)
+    validator: (newVal, schemaItem, error = {}) => booleanValidator(newVal, schemaItem, error),
   },
   bool: {
     jsTypes: ['null', 'boolean'],
-    validator: (newVal, schemaItem, error = {}) => booleanValidator(newVal, schemaItem, error)
-  }
+    validator: (newVal, schemaItem, error = {}) => booleanValidator(newVal, schemaItem, error),
+  },
 };

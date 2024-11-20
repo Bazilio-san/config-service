@@ -11,16 +11,16 @@ const { fileLogger } = require('../example/logger-service.js');
 
 describe('_INIT: Testing environment should be set properly', () => {
   it('NODE_ENV should be "testing"', () => {
-        expect(process.env.NODE_ENV).to.equal('testing');
+    expect(process.env.NODE_ENV).to.equal('testing');
   });
   it('NODE_CONFIG_DIR should be "testing"', () => {
     const nodeConfigDir = path.resolve(process.env.NODE_CONFIG_DIR);
     const expected = path.resolve(`${__dirname}/config`).replace(/\btest\b/, 'example');
-        expect(nodeConfigDir).to.equal(expected);
+    expect(nodeConfigDir).to.equal(expected);
   });
   it('LOGGER_LEVEL should be "debug"', () => {
     const currentLevel = process.env.LOGGER_LEVEL;
-        expect(currentLevel).to.equal('debug');
+    expect(currentLevel).to.equal('debug');
   });
 });
 

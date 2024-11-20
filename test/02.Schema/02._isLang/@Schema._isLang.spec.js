@@ -2,7 +2,7 @@ const {
   clearTestEnv,
   prepareTestEnv,
   Schema,
-  serviceOptions
+  serviceOptions,
 } = require('../../test-utils.js')({ __dirname });
 
 describe('Schema: _isLang()', () => {
@@ -14,7 +14,7 @@ describe('Schema: _isLang()', () => {
     [{}, 'ru', false],
     [{}, 'foo', false],
     [serviceOptions, 'ru', true],
-    [serviceOptions, 'foo', false]
+    [serviceOptions, 'foo', false],
   ].forEach(([options, lng, expected]) => {
     it(`Schema: _isLang: ${options.i18n ? 'i18n / ' : ''} ${lng} -> ${expected}`, () => {
       instance = new Schema(options);
