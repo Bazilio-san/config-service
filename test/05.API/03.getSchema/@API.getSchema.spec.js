@@ -1,6 +1,6 @@
 const lib = require('../../../src/lib.js');
 
-const { prepareTestEnv, clearTestEnv, fnError } = require('../../test-utils.js')({ __dirname });
+const { prepareTestEnv, clearTestEnv, fnError, toPlainObj } = require('../../test-utils.js')({ __dirname });
 
 const expectedSchema = lib.cloneDeep(require('../../resources/with-actual-values/schema---av.js'));
 const expectedSchemaRu = lib.cloneDeep(require('../../resources/with-actual-values/schema-ru---av.js'));
@@ -34,7 +34,7 @@ describe('API: getSchema()', () => {
         expect(fnError(instance, 'getSchema', paramPath, lng)).to.match(match);
       } else {
         const testValue = instance.getSchema(paramPath, lng);
-        expect(testValue).to.eql(expected);
+        expect(toPlainObj(testValue)).to.eql(expected);
       }
     });
   });

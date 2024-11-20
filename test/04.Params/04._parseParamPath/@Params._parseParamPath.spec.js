@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 
-const { prepareTestEnv, clearTestEnv, fnError } = require('../../test-utils.js')({ __dirname });
+const { prepareTestEnv, clearTestEnv, fnError, toPlainObj } = require('../../test-utils.js')({ __dirname });
 
 const forRoot = require('./path_-_.js');
 const forLongPath = require('./path_-_config1_div11_div21_div31_div41.js');
@@ -29,7 +29,7 @@ describe('Params: _parseParamPath()', () => {
     } else {
       it(`Checking parsing path "${path}"`, () => {
         const result = instance._parseParamPath(path, { callFrom: 'test' });
-        expect(result).to.eql(expected);
+        expect(toPlainObj(result)).to.eql(expected);
       });
     }
   });

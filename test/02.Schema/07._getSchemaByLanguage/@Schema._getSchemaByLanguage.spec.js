@@ -1,6 +1,7 @@
 const {
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
+  toPlainObj
 } = require('../../test-utils.js')({ __dirname });
 
 const expectedSchemaRu = require('./expected-schema-ru---default-values.js');
@@ -14,12 +15,12 @@ describe('Schema: Translations should work properly', () => {
 
   it('Method _getSchemaByLanguage() should cache the correct translations (ru)', () => {
     const result = instance._getSchemaByLanguage('ru');
-    expect(result).to.eql(expectedSchemaRu);
+    expect(toPlainObj(result)).to.eql(expectedSchemaRu);
   });
 
   it('Method _getSchemaByLanguage() should cache the correct translations (en)', () => {
     const result = instance._getSchemaByLanguage('en');
-    expect(result).to.eql(expectedSchemaEn);
+    expect(toPlainObj(result)).to.eql(expectedSchemaEn);
   });
 
   it('No translation into a non-existent language', () => {

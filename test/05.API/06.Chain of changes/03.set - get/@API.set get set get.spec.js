@@ -4,7 +4,8 @@ const {
   prepareTestEnv,
   clrRequire,
   clearTestEnv,
-  API
+  API,
+  toPlainObj
 } = require('../../../test-utils.js')({ __dirname });
 
 const configDir = API.getConfigDir();
@@ -96,17 +97,17 @@ describe('API: checking values in the set() and get chain()', () => {
 
       it(`getSchema()`, () => {
         const val = instance.getSchema();
-        expect(val).to.eql(expectedSchema);
+        expect(toPlainObj(val)).to.eql(expectedSchema);
         // const realValue = path ? __.get(expectedSchema, path) : expectedSchema;
         const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
-        expect(values).to.eql(expected);
+        expect(toPlainObj(values)).to.eql(expected);
       });
 
       it(`getSchema(null, 'ru')`, () => {
         const val = instance.getSchema(null, 'ru');
-        expect(val).to.eql(expectedSchemaRu);
+        expect(toPlainObj(val)).to.eql(expectedSchemaRu);
         const values = instance._getValuesFromSchemaFragment(val).__root__.config1;
-        expect(values).to.eql(expected);
+        expect(toPlainObj(values)).to.eql(expected);
       });
 
       it(`getSchema('${paramPath}')`, () => {

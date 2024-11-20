@@ -1,6 +1,7 @@
 const {
   prepareTestEnv,
-  clearTestEnv
+  clearTestEnv,
+  toPlainObj
 } = require('../../test-utils.js')({ __dirname });
 
 const __ = require('../../../src/lib.js');
@@ -31,7 +32,7 @@ describe('Params: check after constructor call', () => {
   });
 
   it(`new schema`, () => {
-    expect(instance.schema).to.eql(expectedNewSchema);
+    expect(toPlainObj(instance.schema)).to.eql(expectedNewSchema);
   });
 
   after(clearTestEnv);

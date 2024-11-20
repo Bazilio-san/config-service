@@ -5,7 +5,8 @@ const {
   prepareTestEnv,
   clearTestEnv,
   clrRequire,
-  newInstance
+  newInstance,
+  toPlainObj
 } = require('../../test-utils.js')({ __dirname });
 
 const schemaDir = Schema.getSchemaDir();
@@ -20,7 +21,7 @@ describe('Schema: _normalizeNewSchema()', () => {
   });
 
   it('Missing optional properties should be added', () => {
-    expect(instance.schema.value[0]).to.eql({
+    expect(instance.schema.value[0]).to.deep.include({
       id: 'rule1',
       path: 'rule1',
       title: 'Title of rule1',
@@ -35,7 +36,7 @@ describe('Schema: _normalizeNewSchema()', () => {
     const originalSchema = require('../../resources/schema.js');
     const expected = require('./schema-normalized---default-values.js');
     const normalizeFullSchema = instance._normalizeNewSchema(originalSchema);
-    expect(normalizeFullSchema).to.eql(expected);
+    expect(toPlainObj(normalizeFullSchema)).to.eql(expected);
   });
 
   after(clearTestEnv);

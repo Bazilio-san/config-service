@@ -132,6 +132,8 @@ const niError = async (type, doBefore, fnName, ...args) => {
   return errMsg;
 };
 
+const toPlainObj = (obj) => JSON.parse(JSON.stringify(obj));
+
 module.exports = (context) => ({
   pr: (src) => path.resolve(path.join(context.__dirname, src)),
   cpSchemaCtx: (src) => {
@@ -189,5 +191,6 @@ module.exports = (context) => ({
     // noinspection UnnecessaryLocalVariableJS
     const instance = await newInstance(isNewInstance, addOptions);
     return instance;
-  }
+  },
+  toPlainObj
 });

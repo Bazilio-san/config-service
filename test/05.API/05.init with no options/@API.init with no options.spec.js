@@ -1,4 +1,4 @@
-const { API, prepareTestEnv, clearTestEnv } = require('../../test-utils.js')({ __dirname });
+const { API, prepareTestEnv, clearTestEnv, toPlainObj } = require('../../test-utils.js')({ __dirname });
 
 const csNoi18n = require('./cs.no.i18n.json');
 
@@ -12,7 +12,7 @@ describe('API: initialized with default parameters should work properly', () => 
 
   it('Check Schema', () => {
     const result = instance.getSchema('config1.div11.div21.div31');
-    expect(result).to.eql({
+    expect(toPlainObj(result)).to.eql({
       id: 'div31',
       path: 'config1.div11.div21.div31',
       type: 'section',
@@ -34,7 +34,7 @@ describe('API: initialized with default parameters should work properly', () => 
 
   it('Check Schema with language', () => {
     const result = instance.getSchema('config1.div11.div21.div31', 'ru');
-    expect(result).to.eql({
+    expect(toPlainObj(result)).to.eql({
       id: 'div31',
       path: 'config1.div11.div21.div31',
       type: 'section',

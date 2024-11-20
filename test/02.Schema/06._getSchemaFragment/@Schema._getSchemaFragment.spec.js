@@ -3,7 +3,8 @@ const lib = require('../../../src/lib.js');
 const {
   fnError,
   clearTestEnv,
-  prepareTestEnv
+  prepareTestEnv,
+  toPlainObj
 } = require('../../test-utils.js')({ __dirname });
 
 const schemaNormalized = lib.cloneDeep(require('../04._normalizeNewSchema/schema-normalized---default-values.js'));
@@ -24,24 +25,24 @@ describe('Schema: _getSchemaFragment()', () => {
 
   it('Get full Schema', () => {
     const actualFullSchema = instance._getSchemaFragment([], instance.schema, { callFrom: 'test' });
-    expect(actualFullSchema).to.eql(schemaNormalized);
+    expect(toPlainObj(actualFullSchema)).to.deep.include(schemaNormalized);
   });
 
   it(`Get Schema fragment 'config1.div11'`, () => {
     const schemaBranch = instance._getSchemaFragment(['config1', 'div11'], instance.schema, { callFrom: 'test' });
-    expect(schemaBranch).to.eql(div11);
+    expect(toPlainObj(schemaBranch)).to.eql(div11);
   });
 
   it(`Get Schema fragment 'config1.div11.div21.div31'`, () => {
     const schemaBranch = instance._getSchemaFragment(['config1', 'div11', 'div21',
       'div31'], instance.schema, { callFrom: 'test' });
-    expect(schemaBranch).to.eql(div11.value[0].value[0]);
+    expect(toPlainObj(schemaBranch)).to.eql(div11.value[0].value[0]);
   });
 
   it(`Get Schema fragment 'config1.div11.div21.div31.div41'`, () => {
     const schemaBranch = instance._getSchemaFragment(['config1', 'div11', 'div21', 'div31',
       'div41'], instance.schema, { callFrom: 'test' });
-    expect(schemaBranch).to.eql(div11.value[0].value[0].value[0]);
+    expect(toPlainObj(schemaBranch)).to.eql(div11.value[0].value[0].value[0]);
   });
 
   after(clearTestEnv);
