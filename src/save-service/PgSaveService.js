@@ -1,27 +1,6 @@
 const { Pool } = require('pg');
 const SaveService = require('./SaveService');
-
-const _5_MIN = 5 * 60_000; // 5 min
-const _3_HOURS = 3_600_000 * 3; // 3 ч
-const TABLE_NAME = 'core.settings';
-
-const defaultOptions = {
-  // all valid client config options are also valid here
-  // in addition here are the pool specific configuration parameters:
-  // number of milliseconds to wait before timing out when connecting a new client
-  // by default this is 0 which means no timeout
-  connectionTimeoutMillis: _5_MIN, // 5 min
-  // number of milliseconds a client must sit idle in the pool and not be checked out
-  // before it is disconnected from the backend and discarded
-  // default is 10000 (10 seconds) - set to 0 to disable auto-disconnection of idle clients
-  idleTimeoutMillis: _3_HOURS, // 3 h
-  // maximum number of clients the pool should contain
-  // by default this is set to 10.
-  max: 10,
-  port: 5432,
-  statement_timeout: _3_HOURS, // number of milliseconds before a statement in query will time out, default is no timeout
-  query_timeout: _3_HOURS // number of milliseconds until the request call times out, no timeout by default
-};
+const { TABLE_NAME, defaultOptions } = require('./db-storage/pg-service-config.js');
 
 /**
  * Класс отвечает за запись и чтение данных из базы дынных.
@@ -31,6 +10,8 @@ module.exports = class PgSaveService extends SaveService {
     super();
     this.options = { ...defaultOptions, ...options };
     this.getPoolPg();
+    this.updates = { schedule: {} };
+    this.initFlashUpdateSchedule();
   }
 
   /**
@@ -133,7 +114,7 @@ module.exports = class PgSaveService extends SaveService {
    */
   async queryPg (
     sqlText,
-    sqlValues
+    sqlValues,
   ) {
     try {
       const pool = await this.getPoolPg();
@@ -142,5 +123,50 @@ module.exports = class PgSaveService extends SaveService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  scheduleUpdate (payload) {
+    this.updates.schedule[payload.paramPath] = payload;
+  }
+
+  async flashUpdateSchedule () {
+    const preRequests = Object.values(this.updates.schedule);
+    this.updates.schedule = {};
+    if (!preRequests.length) {
+      return true;
+    }
+    const values = [];
+    const sql = preRequests.map(({ configName, paramPath, value }, index) => {
+      values.push(value);
+      // @formatter:off
+      return `INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
+      VALUES ('${configName}', '${paramPath}', $${index + 1}, CURRENT_TIMESTAMP)
+      ON CONFLICT ("paramPath")
+      DO UPDATE SET
+          "value" = $${index + 1},
+          "updatedAt" = CURRENT_TIMESTAMP;`;
+      // @formatter:on
+    }).join('\n');
+    try {
+      const pool = await this.getPoolPg();
+      const res = await pool.query(sql, values);
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  initFlashUpdateSchedule () {
+    setInterval(() => {
+      this.flashUpdateSchedule();
+    }, 1000);
+  }
+
+  async getNamedConfigDB (configName) {
+    const sql = `---
+      SELECT * FROM ${TABLE_NAME}
+      WHERE "configName" = '${configName}'`;
+    const res = await this.queryPg(sql);
+    return res;
   }
 };

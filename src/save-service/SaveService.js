@@ -9,4 +9,8 @@ module.exports = class SaveService {
   // eslint-disable-next-line class-methods-use-this
   getConfig () {
   }
-}
+
+  // eslint-disable-next-line class-methods-use-this
+  scheduleUpdate () {
+  }
+};

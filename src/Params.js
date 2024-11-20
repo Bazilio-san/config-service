@@ -3,7 +3,6 @@
 const __ = require('./lib.js');
 const Schema = require('./Schema.js');
 const { getConfigService } = require('./save-service');
-const scheduleUpdate = require('./db-storage/update-settings.js');
 const ee = require('./ee');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
@@ -335,5 +334,5 @@ ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
   if (!configName) {
     return;
   }
-  scheduleUpdate({ configName, paramPath, value: newValue });
+  this.configService.scheduleUpdate({ configName, paramPath, value: newValue });
 });
