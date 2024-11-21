@@ -1,6 +1,8 @@
 const _5_MIN = 5 * 60_000; // 5 min
 const _3_HOURS = 3_600_000 * 3; // 3 ч
 
+const UPDATE_TIME = 10; // in seconds
+
 const TABLE_NAME = 'core.config_service';
 
 const defaultOptions = {
@@ -21,4 +23,4 @@ const defaultOptions = {
   query_timeout: _3_HOURS, // number of milliseconds until the request call times out, no timeout by default
 };
 
-module.exports = { defaultOptions, TABLE_NAME };
+module.exports = { defaultOptions, TABLE_NAME, UPDATE_TIME };

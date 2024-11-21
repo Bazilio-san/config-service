@@ -32,14 +32,16 @@ function fnFoo () {
 module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
+    this.initCsLeafChangeListener();
     const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
-    this.configService = getConfigService(serviceOptions);
+    this.serviceOptions = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
   }
 
   async init () {
     await super.init();
+    this.configService = getConfigService(this.serviceOptions, this.schema);
     const noReloadSchema = true;
     await this._reloadConfig(noReloadSchema);
     this.defaults = this._getDefaults();
@@ -327,12 +329,18 @@ module.exports = class Params extends Schema {
     }
     return valuesContainer;
   }
-};
 
-ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
-  const configName = paramPath.split('.')[0];
-  if (!configName) {
-    return;
+  initCsLeafChangeListener () {
+    ee.on('fetch-config', () => {
+      this._reloadConfig(true);
+    });
+
+    ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
+      const configName = paramPath.split('.')[0];
+      if (!configName) {
+        return;
+      }
+      this.configService.scheduleUpdate({ configName, paramPath, value: newValue });
+    });
   }
-  this.configService.scheduleUpdate({ configName, paramPath, value: newValue });
-});
+};

@@ -1,47 +1,154 @@
 const { Pool } = require('pg');
 const SaveService = require('./SaveService');
 const { TABLE_NAME, defaultOptions } = require('./db-storage/pg-service-config.js');
+const ee = require('../ee');
+const { UPDATE_TIME } = require('./db-storage/pg-service-config');
 
 /**
  * Класс отвечает за запись и чтение данных из базы дынных.
  */
 module.exports = class PgSaveService extends SaveService {
-  constructor (options) {
+  constructor (options, schema) {
     super();
     this.options = { ...defaultOptions, ...options };
     this.getPoolPg();
     this.updates = { schedule: {} };
+    this.schema = schema;
+    this.config = {};
+    this.configRows = new Map();
+    this.initPromise = this.fetchFullConfig(this.schema);
     this.initFlashUpdateSchedule();
   }
 
   /**
-   * Save config to postgres
+   * Save full config to postgres
    *
    * @param {string} configName
    * @param {string} configValue
    */
-  async saveConfig (configName, configValue) {
-    const sql = `---
-      INSERT INTO ${TABLE_NAME} ("configName", "configValue")
-      VALUES ('${configName}', $1)
-      ON CONFLICT ("configName")
-      DO UPDATE SET "configValue" = $1
-      `;
-    await this.queryPg(sql, [configValue]);
+  // eslint-disable-next-line class-methods-use-this
+  saveConfig (configName, configValue) {
+    // unused
   }
 
   /**
-   * Get config from postgres by configName
+   * Get config by configName
    *
    * @param {string} configName
    */
   async getConfig (configName) {
+    await this.initPromise;
+    return this.config[configName];
+  }
+
+  /**
+   * Update config node
+   *
+   * @param {string} configName
+   * @param {string} paramPath
+   * @param {any} node
+   * @private
+   */
+  updateConfigNode (configName, paramPath, node) {
+    if (typeof node === 'object') {
+      Object.entries(node).forEach(([title, value]) => {
+        this.updateConfigNode(configName, `${paramPath}.${title}`, value);
+      });
+    } else {
+      this.scheduleUpdate({ configName, paramPath, value: node });
+    }
+  }
+
+  /**
+   * Get full config from postgres and save to this.config
+   *
+   * @param {schemaItemType} schema
+   * @private
+   */
+  async fetchFullConfig (schema) {
+    await this.fetchConfigRows('20 years');
+    this.config = this.buildConfigNode('', schema);
+    this.configRows = new Map();
+  }
+
+  /**
+   * Get last updated rows from postgres and save to this.config. Emit this.config if it is changed
+   *
+   * @private
+   */
+  async fetchConfigChanges () {
+    await this.fetchConfigRows(`${UPDATE_TIME * 1.5} sec`);
+    if (this.configRows.size) {
+      const lastSavedConfig = this.config;
+      this.setConfigRowsToConfig();
+      if (JSON.stringify(lastSavedConfig) !== JSON.stringify(this.config)) {
+        ee.emit('fetch-config');
+      }
+    }
+    this.configRows = new Map();
+  }
+
+  /**
+   * Save this.configRows to this.config
+   *
+   * @private
+   */
+  setConfigRowsToConfig () {
+    Array.from(this.configRows).forEach(([path, row]) => {
+      const fieldNames = path.split('.');
+      fieldNames.reduce((accum, fieldName, index) => {
+        if (index === fieldNames.length - 1) {
+          accum[fieldName] = row;
+        } else if (!accum[fieldName]) {
+          accum[fieldName] = {};
+        }
+        return accum[fieldName];
+      }, this.config);
+    });
+  }
+
+  /**
+   * Fetch all config rows updated during last time $timeString from table $TABLE_NAME
+   *
+   * @param {string} timeString
+   * @private
+   */
+  async fetchConfigRows (timeString) {
     const sql = `---
-      SELECT "configValue"
+      SELECT *
       FROM ${TABLE_NAME}
-      WHERE "configName" = '${configName}'`;
+      WHERE "updatedAt" > (CURRENT_TIMESTAMP - INTERVAL '${timeString}')`;
     const res = await this.queryPg(sql);
-    return JSON.parse(res);
+    res.rows.forEach((row) => {
+      this.configRows.set(row.paramPath, row.value);
+    });
+  }
+
+  /**
+   * Build config node from rows
+   *
+   * @param {string} path
+   * @param {schemaItemType} nodeSchema
+   * @private
+   */
+  buildConfigNode (path, nodeSchema) {
+    const nodeName = nodeSchema.id;
+    let fullPath = path;
+    if (nodeName !== '__root__') {
+      fullPath = path ? `${path}.${nodeName}` : nodeName;
+    }
+    const nodeSchemaValue = nodeSchema.value;
+    let nodeValue = null;
+    if (Array.isArray(nodeSchemaValue)) {
+      nodeValue = {};
+      nodeSchemaValue.forEach(async (fieldSchema) => {
+        const fieldValue = this.buildConfigNode(fullPath, fieldSchema);
+        nodeValue[fieldSchema.id] = fieldValue;
+      });
+    } else {
+      nodeValue = this.configRows.get(fullPath);
+    }
+    return nodeValue;
   }
 
   /**
@@ -119,54 +226,60 @@ module.exports = class PgSaveService extends SaveService {
     try {
       const pool = await this.getPoolPg();
       const res = await pool.query(sqlText, Array.isArray(sqlValues) ? sqlValues : undefined);
-      return res?.rows?.[0]?.configValue ?? '';
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  scheduleUpdate (payload) {
-    this.updates.schedule[payload.paramPath] = payload;
-  }
-
-  async flashUpdateSchedule () {
-    const preRequests = Object.values(this.updates.schedule);
-    this.updates.schedule = {};
-    if (!preRequests.length) {
-      return true;
-    }
-    const values = [];
-    const sql = preRequests.map(({ configName, paramPath, value }, index) => {
-      values.push(value);
-      // @formatter:off
-      return `INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
-      VALUES ('${configName}', '${paramPath}', $${index + 1}, CURRENT_TIMESTAMP)
-      ON CONFLICT ("paramPath")
-      DO UPDATE SET
-          "value" = $${index + 1},
-          "updatedAt" = CURRENT_TIMESTAMP;`;
-      // @formatter:on
-    }).join('\n');
-    try {
-      const pool = await this.getPoolPg();
-      const res = await pool.query(sql, values);
       return res;
     } catch (error) {
       console.error(error);
     }
   }
 
-  initFlashUpdateSchedule () {
-    setInterval(() => {
-      this.flashUpdateSchedule();
-    }, 1000);
+  /**
+   * Save updated node for sending to postgres
+   *
+   * @param {{ configName: string, paramPath: string, value: any }} payload
+   */
+  scheduleUpdate (payload) {
+    this.updates.schedule[payload.paramPath] = payload;
   }
 
-  async getNamedConfigDB (configName) {
-    const sql = `---
-      SELECT * FROM ${TABLE_NAME}
-      WHERE "configName" = '${configName}'`;
-    const res = await this.queryPg(sql);
-    return res;
+  /**
+   * Send all updates to postgres
+   *
+   * @private
+   */
+  async flashUpdateSchedule () {
+    const preRequests = Object.values(this.updates.schedule);
+    this.updates.schedule = {};
+    if (!preRequests.length) {
+      return;
+    }
+
+    try {
+      const pool = await this.getPoolPg();
+      const promises = preRequests.map(async ({ configName, paramPath, value }, index) => {
+        const sql = `
+          INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
+          VALUES ('${configName}', '${paramPath}', $1, CURRENT_TIMESTAMP)
+            ON CONFLICT ("paramPath")
+            DO UPDATE SET
+            "value" = $1,
+                             "updatedAt" = CURRENT_TIMESTAMP`;
+        await pool.query(sql, [value]);
+      });
+      await Promise.all(promises);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /**
+   * Initialize regular data fetching and update
+   *
+   * @private
+   */
+  initFlashUpdateSchedule () {
+    setInterval(async () => {
+      await this.flashUpdateSchedule();
+      await this.fetchConfigChanges();
+    }, UPDATE_TIME * 1000);
   }
 };

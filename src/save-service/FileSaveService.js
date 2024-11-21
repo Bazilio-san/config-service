@@ -43,6 +43,7 @@ module.exports = class FileSaveService extends SaveService {
     return JSON.parse(configValue);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _expectedPath (path_) {
     return path_.replace(process.cwd(), '<proj_root>').replace(/\\/g, '/');
   }
