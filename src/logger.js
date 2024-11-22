@@ -1,6 +1,5 @@
 class BaseLogger {
   constructor (scope) {
-    this.super();
     this._scope = scope;
   }
 
@@ -45,4 +44,4 @@ const initLogger = (payload) => {
   return logger ?? new BaseLogger(scope);
 };
 
-module.export = { initLogger };
+module.exports = { initLogger };

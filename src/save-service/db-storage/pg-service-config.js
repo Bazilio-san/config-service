@@ -1,7 +1,7 @@
 const _5_MIN = 5 * 60_000; // 5 min
 const _3_HOURS = 3_600_000 * 3; // 3 ч
 
-const UPDATE_TIME = 10; // in seconds
+const UPDATE_TIME = 2; // in seconds
 
 const TABLE_NAME = 'core.config_service';
 

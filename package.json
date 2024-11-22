@@ -1,6 +1,6 @@
 {
   "name": "config-srv",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/index.js",
   "scripts": {
@@ -53,6 +53,7 @@
     "node": ">= 14"
   },
   "dependencies": {
+    "af-db-ts": "^3.0.8",
     "pg": "^8.13.1",
     "set-interval-async": "^3.0.3"
   }
