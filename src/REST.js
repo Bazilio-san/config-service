@@ -143,7 +143,7 @@ const isIoBroadcastDecoratorSymbol = Symbol.for('isIoBroadcastDecorator');
 module.exports = class REST extends API {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
-    const { serviceUrlPath, saveType = 'file' } = serviceOptions;
+    const { serviceUrlPath } = serviceOptions;
     let urlPath = (`/${serviceUrlPath || ''}`).replace(/[/\\]+/g, '/').replace(/\/+$/, '');
     if (!urlPath.replace('/', '')) {
       urlPath = '/config-service';

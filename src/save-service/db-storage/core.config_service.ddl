@@ -11,11 +11,11 @@ CREATE TABLE core.config_service
 
 );
 
-create index config_service_configname_index on config_service ("configName");
+create index config_service_configname_index on core.config_service ("configName");
 
-comment on table config_service is 'Хранилище настроек config service';
+comment on table core.config_service is 'Хранилище настроек config service';
 
-comment on column config_service."configName" is 'Имя коневого свойства - "именованная конфигурация"';
-comment on column config_service."paramPath" is 'Полный путь к свойству, являющемуся "листом" в дереве настроек';
-comment on column config_service.value is 'Значение настройки в json формате';
-comment on column config_service."updatedAt" is 'Время последнего изменения записи';
+comment on column core.config_service."configName" is 'Имя коневого свойства - "именованная конфигурация"';
+comment on column core.config_service."paramPath" is 'Полный путь к свойству, являющемуся "листом" в дереве настроек';
+comment on column core.config_service.value is 'Значение настройки в json формате';
+comment on column core.config_service."updatedAt" is 'Время последнего изменения записи';

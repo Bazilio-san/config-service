@@ -2,7 +2,7 @@
 
 const __ = require('./lib.js');
 const Schema = require('./Schema.js');
-const { getConfigService } = require('./save-service');
+const { getStorageService } = require('./save-service');
 const ee = require('./ee');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
@@ -26,22 +26,19 @@ const _callerId_ = Symbol.for('_callerId_');
  * - validity of Schema file and configuration files (js/json validity)
  */
 
-function fnFoo () {
-}
-
 module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
     this.initCsLeafChangeListener();
     const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
     this.serviceOptions = serviceOptions;
-    this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : fnFoo;
+    this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : () => null;
     this.jsonStringifySpace = Number(jsonStringifySpace) || 2;
   }
 
   async init () {
     await super.init();
-    this.configService = getConfigService(this.serviceOptions, this.schema);
+    this.storageService = getStorageService(this.serviceOptions, this.schema);
     const noReloadSchema = true;
     await this._reloadConfig(noReloadSchema);
     this.defaults = this._getDefaults();
@@ -200,7 +197,7 @@ module.exports = class Params extends Schema {
       throw this._error(`Could not save named configuration «${
         this._expectedConfigDir}/${configName}.json»`, err); // Not covered with tests
     }
-    await this.configService.saveConfig(configName, jsonStr);
+    await this.storageService.saveConfig(configName, jsonStr);
     this.onSaveNamedConfig(configName, this);
   }
 
@@ -272,11 +269,11 @@ module.exports = class Params extends Schema {
     if (!noReloadSchema) {
       await this.reloadSchema();
     }
-    const primiseArr = this.configNames.map(async (configName) => {
+    const promiseArr = this.configNames.map(async (configName) => {
       const configValue = await this._readNamedConfig(configName);
       await this._updateAndSaveNamedConfig(configName, configValue);
     });
-    await Promise.all(primiseArr);
+    await Promise.all(promiseArr);
   }
 
   // #######################################################################################################
@@ -340,7 +337,7 @@ module.exports = class Params extends Schema {
       if (!configName) {
         return;
       }
-      this.configService.scheduleUpdate({ configName, paramPath, value: newValue });
+      this.storageService.scheduleUpdate({ configName, paramPath, value: newValue });
     });
   }
 };

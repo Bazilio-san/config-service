@@ -11,24 +11,34 @@ module.exports = class PgSaveService extends SaveService {
   constructor (options, schema) {
     super();
     this.options = { ...defaultOptions, ...options };
-    this.getPoolPg();
+    this.getPoolPg(); // VVQ?
     this.updates = { schedule: {} };
     this.schema = schema;
     this.config = {};
     this.configRows = new Map();
-    this.initPromise = this.fetchFullConfig(this.schema);
-    this.initFlashUpdateSchedule();
+
+    // Initialize regular data fetching and update
+    setInterval(async () => {
+      await this.flashUpdateSchedule();
+      await this._fetchConfigChanges();
+    }, UPDATE_TIME * 1000);
   }
 
   /**
-   * Save full config to postgres
+   * Get last updated rows from postgres and save to this.config. Emit this.config if it is changed
    *
-   * @param {string} configName
-   * @param {string} configValue
+   * @private
    */
-  // eslint-disable-next-line class-methods-use-this
-  saveConfig (configName, configValue) {
-    // unused
+  async _fetchConfigChanges () {
+    await this.fetchConfigRows(`${UPDATE_TIME * 1.5} sec`);
+    if (this.configRows.size) {
+      const lastSavedConfig = this.config;
+      this.setConfigRowsToConfig();
+      if (JSON.stringify(lastSavedConfig) !== JSON.stringify(this.config)) {
+        ee.emit('fetch-config');
+      }
+    }
+    this.configRows = new Map();
   }
 
   /**
@@ -37,7 +47,10 @@ module.exports = class PgSaveService extends SaveService {
    * @param {string} configName
    */
   async getConfig (configName) {
-    await this.initPromise;
+    // Get full config from postgres and save to this.config
+    await this.fetchConfigRows('20 years');
+    this.config = this.buildConfigNode('', this.schema);
+    this.configRows = new Map();
     return this.config[configName];
   }
 
@@ -50,42 +63,13 @@ module.exports = class PgSaveService extends SaveService {
    * @private
    */
   updateConfigNode (configName, paramPath, node) {
-    if (typeof node === 'object') {
+    if (typeof node === 'object') { // VVQ а если значение листа - объект?
       Object.entries(node).forEach(([title, value]) => {
         this.updateConfigNode(configName, `${paramPath}.${title}`, value);
       });
     } else {
       this.scheduleUpdate({ configName, paramPath, value: node });
     }
-  }
-
-  /**
-   * Get full config from postgres and save to this.config
-   *
-   * @param {schemaItemType} schema
-   * @private
-   */
-  async fetchFullConfig (schema) {
-    await this.fetchConfigRows('20 years');
-    this.config = this.buildConfigNode('', schema);
-    this.configRows = new Map();
-  }
-
-  /**
-   * Get last updated rows from postgres and save to this.config. Emit this.config if it is changed
-   *
-   * @private
-   */
-  async fetchConfigChanges () {
-    await this.fetchConfigRows(`${UPDATE_TIME * 1.5} sec`);
-    if (this.configRows.size) {
-      const lastSavedConfig = this.config;
-      this.setConfigRowsToConfig();
-      if (JSON.stringify(lastSavedConfig) !== JSON.stringify(this.config)) {
-        ee.emit('fetch-config');
-      }
-    }
-    this.configRows = new Map();
   }
 
   /**
@@ -118,8 +102,8 @@ module.exports = class PgSaveService extends SaveService {
       SELECT *
       FROM ${TABLE_NAME}
       WHERE "updatedAt" > (CURRENT_TIMESTAMP - INTERVAL '${timeString}')`;
-    const res = await this.queryPg(sql);
-    res.rows.forEach((row) => {
+    const res = await this.queryPg(sql); // VVQ здесь может быть undefined
+    (res?.rows || []).forEach((row) => {
       this.configRows.set(row.paramPath, row.value);
     });
   }
@@ -139,29 +123,15 @@ module.exports = class PgSaveService extends SaveService {
     }
     const nodeSchemaValue = nodeSchema.value;
     let nodeValue = null;
-    if (Array.isArray(nodeSchemaValue)) {
+    if (Array.isArray(nodeSchemaValue)) { // VVQ Что будет, если значение листа - массив или объект
       nodeValue = {};
       nodeSchemaValue.forEach(async (fieldSchema) => {
-        const fieldValue = this.buildConfigNode(fullPath, fieldSchema);
-        nodeValue[fieldSchema.id] = fieldValue;
+        nodeValue[fieldSchema.id] = this.buildConfigNode(fullPath, fieldSchema);
       });
     } else {
       nodeValue = this.configRows.get(fullPath);
     }
     return nodeValue;
-  }
-
-  /**
-   * Close PoolPg instance
-   *
-   */
-  async closePoolPg () {
-    const pool = this.poolCachePg;
-    if (!pool) return;
-    const fns = (pool._clients || [])
-      .filter((client) => client?._connected && typeof client?.end === 'function')
-      .map((client) => client.end());
-    await Promise.all(fns);
   }
 
   /**
@@ -171,45 +141,33 @@ module.exports = class PgSaveService extends SaveService {
    */
   async getPoolPg () {
     if (!this.poolCachePg) {
-      this.poolCachePg = this.initPoolPg(this.options);
+      const pool = new Pool(this.options);
+      pool.on('error', (error, client) => {
+        client.release(true);
+        console.error(error); // VVQ Logger
+      });
+      pool.on('connect', async (client) => {
+        const { database, processID } = client;
+        console.log(`PG client  connected! DB: "${database}" / processID: ${processID}`); // VVQ Logger
+      });
+      pool.on('remove', (client) => {
+        const { database, processID } = client;
+        console.log(`PG client removed. DB: "${database}" / processID: ${processID}`); // VVQ Logger
+      });
+      await pool.connect();
+      this.poolCachePg = pool;
     }
-    const poolPg = await this.poolCachePg;
-    return poolPg;
+    return this.poolCachePg;
   }
 
   /**
-   * Initialize PoolPg
+   * Close PoolPg instance
    *
-   * @param {PoolOptions} options
-   * @private
    */
-  async initPoolPg (options) {
-    const pool = new Pool(options);
-    this.initListeners(pool);
-    await pool.connect();
-    return pool;
-  }
-
-  /**
-   * Initialize PoolPg listeners
-   *
-   * @param {IPoolPg} pool
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  initListeners (pool) {
-    pool.on('error', (error, client) => {
-      client.release(true);
-      console.error(error);
-    });
-    pool.on('connect', async (client) => {
-      const { database, processID } = client;
-      console.log(`PG client  connected! DB: "${database}" / processID: ${processID}`);
-    });
-    pool.on('remove', (client) => {
-      const { database, processID } = client;
-      console.log(`PG client removed. DB: "${database}" / processID: ${processID}`);
-    });
+  async closePoolPg () {
+    if (this.poolCachePg?._connected) {
+      await this.poolCachePg.end();
+    }
   }
 
   /**
@@ -219,16 +177,13 @@ module.exports = class PgSaveService extends SaveService {
    * @param {string[]} sqlValues
    * @private
    */
-  async queryPg (
-    sqlText,
-    sqlValues,
-  ) {
+  async queryPg (sqlText, sqlValues) {
     try {
       const pool = await this.getPoolPg();
       const res = await pool.query(sqlText, Array.isArray(sqlValues) ? sqlValues : undefined);
       return res;
     } catch (error) {
-      console.error(error);
+      console.error(error); // VVQ logger
     }
   }
 
@@ -255,31 +210,19 @@ module.exports = class PgSaveService extends SaveService {
 
     try {
       const pool = await this.getPoolPg();
-      const promises = preRequests.map(async ({ configName, paramPath, value }, index) => {
+      const promises = preRequests.map(async ({ configName, paramPath, value }) => {
+        value = prepareSqlValuePg(value, { });
         const sql = `
           INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
           VALUES ('${configName}', '${paramPath}', $1, CURRENT_TIMESTAMP)
             ON CONFLICT ("paramPath")
             DO UPDATE SET
-            "value" = $1,
-                             "updatedAt" = CURRENT_TIMESTAMP`;
+            "value" = ${pr}, "updatedAt" = CURRENT_TIMESTAMP`;
         await pool.query(sql, [value]);
       });
-      await Promise.all(promises);
+      await Promise.all(promises); // VVQ так не надо!
     } catch (error) {
-      console.error(error);
+      console.error(error); // VVQ logger
     }
-  }
-
-  /**
-   * Initialize regular data fetching and update
-   *
-   * @private
-   */
-  initFlashUpdateSchedule () {
-    setInterval(async () => {
-      await this.flashUpdateSchedule();
-      await this.fetchConfigChanges();
-    }, UPDATE_TIME * 1000);
   }
 };
