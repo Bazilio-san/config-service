@@ -38,9 +38,8 @@ module.exports = class PgSaveService extends SaveService {
    */
   async _fetchFullConfig (schema) {
     this.logger.info(`_fetchFullConfig start ()`);
-    await this._fetchConfigRows('20 years');
+    await this._fetchConfigRows('100 years');
     const config = this._buildConfigNode('', schema);
-    this.configRows = new Map();
 
     // Initialize regular data fetching and update
     setInterval(async () => {
@@ -62,13 +61,9 @@ module.exports = class PgSaveService extends SaveService {
     await this._fetchConfigRows(`${UPDATE_TIME * 1.5} sec`);
     if (this.configRows.size) {
       const config = await this.config;
-      const lastSavedConfig = JSON.stringify(config);
       this._setConfigRowsToConfig(config);
-      if (lastSavedConfig !== JSON.stringify(config)) {
-        ee.emit('fetch-config');
-      }
+      ee.emit('fetch-config');
     }
-    this.configRows = new Map();
     this.logger.info(`_fetchConfigChanges finished (this.configRows: ${this.configRows})`);
   }
 
@@ -101,6 +96,7 @@ module.exports = class PgSaveService extends SaveService {
    */
   async _fetchConfigRows (timeString) {
     this.logger.info(`_fetchConfigRows start (timeString: ${timeString})`);
+    this.configRows = new Map();
     const sql = `---
       SELECT *
       FROM ${TABLE_NAME}
@@ -134,7 +130,7 @@ module.exports = class PgSaveService extends SaveService {
         nodeValue[fieldSchema.id] = fieldValue;
       });
     } else {
-      nodeValue = this.configRows.get(fullPath);
+      nodeValue = this.configRows.get(fullPath) ?? nodeSchemaValue;
     }
     return nodeValue;
   }
@@ -228,8 +224,9 @@ module.exports = class PgSaveService extends SaveService {
    * @private
    */
   async _flashUpdateSchedule () {
-    this.logger.info(`_flashUpdateSchedule start (his.updates: ${this.updates})`);
-    const preRequests = Object.values(this.updates.schedule);
+    this.logger.info(`_flashUpdateSchedule start (this.updates: ${this.updates})`);
+    const schedule = Object.values(this.updates.schedule);
+    const preRequests = schedule.filter((item) => this.configRows.get(item.paramPath) !== item.value);
     this.updates.schedule = {};
     if (!preRequests.length) {
       return;
@@ -248,7 +245,7 @@ module.exports = class PgSaveService extends SaveService {
           ON CONFLICT ("paramPath")
           DO UPDATE SET
           "value" = ${preparedValue},
-          "updatedAt" = CURRENT_TIMESTAMP`;
+          "updatedAt" = CURRENT_TIMESTAMP;`;
         return sql;
       }).join('\n');
       await pool.query(sqlJoined);
