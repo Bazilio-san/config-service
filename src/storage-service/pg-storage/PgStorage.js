@@ -15,6 +15,27 @@ const debugIt = (message) => {
   this.logger.info(message);
 };
 
+const recreateObjectByPath = (obj, path, value) => {
+  const keys = path.split('.').filter((v) => `${v}`.trim());
+  let current = obj;
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (i === keys.length - 1) {
+      // If it's the last key, set the value
+      current[key] = value;
+    } else {
+      // If the key doesn't exist or isn't an object, create an empty object
+      if (!current[key] || typeof current[key] !== 'object') {
+        current[key] = {};
+      }
+      // Move to the next nested object
+      current = current[key];
+    }
+  }
+  return obj;
+};
+
 let globalFlushIntervalId = null;
 
 /**
@@ -39,13 +60,38 @@ module.exports = class PgStorage extends AbstractStorage {
   }
 
   /**
+   * Send query to postgres
+   *
+   * @param {string} sqlText
+   * @param {string[]} [sqlValues]
+   * @param {boolean} [throwError]
+   * @private
+   */
+  async _queryPg (sqlText, sqlValues, throwError = false) {
+    debugIt(`_queryPg start (sqlText: ${sqlText}, sqlValues: ${sqlValues})`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
+    return queryPg(this.dbId, sqlText, sqlValues, throwError);
+  }
+
+  /**
    * Get config by configName
    *
    * @param {string} configName
    */
-  async getConfig (configName) {
-    const config = await this.config;
-    return config[configName];
+  async getNamedConfig (configName) {
+    this.configRows = new Map();
+    const sql = `---
+      SELECT *
+      FROM ${TABLE_NAME}
+      WHERE "configName" = '${configName}'
+      `;
+    const res = await this._queryPg(sql);
+    const obj = {};
+
+    (res?.rows || []).forEach((row) => {
+      const { paramPath, value } = row;
+      recreateObjectByPath(obj, paramPath, value);
+    });
+    return obj.configName;
   }
 
   /**
@@ -157,19 +203,6 @@ module.exports = class PgStorage extends AbstractStorage {
       nodeValue = this.configRows.get(fullPath) ?? nodeSchemaValue;
     }
     return nodeValue;
-  }
-
-  /**
-   * Send query to postgres
-   *
-   * @param {string} sqlText
-   * @param {string[]} [sqlValues]
-   * @param {boolean} [throwError]
-   * @private
-   */
-  async _queryPg (sqlText, sqlValues, throwError = false) {
-    debugIt(`_queryPg start (sqlText: ${sqlText}, sqlValues: ${sqlValues})`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
-    return queryPg(this.dbId, sqlText, sqlValues, throwError);
   }
 
   /**

@@ -27,7 +27,7 @@ module.exports = class FileStorage extends AbstractStorage {
     await writeFile(configPath, jsonStr);
   }
 
-  async getConfig (configName) {
+  async getNamedConfig (configName) {
     const readFile = util.promisify(fs.readFile);
     let configValue = null;
     const configPath = this._getConfigPath(configName);

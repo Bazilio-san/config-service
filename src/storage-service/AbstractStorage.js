@@ -7,7 +7,7 @@ module.exports = class AbstractStorage {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getConfig () {
+  getNamedConfig () {
   }
 
   // eslint-disable-next-line class-methods-use-this

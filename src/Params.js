@@ -205,7 +205,7 @@ module.exports = class Params extends Schema {
    * re-/loading named configuration file.
    */
   async _readNamedConfig (configName) {
-    const configValue = await this.storageService.getConfig(configName);
+    const configValue = await this.storageService.getNamedConfig(configName);
     return configValue;
   }
 
