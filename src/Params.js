@@ -2,7 +2,7 @@
 
 const __ = require('./lib.js');
 const Schema = require('./Schema.js');
-const { getStorageService } = require('./save-service');
+const { getStorageService } = require('./storage-service');
 const ee = require('./ee');
 
 const _isRootNode_ = Symbol.for('_isRootNode_');
@@ -337,6 +337,7 @@ module.exports = class Params extends Schema {
       if (!configName) {
         return;
       }
+      // VVA в случе файлового хранилища тут будет ошибка, т.к scheduleUpdate не будет
       this.storageService.scheduleUpdate({ configName, paramPath, value: newValue });
     });
   }

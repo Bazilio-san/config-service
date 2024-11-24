@@ -1,0 +1,5 @@
+module.exports = {
+  TABLE_NAME: 'core.config_service',
+  FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS: 2000,
+  MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS: 200,
+};

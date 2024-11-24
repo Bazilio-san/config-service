@@ -1,7 +1,7 @@
 /**
  * Абстрактный класс отвечает за запись и чтение данных из файловой системы (базы дынных).
  */
-module.exports = class SaveService {
+module.exports = class AbstractStorage {
   // eslint-disable-next-line class-methods-use-this
   saveConfig () {
   }

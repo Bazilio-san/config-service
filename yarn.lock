@@ -477,7 +477,7 @@ af-logger@^2.0.29:
     winston "^3.10.0"
     winston-daily-rotate-file "^4.7.1"
 
-af-tools-ts@^1.0.87:
+af-tools-ts@^1.0.87, af-tools-ts@^1.0.90:
   version "1.0.90"
   resolved "https://registry.yarnpkg.com/af-tools-ts/-/af-tools-ts-1.0.90.tgz#6c227f56389fb2b0a8cab3fe94abe3cc6edced96"
   integrity sha512-dAY7MkDPiYLEaVQwWewcN5BxAh3uzGXKGz8dT3JQuIjN5852k3HA2BKEs+DAKGm1S5SnKlA1YOBIsz6MzM0qOQ==

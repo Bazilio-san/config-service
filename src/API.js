@@ -182,6 +182,7 @@ module.exports = class API extends Params {
   async getSchemaAsync (paramPath, lng, options = {}) {
     try {
       this._addFrom(options, 'getSchemaAsync');
+      // await this._reloadConfig(); VVQ А почему решил удалить?
       // noinspection UnnecessaryLocalVariableJS
       const res = this.getSchema(paramPath, lng, options);
       return res;
