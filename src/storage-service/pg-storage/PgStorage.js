@@ -3,16 +3,15 @@ const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
 const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
+const { debugCS } = require('../../debug');
 
 // TODO описать структуру pgStorageOptions
 
-const isDebug = true; // VVQ Спросить - расскажу, как сделать
-
 const debugIt = (message) => {
-  if (!isDebug) {
+  if (!debugCS.enabled) {
     return;
   }
-  this.logger.info(message);
+  debugCS(message);
 };
 
 const setConfigRowsToConfig = (config, configRows) => {
