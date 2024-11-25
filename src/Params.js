@@ -114,7 +114,7 @@ module.exports = class Params extends Schema {
 
   // ============================ FILL SCHEMA BY VALUES =============================
 
-  __addNewValueCallback (schemaItem, { absentPaths, appliedPaths, skipEmitLeafChange }) {
+  __addNewValueCallback (schemaItem, { absentPaths, appliedPaths }) {
     // eslint-disable-next-line camelcase,prefer-const
     const {
       value,
@@ -152,17 +152,6 @@ module.exports = class Params extends Schema {
       } else {
         schemaItem.value = currentValue;
       }
-      if (!skipEmitLeafChange) {
-        const changes = {
-          paramPath,
-          oldValue,
-          newValue: currentValue,
-          schemaItem,
-          csInstance: this,
-          callerId: schemaItem[_callerId_] || this[_callerId_],
-        };
-        ee.emit('cs-leaf-change', changes);
-      }
       delete schemaItem[_onChange_];
       delete schemaItem[_callerId_];
     }
@@ -172,12 +161,12 @@ module.exports = class Params extends Schema {
    * Fills the Schema with actual values
    */
   _fillSchemaWithValues (paramPath, newValues, options = {}) {
-    const { callFrom = '_fillSchemaWithValues', onChange, skipEmitLeafChange } = options;
+    const { callFrom = '_fillSchemaWithValues', onChange } = options;
     options.callFrom = callFrom;
     const { pathArr, schemaItem } = this._parseParamPath(paramPath, options);
     const absentPaths = new Set();
     const appliedPaths = new Set();
-    const traverseOptions = { pathArr, absentPaths, appliedPaths, skipEmitLeafChange };
+    const traverseOptions = { pathArr, absentPaths, appliedPaths };
     schemaItem[_v_] = newValues;
     if (onChange !== undefined) {
       schemaItem[_onChange_] = onChange;
@@ -286,7 +275,7 @@ module.exports = class Params extends Schema {
     }
     const promiseArr = this.configNames.map(async (configName) => {
       const configValue = await this._readNamedConfig(configName);
-      this._fillSchemaWithValues(configName, configValue, { skipEmitLeafChange: true }); // Не оповещаем об обновлении для только что считанных данных
+      this._fillSchemaWithValues(configName, configValue); // Не оповещаем об обновлении для только что считанных данных
     });
     await Promise.all(promiseArr);
   }
@@ -343,9 +332,9 @@ module.exports = class Params extends Schema {
   }
 
   initCsLeafChangeListener () {
-    // ee.on('fetch-config', () => { VVR Это не нужно, так как сначала происходит обновлене значения в памяти, а потом вызов 'cs-leaf-change'
-    //   this._reloadConfig(true);
-    // });
+    ee.on('remote-config-changed', (config) => { // VVR В случае изменения конфига другим инстансом
+      this._fillSchemaWithValues('', config);
+    });
 
     ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
       const configName = paramPath.split('.')[0];
