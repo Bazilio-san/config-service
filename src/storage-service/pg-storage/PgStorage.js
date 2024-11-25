@@ -53,10 +53,10 @@ module.exports = class PgStorage extends AbstractStorage {
     clearInterval(globalFlushIntervalId); // VVQ Это надо на случай повторной инициализации
     globalFlushIntervalId = setInterval(async () => {
       await this._flashUpdateSchedule();
-      await this._fetchConfigChanges();
+      // await this._fetchConfigChanges(); VVR - это не нужно, т.к. до помещения в кеш апдейта изменение должно уже быть в памяти
     }, FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS);
-
-    this.config = this._fetchFullConfig(this.schema);
+    this._fetchFullConfig(this.schema)
+    // this.config = this._fetch@FullConfig(this.schema); // VVR
   }
 
   /**
@@ -100,15 +100,15 @@ module.exports = class PgStorage extends AbstractStorage {
    * @param {schemaItemType} schema
    * @private
    */
-  async _fetchFullConfig (schema) {
+  async _fetchFullConfig (schema) { // VVR
     await this._fetchConfigRows();
     return this._buildConfigNode('', schema);
   }
 
   // async _fetch_FullConfig (schema) {
   //   // VVA не нужно смешивать инициализацию таймера и получение конфига
-  //   await this._fetchConfigRows('100 years');
-  //   const config = this._buildConfigNode('', schema);
+  //   await this._fetch@ConfigRows('100 years');
+  //   const config = this._build@ConfigNode('', schema);
   //
   //   // Initialize regular data fetching and update
   //   setInterval(async () => {
@@ -119,43 +119,31 @@ module.exports = class PgStorage extends AbstractStorage {
   //   return config;
   // }
 
-  /**
-   * Get last updated rows from postgres and save to this.config. Emit this.config if it is changed
-   *
-   * @private
-   */
-  async _fetchConfigChanges () {
-    debugIt(`_fetchConfigChanges start ()`);
-    const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 100) / 10;
-    await this._fetchConfigRows(`${intervalSeconds} sec`);
-    if (this.configRows.size) {
-      const config = await this.config;
-      this._setConfigRowsToConfig(config);
-      ee.emit('fetch-config');
-    }
-    debugIt(`_fetchConfigChanges finished (this.configRows: ${this.configRows})`);
-  }
+  // VVR Это не нужно
+  // async _fetchConfigChanges () {
+  //   const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 100) / 10;
+  //   await this._fetch@ConfigRows(`${intervalSeconds} sec`);
+  //   if (this.configRows.size) {
+  //     const config = await this.config;
+  //     this._setConfigRowsToConfig(config);
+  //     ee.emit('fetch-config');
+  //   }
+  // }
 
-  /**
-   * Save this.configRows to this.config
-   *
-   * @private
-   */
-  _setConfigRowsToConfig (config) {
-    debugIt(`_setConfigRowsToConfig start (this.configRows: ${this.configRows})`);
-    Array.from(this.configRows).forEach(([path, row]) => {
-      const fieldNames = path.split('.');
-      fieldNames.reduce((accum, fieldName, index) => {
-        if (index === fieldNames.length - 1) {
-          accum[fieldName] = row;
-        } else if (!accum[fieldName]) {
-          accum[fieldName] = {};
-        }
-        return accum[fieldName];
-      }, config);
-    });
-    debugIt(`_setConfigRowsToConfig finished (this.config: ${config})`);
-  }
+  // VVR Это не нужно
+  // _setConfigRowsToConfig (config) {
+  //   Array.from(this.configRows).forEach(([path, row]) => {
+  //     const fieldNames = path.split('.');
+  //     fieldNames.reduce((accum, fieldName, index) => {
+  //       if (index === fieldNames.length - 1) {
+  //         accum[fieldName] = row;
+  //       } else if (!accum[fieldName]) {
+  //         accum[fieldName] = {};
+  //       }
+  //       return accum[fieldName];
+  //     }, config);
+  //   });
+  // }
 
   /**
    * Fetch all config rows updated during last time $timeString from table $TABLE_NAME
@@ -164,7 +152,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @private
    */
   async _fetchConfigRows (timeString = undefined) {
-    debugIt(`_fetchConfigRows start (timeString: ${timeString})`);
+    debugIt(`_fetch@ConfigRows start (timeString: ${timeString})`);
     this.configRows = new Map();
     const sql = `---
       SELECT *
@@ -175,35 +163,29 @@ module.exports = class PgStorage extends AbstractStorage {
     (res?.rows || []).forEach((row) => {
       this.configRows.set(row.paramPath, row.value); // VVA упразднить configRows! использовать schema
     });
-    debugIt(`_fetchConfigRows finished (this.configRows: ${this.configRows})`);
+    debugIt(`_fetch@ConfigRows finished (this.configRows: ${this.configRows})`);
   }
 
-  /**
-   * Build config node from rows
-   *
-   * @param {string} path
-   * @param {schemaItemType} nodeSchema
-   * @private
-   */
-  _buildConfigNode (path, nodeSchema) {
-    // VVA упразднить configRows! использовать schema
-    const nodeName = nodeSchema.id;
-    let fullPath = path;
-    if (nodeName !== '__root__') {
-      fullPath = path ? `${path}.${nodeName}` : nodeName;
-    }
-    const nodeSchemaValue = nodeSchema.value;
-    let nodeValue = null;
-    if (Array.isArray(nodeSchemaValue)) {
-      nodeValue = {};
-      nodeSchemaValue.forEach(async (fieldSchema) => {
-        nodeValue[fieldSchema.id] = this._buildConfigNode(fullPath, fieldSchema);
-      });
-    } else {
-      nodeValue = this.configRows.get(fullPath) ?? nodeSchemaValue;
-    }
-    return nodeValue;
-  }
+  // VVR - вместо этого использовать функции Params
+  // _buildConfigNode (path, nodeSchema) {
+  //   // VVA упразднить configRows! использовать schema
+  //   const nodeName = nodeSchema.id;
+  //   let fullPath = path;
+  //   if (nodeName !== '__root__') {
+  //     fullPath = path ? `${path}.${nodeName}` : nodeName;
+  //   }
+  //   const nodeSchemaValue = nodeSchema.value;
+  //   let nodeValue = null;
+  //   if (Array.isArray(nodeSchemaValue)) {
+  //     nodeValue = {};
+  //     nodeSchemaValue.forEach(async (fieldSchema) => {
+  //       nodeValue[fieldSchema.id] = this._buildConfigNode(fullPath, fieldSchema);
+  //     });
+  //   } else {
+  //     nodeValue = this.configRows.get(fullPath) ?? nodeSchemaValue;
+  //   }
+  //   return nodeValue;
+  // }
 
   /**
    * Save updated node for sending to postgres

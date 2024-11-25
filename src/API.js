@@ -56,7 +56,7 @@ module.exports = class API extends Params {
         throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
       }
       this._fillSchemaWithValues(pathArr, paramValue, options);
-      this._saveNamedConfig(configName);
+      this._saveNamedConfig(configName); // VVQ тут надо по-разному поступать для файлов и для БД
       return true;
     } catch (err) {
       if (!this.noThrow.set) {

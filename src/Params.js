@@ -114,7 +114,7 @@ module.exports = class Params extends Schema {
 
   // ============================ FILL SCHEMA BY VALUES =============================
 
-  __addNewValueCallback (schemaItem, { absentPaths, appliedPaths }) {
+  __addNewValueCallback (schemaItem, { absentPaths, appliedPaths, skipEmitLeafChange }) {
     // eslint-disable-next-line camelcase,prefer-const
     const {
       value,
@@ -146,10 +146,22 @@ module.exports = class Params extends Schema {
         }
       });
     } else if (isProp) {
+      const oldValue = schemaItem.value;
       if (onChange !== undefined) {
         schemaItem.value = { value: currentValue, [_onChange_]: onChange };
       } else {
         schemaItem.value = currentValue;
+      }
+      if (!skipEmitLeafChange) {
+        const changes = {
+          paramPath,
+          oldValue,
+          newValue: currentValue,
+          schemaItem,
+          csInstance: this,
+          callerId: schemaItem[_callerId_] || this[_callerId_],
+        };
+        ee.emit('cs-leaf-change', changes);
       }
       delete schemaItem[_onChange_];
       delete schemaItem[_callerId_];
@@ -160,14 +172,15 @@ module.exports = class Params extends Schema {
    * Fills the Schema with actual values
    */
   _fillSchemaWithValues (paramPath, newValues, options = {}) {
-    options.callFrom = options.callFrom || '_fillSchemaWithValues';
+    const { callFrom = '_fillSchemaWithValues', onChange, skipEmitLeafChange } = options;
+    options.callFrom = callFrom;
     const { pathArr, schemaItem } = this._parseParamPath(paramPath, options);
     const absentPaths = new Set();
     const appliedPaths = new Set();
-    const traverseOptions = { pathArr, absentPaths, appliedPaths };
+    const traverseOptions = { pathArr, absentPaths, appliedPaths, skipEmitLeafChange };
     schemaItem[_v_] = newValues;
-    if (options.onChange !== undefined) {
-      schemaItem[_onChange_] = options.onChange;
+    if (onChange !== undefined) {
+      schemaItem[_onChange_] = onChange;
     }
     schemaItem[_callerId_] = options.callerId;
     this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
@@ -185,6 +198,7 @@ module.exports = class Params extends Schema {
    * @param {String} configName
    */
   async _saveNamedConfig (configName) {
+    // VVQ Это чисто для файлов. Перенсти в FileStorage.js
     let configValue = this._getValues(configName);
     // The named configuration must be an object !!!
     if (!__.isObject(configValue)) {
@@ -261,6 +275,7 @@ module.exports = class Params extends Schema {
     }
     this._fillSchemaWithValues(configName, configValue, options);
     this._saveNamedConfig(configName);
+    // VVQ сделать функцию асинхронной. Для файлов - сохранение в файл. Для БД - принудительный _flashUpdateSchedule
   }
 
   // =============================== INIT ==================================
@@ -271,7 +286,7 @@ module.exports = class Params extends Schema {
     }
     const promiseArr = this.configNames.map(async (configName) => {
       const configValue = await this._readNamedConfig(configName);
-      await this._updateAndSaveNamedConfig(configName, configValue);
+      this._fillSchemaWithValues(configName, configValue, { skipEmitLeafChange: true }); // Не оповещаем об обновлении для только что считанных данных
     });
     await Promise.all(promiseArr);
   }
@@ -328,9 +343,9 @@ module.exports = class Params extends Schema {
   }
 
   initCsLeafChangeListener () {
-    ee.on('fetch-config', () => {
-      this._reloadConfig(true);
-    });
+    // ee.on('fetch-config', () => { VVR Это не нужно, так как сначала происходит обновлене значения в памяти, а потом вызов 'cs-leaf-change'
+    //   this._reloadConfig(true);
+    // });
 
     ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
       const configName = paramPath.split('.')[0];
