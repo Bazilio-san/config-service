@@ -38,7 +38,7 @@ module.exports = class Params extends Schema {
 
   async init () {
     await super.init();
-    this.storageService = getStorageService(this.serviceOptions, this.schema);
+    this.storageService = getStorageService(this.serviceOptions);
     const noReloadSchema = true;
     await this._reloadConfig(noReloadSchema);
     this.defaults = this._getDefaults();

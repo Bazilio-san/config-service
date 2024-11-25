@@ -35,11 +35,10 @@ let globalFlushIntervalId = null;
  * Класс отвечает за запись и чтение данных из базы дынных.
  */
 module.exports = class PgStorage extends AbstractStorage {
-  constructor (pgStorageOptions, schema) {
+  constructor (pgStorageOptions) {
     super();
     this.dbId = pgStorageOptions.dbId;
     this.updates = { schedule: {} };
-    this.schema = schema;
     this.lastFetchedRows = new Map(); // Последние полученные строки
     this.logger = initLogger({ scope: 'PgStorage' });
     // Initialize regular data fetching and update
@@ -83,13 +82,13 @@ module.exports = class PgStorage extends AbstractStorage {
       });
       setConfigRowsToConfig(obj, rows);
     }
-    return obj.configName;
+    return obj[configName];
   }
 
   async _fetchConfigChanges () {
     // eslint-disable-next-line no-mixed-operators
-    const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 100) / 10;
-    const timeString = intervalSeconds.toString();
+    const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 1000);
+    const timeString = `${intervalSeconds.toString()} sec`;
     debugIt(`_fetchConfigChanges start (timeString: ${timeString})`);
     this.configRows = new Map();
     const sql = `---
