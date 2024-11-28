@@ -72,10 +72,14 @@ describe(`REST: get & set`, () => {
         expect(testValue).equals(expected_);
       });
 
-      it('Method onSaveNamedConfig() should work', () => {
-        const testValue = instance.testOnSaveNamedConfig;
+      it('Method onSaveNamedConfig() should work', (done) => {
         const expected_ = paramPath.split('.')[0];
-        expect(testValue).equals(expected_);
+        post(`${cu}${query}`)
+          .send({ value: newVal })
+          .end(() => {
+            expect(instance.testOnSaveNamedConfig).equals(expected_);
+            done();
+          });
       });
     });
   });

@@ -14,7 +14,7 @@ const schemaDir = Schema.getSchemaDir();
 describe('Schema: _normalizeNewSchema()', () => {
   let instance;
   before(async () => {
-    await prepareTestEnv(false);
+    await prepareTestEnv('');
     clrRequire(`${schemaDir}/schema.js`);
     cpc('./schema-no-default-properties.js', `${schemaDir}/schema.js`);
     instance = await newInstance('Schema');

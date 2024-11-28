@@ -14,7 +14,7 @@ const schemaDir = Schema.getSchemaDir();
 describe('Schema: reloadSchema()', () => {
   let instance;
   before(async () => {
-    await prepareTestEnv(false);
+    await prepareTestEnv('');
     clrRequire(`${schemaDir}/schema.js`);
     cpc('./schema1.js', `${schemaDir}/schema.js`);
     instance = await newInstance('Schema');

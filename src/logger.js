@@ -1,15 +1,27 @@
+const { Debug } = require('af-tools-ts');
+const { bold, reset, red } = require('af-color');
+
+const debugCS = Debug('config-service', {
+  noTime: false,
+  noPrefix: false,
+  prefixColor: bold + red,
+  messageColor: reset,
+});
+
 class BaseLogger {
   constructor (scope) {
+    this._service = 'config-service';
     this._scope = scope;
   }
 
-  info (msg) {
-    const msgWithTimestring = this._addTimestring(this._addScope(msg));
-    console.info(msgWithTimestring);
+  // eslint-disable-next-line class-methods-use-this
+  info (msg, payload = '') {
+    const message = payload ? `${msg} - payload: ${JSON.stringify(payload)}` : msg;
+    debugCS(this._addScope(message));
   }
 
   warn (msg) {
-    const msgWithTimestring = this._addTimestring(this._addScope(msg));
+    const msgWithTimestring = this._addTimestring(this._addServiceName(this._addScope(msg)));
     console.warn(msgWithTimestring);
   }
 
@@ -24,7 +36,7 @@ class BaseLogger {
       }
     }
     cMsg += `\x1b[0m`;
-    const msgWithTimestring = this._addTimestring(this._addScope(cMsg));
+    const msgWithTimestring = this._addTimestring(this._addServiceName(this._addScope(cMsg)));
     console.error(msgWithTimestring);
   }
 
@@ -37,9 +49,14 @@ class BaseLogger {
   _addScope (msg) {
     return this._scope ? `${this._scope}: ${msg}` : msg;
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  _addServiceName (msg) {
+    return this._service ? `${this._service}: ${msg}` : msg;
+  }
 }
 
-const initLogger = (payload) => {
+const initLogger = (payload = {}) => {
   const { logger, scope } = payload;
   return logger ?? new BaseLogger(scope);
 };

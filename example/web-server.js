@@ -17,7 +17,7 @@ if (!process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR) {
 
 const tu = require('../test/test-utils.js')({ __dirname });
 
-tu.prepareTestEnv(false);
+tu.prepareTestEnv('');
 
 const REST = require('../src/REST.js');
 

@@ -7,6 +7,7 @@ const {
 const __ = require('../../../src/lib.js');
 const expectedNewDefaults = require('../../03.Defaults/expected-defaults.js');
 const expectedNewConfig = require('./expected-new-config.js');
+const configFromFiles = require('./config-from-files.js');
 const expectedNewSchema = require('../../resources/with-actual-values/schema---av.js');
 
 describe('Params: check after constructor call', () => {
@@ -24,9 +25,9 @@ describe('Params: check after constructor call', () => {
     expect(config).to.eql(expectedNewConfig);
   });
 
-  __.each(expectedNewConfig, (expectedValue, configName) => {
-    it(`Check file "${configName}.json"`, () => {
-      const config = instance._readNamedConfig(configName);
+  __.each(configFromFiles, (expectedValue, configName) => {
+    it(`Check file "${configName}.json"`, async () => {
+      const config = await instance._readNamedConfig(configName);
       expect(config).to.eql(expectedValue);
     });
   });

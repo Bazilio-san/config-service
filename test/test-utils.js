@@ -2,6 +2,7 @@
 const fse = require('fs-extra');
 const path = require('path');
 
+const { readdirSync, accessSync } = require('node:fs');
 const { logger, fileLogger } = require('../example/logger-service.js');
 const i18n = require('../example/i18n/i18n.js')();
 
@@ -104,10 +105,17 @@ function cpSchemaFromResources (src) {
 }
 
 function clearTestEnv () {
-  rm(REST.getConfigDir());
-  const schemaDir = REST.getSchemaDir();
-  rm(`${schemaDir}/schema.js`);
-  rm(schemaDir);
+  const configDir = REST.getConfigDir();
+  try {
+    accessSync(configDir);
+    readdirSync(configDir).forEach((file) => {
+      rm(`${configDir}/${file}`);
+    });
+    rm(configDir);
+    const schemaDir = REST.getSchemaDir();
+    rm(`${schemaDir}/schema.js`);
+    rm(schemaDir);
+  } catch (err) { /* empty */ }
 }
 
 const niError = async (type, doBefore, fnName, ...args) => {
@@ -118,10 +126,10 @@ const niError = async (type, doBefore, fnName, ...args) => {
       instance = await newInstance(type);
     } else if (typeof doBefore === 'string') { // doBefore -> fnName;
       instance = await newInstance(type);
-      instance[doBefore](fnName, ...args);
+      await instance[doBefore](fnName, ...args);
     } else if (typeof doBefore === 'function') {
       instance = await newInstance(type);
-      doBefore(instance);
+      await doBefore(instance);
       instance[fnName](...args);
     } else {
       return 'Unrecognized signature passed to niError function';
@@ -173,7 +181,7 @@ module.exports = (context) => ({
     return errMsg;
   },
 
-  async prepareTestEnv (isNewInstance = true, schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, addOptions = {}) {
+  async prepareTestEnv (type = 'Params', schemaDir = SCHEMA_DIR, configDir = CONFIG_DIR, addOptions = {}) {
     process.env.NODE_CONFIG_SERVICE_SCHEMA_DIR = schemaDir;
     process.env.NODE_CONFIG_SERVICE_DIR = configDir;
     const configPath = Params.getConfigDir();
@@ -185,11 +193,11 @@ module.exports = (context) => ({
       cpr(`${configName}.json`, `${configPath}/${configName}.json`);
       clrRequire(`${configPath}/${configName}.json`);
     });
-    if (isNewInstance === false) {
+    if (!type) {
       return null;
     }
     // noinspection UnnecessaryLocalVariableJS
-    const instance = await newInstance(isNewInstance, addOptions);
+    const instance = await newInstance(type, addOptions);
     return instance;
   },
   toPlainObj,

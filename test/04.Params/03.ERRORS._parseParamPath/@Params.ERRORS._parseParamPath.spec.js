@@ -6,7 +6,7 @@ const {
 
 describe('Params: ERRORS: _parseParamPath()', () => {
   before(async () => {
-    await prepareTestEnv(false);
+    await prepareTestEnv('');
   });
 
   [

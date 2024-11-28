@@ -29,7 +29,6 @@ const _callerId_ = Symbol.for('_callerId_');
 module.exports = class Params extends Schema {
   constructor (serviceOptions = {}) {
     super(serviceOptions);
-    this.initCsLeafChangeListener();
     const { onSaveNamedConfig, jsonStringifySpace } = serviceOptions;
     this.serviceOptions = serviceOptions;
     this.onSaveNamedConfig = typeof onSaveNamedConfig === 'function' ? onSaveNamedConfig : () => null;
@@ -39,6 +38,7 @@ module.exports = class Params extends Schema {
   async init () {
     await super.init();
     this.storageService = getStorageService(this.serviceOptions);
+    this.initCsLeafChangeListener();
     const noReloadSchema = true;
     await this._reloadConfig(noReloadSchema);
     this.defaults = this._getDefaults();
@@ -134,7 +134,7 @@ module.exports = class Params extends Schema {
         vIds.filter((id) => sIds.includes(id)).forEach((v) => {
           appliedPaths.add(`${paramPath}.${v}`);
         });
-      } else if (currentValue !== undefined && !__.isObject(currentValue)) {
+      } else if (currentValue !== undefined && currentValue !== null && !__.isObject(currentValue)) {
         throw this._error(`Cannot set a value «${currentValue}» for a 'section' «${paramPath}»`);
       }
       value.forEach((childSchemaItem) => {
@@ -146,7 +146,6 @@ module.exports = class Params extends Schema {
         }
       });
     } else if (isProp) {
-      const oldValue = schemaItem.value;
       if (onChange !== undefined) {
         schemaItem.value = { value: currentValue, [_onChange_]: onChange };
       } else {
@@ -263,7 +262,7 @@ module.exports = class Params extends Schema {
       await this.reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
     }
     this._fillSchemaWithValues(configName, configValue, options);
-    this._saveNamedConfig(configName);
+    await this._saveNamedConfig(configName);
     // VVQ сделать функцию асинхронной. Для файлов - сохранение в файл. Для БД - принудительный _flashUpdateSchedule
   }
 

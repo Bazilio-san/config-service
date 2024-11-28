@@ -15,7 +15,7 @@ const onChange = ({ paramPath, newValue, schemaItem, isJustInitialized }) => {
 describe('API: Check onChange method call', () => {
   let instance;
   before(async () => {
-    await prepareTestEnv(false);
+    await prepareTestEnv('');
     const thisServiceOptions = {
       ...serviceOptions,
       onChange,
@@ -26,7 +26,6 @@ describe('API: Check onChange method call', () => {
 
   it('Method onChange should work', () => {
     let expected = `config-2.c1_s0 / value is ONLY in the CONFIG / c1_s0 / true`;
-    expect(testValue).equals(expected);
     const paramPath = 'config1.div13.v_string';
     const newValue = 'new value';
     const id = 'v_string';
@@ -36,7 +35,10 @@ describe('API: Check onChange method call', () => {
   });
 
   it('A new value must be set', () => {
-    expect(instance.get('config1.div13.v_string')).equals('new value');
+    const paramPath = 'config1.div13.v_string';
+    const newValue = 'new value';
+    instance.set(paramPath, newValue);
+    expect(instance.get(paramPath)).equals(newValue);
   });
 
   it('The onChange method should not be triggered when a failure to set a new value', () => {

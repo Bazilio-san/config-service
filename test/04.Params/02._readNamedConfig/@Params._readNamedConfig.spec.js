@@ -7,10 +7,11 @@ const {
   Params,
   newInstance,
   fnError,
-  niError,
 } = require('../../test-utils.js')({ __dirname });
 
 const __ = require('../../../src/lib.js');
+const expectedConfig = require('../00.new/expected-new-config');
+const configFromFiles = require('../00.new/config-from-files.js');
 
 describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () => {
   describe('_readNamedConfig, _saveNamedConfig, _reloadConfig', () => {
@@ -21,15 +22,15 @@ describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () =
 
     // _reloadConfig is indirectly tested
 
-    const expectedConfig = require('../00.new/expected-new-config.js');
-
     __.each(expectedConfig, (expectedValue, configName) => {
       it(`Check object "${configName}"`, () => {
         const config = instance._getValues();
         expect(config[configName]).to.eql(expectedValue);
       });
-      it(`Check file "${configName}.json"`, () => {
-        const config = instance._readNamedConfig(configName);
+    });
+    __.each(configFromFiles, (expectedValue, configName) => {
+      it(`Check file "${configName}.json"`, async () => {
+        const config = await instance._readNamedConfig(configName);
         expect(config).to.eql(expectedValue);
       });
     });
@@ -46,29 +47,22 @@ describe('Params: _readNamedConfig(), _saveNamedConfig(), _reloadConfig()', () =
       // The first version of the named configuration is read
 
       cpc('./config_02_2.json', configFile);
-      instance._readNamedConfig(configName);
+      await instance._readNamedConfig(configName);
 
       // The second version of the named configuration is read
 
-      const configValue = instance._readNamedConfig(configName);
+      const configValue = await instance._readNamedConfig(configName);
       await instance._updateAndSaveNamedConfig(configName, configValue);
       const config = instance._getValues();
       expect(config.config_02.param_02).to.eql('version 2');
     });
 
-    it('ERROR: Could not load named configuration file (1)', () => {
+    it('Could load named configuration file', () => {
       const configDir = Params.getConfigDir();
       clrRequire(`${configDir}/config_02.json`);
       cpc('./config-file-bad.json.txt', `${configDir}/config_02.json`);
       expect(fnError(instance, '_readNamedConfig', 'config_02'))
-        .to.have.string('Could not load named configuration file');
-    });
-
-    // eslint-disable-next-line max-len
-    it('ERROR: Could not load named configuration file (When creating a new service instance, named configurations should not be cached)', async () => {
-      cpc('./config-file-bad.json.txt', `${Params.getConfigDir()}/config_02.json`);
-      const result = await niError('Params');
-      expect(result).to.have.string('Could not load named configuration file');
+        .to.have.string('There was no error');
     });
 
     after(clearTestEnv);

@@ -3,18 +3,13 @@ const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
 const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
-const { debugCS } = require('../../debug');
 
 // TODO описать структуру pgStorageOptions
 
-const debugIt = (message) => {
-  if (!debugCS.enabled) {
-    return;
-  }
-  debugCS(message);
-};
+const logger = initLogger({ scope: 'PgStorage' });
 
 const setConfigRowsToConfig = (config, configRows) => {
+  logger.info(`setConfigRowsToConfig start [config: ${JSON.stringify(config)}, configRows: ${JSON.stringify(configRows)}]`);
   configRows.forEach((row) => {
     const { paramPath, value } = row;
     const fieldNames = paramPath.split('.');
@@ -27,6 +22,7 @@ const setConfigRowsToConfig = (config, configRows) => {
       return accum[fieldName];
     }, config);
   });
+  logger.info(`setConfigRowsToConfig finish`);
 };
 
 let globalFlushIntervalId = null;
@@ -40,13 +36,13 @@ module.exports = class PgStorage extends AbstractStorage {
     this.dbId = pgStorageOptions.dbId;
     this.updates = { schedule: {} };
     this.lastFetchedRows = new Map(); // Последние полученные строки
-    this.logger = initLogger({ scope: 'PgStorage' });
     // Initialize regular data fetching and update
     clearInterval(globalFlushIntervalId); // VVQ Это надо на случай повторной инициализации
     globalFlushIntervalId = setInterval(async () => {
       await this._flashUpdateSchedule();
       await this._fetchConfigChanges();
     }, FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS);
+    logger.info(`Constructor init [dbId: ${this.dbId}]`);
   }
 
   /**
@@ -58,7 +54,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @private
    */
   async _queryPg (sqlText, sqlValues, throwError = false) {
-    debugIt(`_queryPg start (sqlText: ${sqlText}, sqlValues: ${sqlValues})`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
+    logger.info(`_queryPg start [sqlText: ${sqlText}, sqlValues: ${JSON.stringify(sqlValues)}]`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
     return queryPg(this.dbId, sqlText, sqlValues, throwError);
   }
 
@@ -68,6 +64,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @param {string} configName
    */
   async getNamedConfig (configName) {
+    logger.info(`getNamedConfig start [configName: ${configName}]`);
     const sql = `---
       SELECT *
       FROM ${TABLE_NAME}
@@ -82,6 +79,7 @@ module.exports = class PgStorage extends AbstractStorage {
       });
       setConfigRowsToConfig(obj, rows);
     }
+    logger.info(`getNamedConfig finish [obj: ${JSON.stringify(obj)}]`);
     return obj[configName];
   }
 
@@ -89,7 +87,7 @@ module.exports = class PgStorage extends AbstractStorage {
     // eslint-disable-next-line no-mixed-operators
     const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 1000);
     const timeString = `${intervalSeconds.toString()} sec`;
-    debugIt(`_fetchConfigChanges start (timeString: ${timeString})`);
+    logger.info(`_fetchConfigChanges start [timeString: ${timeString}]`);
     this.configRows = new Map();
     const sql = `---
       SELECT *
@@ -107,7 +105,7 @@ module.exports = class PgStorage extends AbstractStorage {
       setConfigRowsToConfig(obj, rows);
       ee.emit('remote-config-changed', obj);
     }
-    debugIt(`_fetchConfigChanges finished (this.configRows: ${this.configRows})`);
+    logger.info(`_fetchConfigChanges finished [this.configRows: ${JSON.stringify(this.configRows)}]`);
   }
 
   /**
@@ -116,7 +114,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @param {{ configName: string, paramPath: string, value: any }} payload
    */
   scheduleUpdate (payload) {
-    debugIt(`scheduleUpdate start (payload: ${payload})`);
+    logger.info(`scheduleUpdate start [payload: ${JSON.stringify(payload)}]`);
     this.updates.schedule[payload.paramPath] = payload;
   }
 
@@ -126,7 +124,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @private
    */
   async _flashUpdateSchedule () {
-    debugIt(`_flashUpdateSchedule start (this.updates: ${this.updates})`);
+    logger.info(`_flashUpdateSchedule start [this.updates: ${JSON.stringify(this.updates)}]`);
     const schedule = Object.values(this.updates.schedule);
     const preRequests = schedule.filter((item) => this.lastFetchedRows.get(item.paramPath) !== item.value);
     this.updates.schedule = {};
@@ -146,6 +144,7 @@ module.exports = class PgStorage extends AbstractStorage {
             "updatedAt" = CURRENT_TIMESTAMP;`;
       }).join('\n');
       await this._queryPg(sqlText);
+      logger.info(`_flashUpdateSchedule finish [sqlText: ${sqlText}]`);
     }
   }
 };
