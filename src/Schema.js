@@ -17,6 +17,7 @@ const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
 const _value_ = Symbol.for('_value_');
 const _callerId_ = Symbol.for('_callerId_');
+const _updatedBy_ = Symbol.for('_updatedBy_');
 const _initialized_ = Symbol.for('_initialized_');
 const _lng_ = Symbol.for('_lng_');
 const _onChange_ = Symbol.for('_onChange_');
@@ -362,6 +363,7 @@ module.exports = class Schema extends Utils {
                   csInstance: cs,
                   isJustInitialized,
                   callerId: this[_callerId_],
+                  updatedBy: this[_updatedBy_],
                 };
                 if (onChange && typeof onChange === 'function') {
                   onChange(changes);

@@ -125,8 +125,8 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'set')) {
-      const { propPath, paramValue, callerId = socket.id } = request;
-      exec('set', [propPath, paramValue, { callerId }], args);
+      const { propPath, paramValue, callerId = socket.id, updatedBy = socket.user } = request;
+      exec('set', [propPath, paramValue, { callerId, updatedBy }], args);
     }
   });
 

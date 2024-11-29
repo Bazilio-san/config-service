@@ -1,7 +1,7 @@
 const { prepareSqlValuePg, queryPg } = require('af-db-ts');
 const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
-const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS } = require('./pg-service-config');
+const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
 
 // TODO описать структуру pgStorageOptions
@@ -34,6 +34,7 @@ module.exports = class PgStorage extends AbstractStorage {
   constructor (pgStorageOptions) {
     super();
     this.dbId = pgStorageOptions.dbId;
+    this.updatedBy = pgStorageOptions.updatedBy;
     this.updates = { schedule: {} };
     this.lastFetchedRows = new Map(); // Последние полученные строки
     // Initialize regular data fetching and update
@@ -133,16 +134,52 @@ module.exports = class PgStorage extends AbstractStorage {
     }
     while (preRequests.length) {
       const batch = preRequests.splice(0, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS);
-      const sqlText = batch.map(({ configName, paramPath, value }) => {
-        const preparedValue = prepareSqlValuePg({ value, fieldDef: { dataType: 'jsonb' } });
-        return `
-          INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
-          VALUES ('${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP)
-          ON CONFLICT ("paramPath")
-          DO UPDATE SET "value" = EXCLUDED."value", "updatedAt" = CURRENT_TIMESTAMP;`;
-      }).join('\n');
-      await this._queryPg(sqlText);
-      logger.info(`_flashUpdateSchedule finish [sqlText: ${sqlText}]`);
+      await this._updateConfigServiceTable(batch);
+      await this._updateConfigServiceHistoryTable(batch);
+      logger.info(`_flashUpdateSchedule finish`);
     }
+  }
+
+  /**
+   * Update rows in config_service table
+   *
+   * @private
+   */
+  async _updateConfigServiceTable (batch) {
+    logger.info(`_updateConfigServiceTable start [batch: ${JSON.stringify(batch)}]`);
+    const sqlText = batch.map(({ configName, paramPath, value, updatedBy }) => {
+      const preparedValue = prepareSqlValuePg({ value, fieldDef: { dataType: 'jsonb' } });
+      return `
+          INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt", "updatedBy")
+          VALUES ('${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP, '${updatedBy}')
+          ON CONFLICT ("paramPath")
+          DO UPDATE SET
+            "value" = EXCLUDED."value",
+            "updatedBy" = EXCLUDED."updatedBy",
+            "updatedAt" = CURRENT_TIMESTAMP;`;
+    }).join('\n');
+    await this._queryPg(sqlText);
+    logger.info(`_updateConfigServiceTable finish [sqlText: ${sqlText}]`);
+  }
+
+  /**
+   * Update rows in config_service_history table
+   *
+   * @private
+   */
+  async _updateConfigServiceHistoryTable (batch) {
+    logger.info(`_updateConfigServiceHistoryTable start [batch: ${JSON.stringify(batch)}]`);
+    const sqlUpdateText = batch.map(({ configName, paramPath, value, updatedBy }) => {
+      const preparedValue = prepareSqlValuePg({ value, fieldDef: { dataType: 'jsonb' } });
+      return `
+        INSERT INTO ${TABLE_LOG_NAME} ("historyPath", "configName", "paramPath", "value", "updatedAt", "updatedBy")
+        VALUES (CONCAT('${paramPath}-${updatedBy}:',TO_CHAR(CURRENT_TIMESTAMP,'HH24Hours-DD-Mon-YYYY')), '${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP, '${updatedBy}')
+          ON CONFLICT ("historyPath")
+          DO UPDATE SET
+          "value" = EXCLUDED."value",
+                         "updatedAt" = CURRENT_TIMESTAMP;`;
+    }).join('\n');
+    await this._queryPg(sqlUpdateText);
+    logger.info(`_updateConfigServiceHistoryTable finish [sqlText: ${sqlUpdateText}]`);
   }
 };

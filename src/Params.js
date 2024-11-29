@@ -11,6 +11,7 @@ const _isSection_ = Symbol.for('_isSection_');
 const _isProp_ = Symbol.for('_isProp_');
 const _onChange_ = Symbol.for('_onChange_');
 const _callerId_ = Symbol.for('_callerId_');
+const _updatedBy_ = Symbol.for('_updatedBy_');
 
 /**
  * Initialization:
@@ -153,6 +154,7 @@ module.exports = class Params extends Schema {
       }
       delete schemaItem[_onChange_];
       delete schemaItem[_callerId_];
+      delete schemaItem[_updatedBy_];
     }
   }
 
@@ -171,6 +173,7 @@ module.exports = class Params extends Schema {
       schemaItem[_onChange_] = onChange;
     }
     schemaItem[_callerId_] = options.callerId;
+    schemaItem[_updatedBy_] = options.updatedBy;
     this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
     if (absentPaths.size) {
       // console.log(`Missed:\n${[...absentPaths].join('\n')}`);
@@ -335,13 +338,13 @@ module.exports = class Params extends Schema {
       this._fillSchemaWithValues('', config);
     });
 
-    ee.on('cs-leaf-change', ({ paramPath, newValue }) => {
+    ee.on('cs-leaf-change', ({ paramPath, newValue, updatedBy }) => {
       const configName = paramPath.split('.')[0];
       if (!configName) {
         return;
       }
       // VVA в случе файлового хранилища тут будет ошибка, т.к scheduleUpdate не будет
-      this.storageService.scheduleUpdate({ configName, paramPath, value: newValue });
+      this.storageService.scheduleUpdate({ configName, paramPath, updatedBy, value: newValue });
     });
   }
 };

@@ -145,7 +145,7 @@ describe('PgStorage', () => {
       await pgStorage._flashUpdateSchedule();
 
       // eslint-disable-next-line no-unused-expressions
-      expect(pgStorage._queryPg.calledOnce).to.be.true; // should update config_service
+      expect(pgStorage._queryPg.callCount).to.equal(2); // should update config_service, config_service_history
       expect(pgStorage.updates.schedule).to.deep.equal({});
     });
 
@@ -171,7 +171,7 @@ describe('PgStorage', () => {
 
       await pgStorage._flashUpdateSchedule();
 
-      expect(pgStorage._queryPg.callCount).to.equal(1); // should update config_service
+      expect(pgStorage._queryPg.callCount).to.equal(2); // should update config_service, config_service_history
     });
   });
 
@@ -184,7 +184,7 @@ describe('PgStorage', () => {
       await pgStorage._flashUpdateSchedule();
       await pgStorage._fetchConfigChanges();
 
-      expect(pgStorage._queryPg.callCount).to.equal(2); // should update config_service and fetch changes
+      expect(pgStorage._queryPg.callCount).to.equal(3); // should update config_service, config_service_history and fetch changes
       // eslint-disable-next-line no-unused-expressions
       expect(emitSpy.called).to.be.true;
     });
@@ -201,7 +201,7 @@ describe('PgStorage', () => {
 
       await pgStorage._flashUpdateSchedule();
 
-      expect(pgStorage._queryPg.callCount).to.equal(1); // should not update config_service but fetch changes
+      expect(pgStorage._queryPg.callCount).to.equal(2); // should update config_service and config_service_history
     });
   });
 });
