@@ -139,9 +139,7 @@ module.exports = class PgStorage extends AbstractStorage {
           INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt")
           VALUES ('${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP)
           ON CONFLICT ("paramPath")
-          DO UPDATE SET
-            "value" = EXCLUDED."value",
-            "updatedAt" = CURRENT_TIMESTAMP;`;
+          DO UPDATE SET "value" = EXCLUDED."value", "updatedAt" = CURRENT_TIMESTAMP;`;
       }).join('\n');
       await this._queryPg(sqlText);
       logger.info(`_flashUpdateSchedule finish [sqlText: ${sqlText}]`);
