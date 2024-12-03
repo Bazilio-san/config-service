@@ -125,6 +125,7 @@ module.exports = class Schema extends Utils {
   }
 
   // =============================== SCHEMA =================================
+
   /**
    * Recursive movement along branches of a Schema with callback functions call
    *
