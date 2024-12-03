@@ -17,7 +17,6 @@ module.exports = class FileStorage extends AbstractStorage {
     this.configDir = Schema.getConfigDir();
     this._expectedConfigDir = this.configDir.replace(process.cwd(), '<proj_root>').replace(/\\/g, '/');
     if (!fs.existsSync(this.configDir)) {
-      // VVA - this._error - отсутсьвует
       throw this._error(`Missing configuration directory: ${this._expectedConfigDir}`);
     }
     if (!fs.lstatSync(this.configDir).isDirectory()) {
