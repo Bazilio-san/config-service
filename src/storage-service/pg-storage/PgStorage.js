@@ -1,8 +1,9 @@
 const { prepareSqlValuePg, queryPg } = require('af-db-ts');
 const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
-const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
+const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
+const { prepareDbTables } = require('./prepare-db-tables');
 
 // TODO описать структуру pgStorageOptions
 
@@ -34,9 +35,14 @@ module.exports = class PgStorage extends AbstractStorage {
   constructor (pgStorageOptions) {
     super();
     this.dbId = pgStorageOptions.dbId;
-    this.updatedBy = pgStorageOptions.updatedBy;
+    const settingsSchema = pgStorageOptions.schema || SCHEMA_NAME;
+    const settingsTableName = pgStorageOptions.settingsTableName || TABLE_NAME;
+    const settingsTableHistoryName = pgStorageOptions.settingsHistoryTableName || TABLE_LOG_NAME;
+    this.settingsTable = `"${settingsSchema}"."${settingsTableName}"`;
+    this.settingsHistoryTable = `"${settingsSchema}"."${settingsTableHistoryName}"`;
     this.updates = { schedule: {} };
     this.lastFetchedRows = new Map(); // Последние полученные строки
+    this.awaitPrepareDb = prepareDbTables(this.dbId, settingsSchema, settingsTableName, settingsTableHistoryName);
     // Initialize regular data fetching and update
     clearInterval(globalFlushIntervalId); // VVQ Это надо на случай повторной инициализации
     globalFlushIntervalId = setInterval(async () => {
@@ -56,6 +62,7 @@ module.exports = class PgStorage extends AbstractStorage {
    */
   async _queryPg (sqlText, sqlValues, throwError = false) {
     logger.info(`_queryPg start [sqlText: ${sqlText}, sqlValues: ${JSON.stringify(sqlValues)}]`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
+    await this.awaitPrepareDb;
     return queryPg(this.dbId, sqlText, sqlValues, throwError);
   }
 
@@ -68,7 +75,7 @@ module.exports = class PgStorage extends AbstractStorage {
     logger.info(`getNamedConfig start [configName: ${configName}]`);
     const sql = `---
       SELECT *
-      FROM ${TABLE_NAME}
+      FROM ${this.settingsTable}
       WHERE "configName" = '${configName}'
       `;
     const res = await this._queryPg(sql);
@@ -86,13 +93,13 @@ module.exports = class PgStorage extends AbstractStorage {
 
   async _fetchConfigChanges () {
     // eslint-disable-next-line no-mixed-operators
-    const intervalSeconds = Math.round(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 1000);
+    const intervalSeconds = Math.ceil(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 1000);
     const timeString = `${intervalSeconds.toString()} sec`;
     logger.info(`_fetchConfigChanges start [timeString: ${timeString}]`);
     this.configRows = new Map();
     const sql = `---
       SELECT *
-      FROM ${TABLE_NAME}
+      FROM ${this.settingsTable}
       ${timeString ? `WHERE "updatedAt" > (CURRENT_TIMESTAMP - INTERVAL '${timeString}')` : ''}
       `;
     const res = await this._queryPg(sql);
@@ -150,7 +157,7 @@ module.exports = class PgStorage extends AbstractStorage {
     const sqlText = batch.map(({ configName, paramPath, value, updatedBy }) => {
       const preparedValue = prepareSqlValuePg({ value, fieldDef: { dataType: 'jsonb' } });
       return `
-          INSERT INTO ${TABLE_NAME} ("configName", "paramPath", "value", "updatedAt", "updatedBy")
+          INSERT INTO ${this.settingsTable} ("configName", "paramPath", "value", "updatedAt", "updatedBy")
           VALUES ('${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP, '${updatedBy}')
           ON CONFLICT ("paramPath")
           DO UPDATE SET
@@ -172,7 +179,7 @@ module.exports = class PgStorage extends AbstractStorage {
     const sqlUpdateText = batch.map(({ configName, paramPath, value, updatedBy }) => {
       const preparedValue = prepareSqlValuePg({ value, fieldDef: { dataType: 'jsonb' } });
       return `
-        INSERT INTO ${TABLE_LOG_NAME} ("historyPath", "configName", "paramPath", "value", "updatedAt", "updatedBy")
+        INSERT INTO ${this.settingsHistoryTable} ("historyPath", "configName", "paramPath", "value", "updatedAt", "updatedBy")
         VALUES (CONCAT('${paramPath}-${updatedBy}:',TO_CHAR(CURRENT_TIMESTAMP,'HH24Hours-DD-Mon-YYYY')), '${configName}', '${paramPath}', ${preparedValue}, CURRENT_TIMESTAMP, '${updatedBy}')
           ON CONFLICT ("historyPath")
           DO UPDATE SET

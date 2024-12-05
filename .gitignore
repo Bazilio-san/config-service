@@ -24,4 +24,5 @@ thumbs.db
 /example/_cfg_/
 /example/_schema_/
 /TODO.txt
+/example/config/local.*
 

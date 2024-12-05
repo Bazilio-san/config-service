@@ -1,6 +1,6 @@
 {
   "name": "config-srv",
-  "version": "4.0.10",
+  "version": "4.0.11",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/index.js",
   "scripts": {
@@ -57,6 +57,7 @@
     "af-color": "^0.0.8",
     "af-db-ts": "^3.0.8",
     "af-tools-ts": "^1.0.90",
+    "config": "^3.3.12",
     "pg": "^8.13.1",
     "set-interval-async": "^3.0.3"
   }
