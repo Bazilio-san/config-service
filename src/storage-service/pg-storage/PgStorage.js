@@ -40,22 +40,25 @@ module.exports = class PgStorage extends AbstractStorage {
     const settingsSchema = pgStorageOptions.schema || SCHEMA_NAME;
     const settingsTableName = pgStorageOptions.settingsTableName || TABLE_NAME;
     const settingsTableHistoryName = pgStorageOptions.settingsHistoryTableName || TABLE_LOG_NAME;
-    this.updateChangesInterval = pgStorageOptions.updateChangesInterval || UPDATE_CHANGES_INTERVAL;
-    this.fetchChangesInterval = pgStorageOptions.fetchChangesInterval || FETCH_CHANGES_INTERVAL;
     this.settingsTable = `"${settingsSchema}"."${settingsTableName}"`;
     this.settingsHistoryTable = `"${settingsSchema}"."${settingsTableHistoryName}"`;
     this.updates = { schedule: {} };
     this.lastFetchedRows = new Map(); // Последние полученные строки
     this.awaitPrepareDb = prepareDbTables(this.dbId, settingsSchema, settingsTableName, settingsTableHistoryName);
+
     // Initialize regular data fetching and update
-    clearInterval(globalUpdateIntervalId); // VVQ Это надо на случай повторной инициализации
+    this.updateChangesInterval = pgStorageOptions.updateChangesInterval || UPDATE_CHANGES_INTERVAL;
+    clearInterval(globalUpdateIntervalId);
     globalUpdateIntervalId = setIntervalAsync(async () => {
       await this._flashUpdateSchedule();
     }, this.updateChangesInterval);
+
+    this.fetchChangesInterval = pgStorageOptions.fetchChangesInterval || FETCH_CHANGES_INTERVAL;
     clearInterval(globalFetchIntervalId);
     globalFetchIntervalId = setIntervalAsync(async () => {
       await this._fetchConfigChanges();
     }, this.fetchChangesInterval);
+
     logger.info(`Constructor init [dbId: ${this.dbId}]`);
   }
 
@@ -68,7 +71,7 @@ module.exports = class PgStorage extends AbstractStorage {
    * @private
    */
   async _queryPg (sqlText, sqlValues, throwError = false) {
-    logger.info(`_queryPg start [sqlText: ${sqlText}, sqlValues: ${JSON.stringify(sqlValues)}]`); // VVQ a если не передано sqlValues, Еси передао - это не будет красиво отображено
+    logger.info(`_queryPg start [sqlText: ${sqlText}${sqlValues?.length ? `, sqlValues: ${JSON.stringify(sqlValues)}` : ''}]`);
     await this.awaitPrepareDb;
     return queryPg(this.dbId, sqlText, sqlValues, throwError);
   }

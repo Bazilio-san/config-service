@@ -46,8 +46,7 @@ module.exports = class FileStorage extends AbstractStorage {
       }
     }
     logger.info(`getNamedConfig start [configValue: ${configValue}]`);
-    // VVQ - А если файла нет? JSON.parse(null)?
-    return JSON.parse(configValue);
+    return configValue ? JSON.parse(configValue) : {};
   }
 
   /**

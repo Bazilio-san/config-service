@@ -189,7 +189,6 @@ module.exports = class Params extends Schema {
    * @param {String} configName
    */
   async _saveNamedConfig (configName) {
-    // VVQ Это чисто для файлов. Перенсти в FileStorage.js
     let configValue = this._getValues(configName);
     // The named configuration must be an object !!!
     if (!__.isObject(configValue)) {
@@ -210,8 +209,7 @@ module.exports = class Params extends Schema {
    * re-/loading named configuration file.
    */
   async _readNamedConfig (configName) {
-    const configValue = await this.storageService.getNamedConfig(configName);
-    return configValue;
+    return this.storageService.getNamedConfig(configName);
   }
 
   /**
@@ -262,7 +260,7 @@ module.exports = class Params extends Schema {
   async _updateAndSaveNamedConfig (configName, configValue, refreshSchema = false, options = {}) {
     options.callFrom = options.callFrom || '_updateAndSaveNamedConfig'; // function name to substitute in error message
     if (refreshSchema) {
-      await this.reloadSchema(); // VVQ сделать релод именованных конфигураций по отдельности
+      await this.reloadSchema();
     }
     this._fillSchemaWithValues(configName, configValue, options);
     await this._saveNamedConfig(configName);

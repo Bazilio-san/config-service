@@ -56,7 +56,7 @@ module.exports = class API extends Params {
         throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
       }
       this._fillSchemaWithValues(pathArr, paramValue, options);
-      this._saveNamedConfig(configName); // VVQ тут надо по-разному поступать для файлов и для БД
+      this._saveNamedConfig(configName).then(() => 0); // TODO тут надо по-разному поступать для файлов и для БД
       return true;
     } catch (err) {
       if (!this.noThrow.set) {
@@ -182,7 +182,6 @@ module.exports = class API extends Params {
   async getSchemaAsync (paramPath, lng, options = {}) {
     try {
       this._addFrom(options, 'getSchemaAsync');
-      // await this._reloadConfig(); VVQ А почему решил удалить?
       // noinspection UnnecessaryLocalVariableJS
       const res = this.getSchema(paramPath, lng, options);
       return res;
