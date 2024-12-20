@@ -1,7 +1,8 @@
 const { prepareSqlValuePg, queryPg } = require('af-db-ts');
+const { setIntervalAsync } = require('set-interval-async/dynamic');
 const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
-const { FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
+const { UPDATE_CHANGES_INTERVAL, FETCH_CHANGES_INTERVAL, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
 const { prepareDbTables } = require('./prepare-db-tables');
 
@@ -26,7 +27,8 @@ const setConfigRowsToConfig = (config, configRows) => {
   logger.info(`setConfigRowsToConfig finish`);
 };
 
-let globalFlushIntervalId = null;
+let globalUpdateIntervalId = null;
+let globalFetchIntervalId = null;
 
 /**
  * Класс отвечает за запись и чтение данных из базы дынных.
@@ -38,17 +40,22 @@ module.exports = class PgStorage extends AbstractStorage {
     const settingsSchema = pgStorageOptions.schema || SCHEMA_NAME;
     const settingsTableName = pgStorageOptions.settingsTableName || TABLE_NAME;
     const settingsTableHistoryName = pgStorageOptions.settingsHistoryTableName || TABLE_LOG_NAME;
+    this.updateChangesInterval = pgStorageOptions.updateChangesInterval || UPDATE_CHANGES_INTERVAL;
+    this.fetchChangesInterval = pgStorageOptions.fetchChangesInterval || FETCH_CHANGES_INTERVAL;
     this.settingsTable = `"${settingsSchema}"."${settingsTableName}"`;
     this.settingsHistoryTable = `"${settingsSchema}"."${settingsTableHistoryName}"`;
     this.updates = { schedule: {} };
     this.lastFetchedRows = new Map(); // Последние полученные строки
     this.awaitPrepareDb = prepareDbTables(this.dbId, settingsSchema, settingsTableName, settingsTableHistoryName);
     // Initialize regular data fetching and update
-    clearInterval(globalFlushIntervalId); // VVQ Это надо на случай повторной инициализации
-    globalFlushIntervalId = setInterval(async () => {
+    clearInterval(globalUpdateIntervalId); // VVQ Это надо на случай повторной инициализации
+    globalUpdateIntervalId = setIntervalAsync(async () => {
       await this._flashUpdateSchedule();
+    }, this.updateChangesInterval);
+    clearInterval(globalFetchIntervalId);
+    globalFetchIntervalId = setIntervalAsync(async () => {
       await this._fetchConfigChanges();
-    }, FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS);
+    }, this.fetchChangesInterval);
     logger.info(`Constructor init [dbId: ${this.dbId}]`);
   }
 
@@ -93,7 +100,7 @@ module.exports = class PgStorage extends AbstractStorage {
 
   async _fetchConfigChanges () {
     // eslint-disable-next-line no-mixed-operators
-    const intervalSeconds = Math.ceil(FLASH_UPDATE_SCHEDULE_INTERVAL_MILLIS * 1.5 / 1000);
+    const intervalSeconds = Math.ceil(this.fetchChangesInterval * 1.5 / 1000);
     const timeString = `${intervalSeconds.toString()} sec`;
     logger.info(`_fetchConfigChanges start [timeString: ${timeString}]`);
     this.configRows = new Map();
