@@ -1,6 +1,6 @@
 {
   "name": "config-srv",
-  "version": "4.0.13",
+  "version": "4.0.14",
   "description": "API and REST interface for editing a structured set of parameters",
   "main": "src/index.js",
   "scripts": {

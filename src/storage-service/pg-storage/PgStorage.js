@@ -2,7 +2,7 @@ const { prepareSqlValuePg, queryPg } = require('af-db-ts');
 const { setIntervalAsync } = require('set-interval-async/dynamic');
 const AbstractStorage = require('../AbstractStorage');
 const ee = require('../../ee');
-const { UPDATE_CHANGES_INTERVAL, FETCH_CHANGES_INTERVAL, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
+const { UPDATE_CHANGES_INTERVAL_MILLIS, FETCH_CHANGES_INTERVAL_MILLIS, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
 const { prepareDbTables } = require('./prepare-db-tables');
 
@@ -47,17 +47,17 @@ module.exports = class PgStorage extends AbstractStorage {
     this.awaitPrepareDb = prepareDbTables(this.dbId, settingsSchema, settingsTableName, settingsTableHistoryName);
 
     // Initialize regular data fetching and update
-    this.updateChangesInterval = pgStorageOptions.updateChangesInterval || UPDATE_CHANGES_INTERVAL;
+    this.updateChangesIntervalMillis = pgStorageOptions.updateChangesIntervalMillis || UPDATE_CHANGES_INTERVAL_MILLIS;
     clearInterval(globalUpdateIntervalId);
     globalUpdateIntervalId = setIntervalAsync(async () => {
       await this._flashUpdateSchedule();
-    }, this.updateChangesInterval);
+    }, this.updateChangesIntervalMillis);
 
-    this.fetchChangesInterval = pgStorageOptions.fetchChangesInterval || FETCH_CHANGES_INTERVAL;
+    this.fetchChangesIntervalMillis = pgStorageOptions.fetchChangesIntervalMillis || FETCH_CHANGES_INTERVAL_MILLIS;
     clearInterval(globalFetchIntervalId);
     globalFetchIntervalId = setIntervalAsync(async () => {
       await this._fetchConfigChanges();
-    }, this.fetchChangesInterval);
+    }, this.fetchChangesIntervalMillis);
 
     logger.info(`Constructor init [dbId: ${this.dbId}]`);
   }
@@ -103,7 +103,7 @@ module.exports = class PgStorage extends AbstractStorage {
 
   async _fetchConfigChanges () {
     // eslint-disable-next-line no-mixed-operators
-    const intervalSeconds = Math.ceil(this.fetchChangesInterval * 1.5 / 1000);
+    const intervalSeconds = Math.ceil(this.fetchChangesIntervalMillis * 1.5 / 1000);
     const timeString = `${intervalSeconds.toString()} sec`;
     logger.info(`_fetchConfigChanges start [timeString: ${timeString}]`);
     this.configRows = new Map();
