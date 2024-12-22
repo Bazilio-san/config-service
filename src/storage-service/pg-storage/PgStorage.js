@@ -142,7 +142,6 @@ module.exports = class PgStorage extends AbstractStorage {
    * @private
    */
   async _flashUpdateSchedule () {
-    logger.info(`_flashUpdateSchedule start [this.updates: ${JSON.stringify(this.updates)}]`);
     const schedule = Object.values(this.updates.schedule);
     const preRequests = schedule.filter((item) => this.lastFetchedRows.get(item.paramPath) !== item.value);
     this.updates.schedule = {};
