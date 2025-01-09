@@ -181,6 +181,17 @@ module.exports = class Params extends Schema {
   }
 
   // ============================ PARAMETERS =============================
+  /**
+   * Saving array of configs to several files
+   * Data must be pre-checked and normalized and stored in the configuration object.
+   *
+   * @param {String[]} configNames
+   */
+  async _saveNamedConfigArr (configNames) {
+    const uniqConfigNames = [...new Set(configNames)];
+    const promiseArr = uniqConfigNames.map((configName) => this._saveNamedConfig(configName));
+    await Promise.all(promiseArr);
+  }
 
   /**
    * Saving named configuration data to a file

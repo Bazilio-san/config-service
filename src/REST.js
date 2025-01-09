@@ -130,6 +130,13 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     }
   });
 
+  socket.on(`${prefix}/setArr`, async (request, ...args) => {
+    if (checkRequestArgs(request, args, 'setArr')) {
+      const { paramArr, callerId = socket.id, updatedBy = socket.user } = request;
+      exec('setArr', [paramArr, { callerId, updatedBy }], args);
+    }
+  });
+
   socket.on(`${prefix}/params-list`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'params-list')) {
       const { node, isExtended = false } = request;

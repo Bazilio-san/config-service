@@ -39,30 +39,55 @@ module.exports = class API extends Params {
    * @param {propPathType} paramPath
    * @param {any} paramValue
    * @param {Object} options
-   * @return {boolean}
    */
   // TODO
-  set (paramPath, paramValue, options = {}) {
+  async set (paramPath, paramValue, options = {}) {
     try {
       this._addFrom(options, 'set');
-      const {
-        pathArr,
-        configName,
-      } = this._parseParamPathFragment(paramPath, options);
-      if (!configName) {
-        throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
-      }
-      if (!this.configNames.includes(configName)) {
-        throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
-      }
-      this._fillSchemaWithValues(pathArr, paramValue, options);
-      this._saveNamedConfig(configName).then(() => 0); // TODO тут надо по-разному поступать для файлов и для БД
-      return true;
+      const configName = this._setValue(paramPath, paramValue, options);
+
+      if (this.serviceOptions.storageType === 'postgres') return;
+      /** Вызывается только при записи в файл */
+      await this._saveNamedConfig(configName);
     } catch (err) {
       if (!this.noThrow.set) {
         throw err;
       }
     }
+  }
+
+  async setArr (paramArr, options) {
+    try {
+      this._addFrom(options, 'set');
+      const configNames = paramArr.map((item) => {
+        const { path, value } = item;
+        const configName = this._setValue(path, value, options);
+        return configName;
+      });
+
+      if (this.serviceOptions.storageType === 'postgres') return;
+      /** Вызывается только при записи в файл */
+      await this._saveNamedConfigArr(configNames);
+    } catch (err) {
+      if (!this.noThrow.set) {
+        throw err;
+      }
+    }
+  }
+
+  _setValue (paramPath, paramValue, options) {
+    const {
+      pathArr,
+      configName,
+    } = this._parseParamPathFragment(paramPath, options);
+    if (!configName) {
+      throw this._error(`The path must begin with a named configuration identifier. Function «${options.callFrom}»`);
+    }
+    if (!this.configNames.includes(configName)) {
+      throw this._error(`There is no named configuration «${configName}» in the schema. Function «${options.callFrom}»`);
+    }
+    this._fillSchemaWithValues(pathArr, paramValue, options);
+    return configName;
   }
 
   /**
