@@ -123,6 +123,7 @@ module.exports = class Params extends Schema {
       [_onChange_]: onChange,
       [_isSection_]: isSection,
       [_isProp_]: isProp,
+      [_updatedBy_]: updatedBy,
       path: paramPath,
     } = schemaItem || {};
     if (isSection && Array.isArray(value)) {
@@ -144,6 +145,9 @@ module.exports = class Params extends Schema {
           if (onChange !== undefined) {
             childSchemaItem[_onChange_] = onChange;
           }
+          if (updatedBy !== undefined) {
+            childSchemaItem[_updatedBy_] = updatedBy;
+          }
         }
       });
     } else if (isProp) {
@@ -162,12 +166,12 @@ module.exports = class Params extends Schema {
    * Fills the Schema with actual values
    */
   _fillSchemaWithValues (paramPath, newValues, options = {}) {
-    const { callFrom = '_fillSchemaWithValues', onChange } = options;
+    const { callFrom = '_fillSchemaWithValues', onChange, updatedBy } = options;
     options.callFrom = callFrom;
     const { pathArr, schemaItem } = this._parseParamPath(paramPath, options);
     const absentPaths = new Set();
     const appliedPaths = new Set();
-    const traverseOptions = { pathArr, absentPaths, appliedPaths };
+    const traverseOptions = { pathArr, absentPaths, appliedPaths, updatedBy };
     schemaItem[_v_] = newValues;
     if (onChange !== undefined) {
       schemaItem[_onChange_] = onChange;
@@ -286,7 +290,7 @@ module.exports = class Params extends Schema {
     }
     const promiseArr = this.configNames.map(async (configName) => {
       const configValue = await this._readNamedConfig(configName);
-      this._fillSchemaWithValues(configName, configValue); // Не оповещаем об обновлении для только что считанных данных
+      this._fillSchemaWithValues(configName, configValue, { updatedBy: 'initialConfig' }); // Не оповещаем об обновлении для только что считанных данных
     });
     await Promise.all(promiseArr);
   }
