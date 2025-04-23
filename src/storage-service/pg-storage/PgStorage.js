@@ -5,6 +5,7 @@ const ee = require('../../ee');
 const { UPDATE_CHANGES_INTERVAL_MILLIS, FETCH_CHANGES_INTERVAL_MILLIS, TABLE_NAME, SCHEMA_NAME, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS, TABLE_LOG_NAME } = require('./pg-service-config');
 const { initLogger } = require('../../logger');
 const { prepareDbTables } = require('./prepare-db-tables');
+const FileStorage = require('../FileStorage');
 
 // TODO описать структуру pgStorageOptions
 
@@ -59,6 +60,11 @@ module.exports = class PgStorage extends AbstractStorage {
       await this._fetchConfigChanges();
     }, this.fetchChangesIntervalMillis);
 
+    this.migrateFromFileStorage = pgStorageOptions.migrateFromFileStorage || false;
+    if (this.migrateFromFileStorage) {
+      this.fileStorage = new FileStorage();
+    }
+
     logger.info(`Constructor init [dbId: ${this.dbId}]`);
   }
 
@@ -91,14 +97,24 @@ module.exports = class PgStorage extends AbstractStorage {
     const res = await this._queryPg(sql);
     const obj = {};
     const rows = res?.rows ?? [];
+
     if (rows.length) {
       rows.forEach((row) => {
         this.lastFetchedRows.set(row.paramPath, row.value);
       });
       setConfigRowsToConfig(obj, rows);
+      logger.info(`getNamedConfig finish [obj: ${JSON.stringify(obj)}]`);
+      return obj[configName];
+    } else if (this.migrateFromFileStorage) {
+      // Подгрузка конфигурации из файловой системы
+      logger.info(`Config not found in DB, attempting to load from file storage [configName: ${configName}]`);
+      let fileConfig = await this.fileStorage.getNamedConfig(configName);
+      if (fileConfig) {
+        return fileConfig;
+      }
     }
-    logger.info(`getNamedConfig finish [obj: ${JSON.stringify(obj)}]`);
-    return obj[configName];
+
+    return {};
   }
 
   async _fetchConfigChanges () {
@@ -136,15 +152,8 @@ module.exports = class PgStorage extends AbstractStorage {
     this.updates.schedule[payload.paramPath] = payload;
   }
 
-  /**
-   * Send all updates to postgres
-   *
-   * @private
-   */
-  async _flashUpdateSchedule () {
-    const schedule = Object.values(this.updates.schedule);
-    const preRequests = schedule.filter((item) => this.lastFetchedRows.get(item.paramPath) !== item.value);
-    this.updates.schedule = {};
+  async _processConfigChanges (configChanges) {
+    const preRequests = configChanges.filter((item) => this.lastFetchedRows.get(item.paramPath) !== item.value);
     if (!preRequests.length) {
       return;
     }
@@ -152,8 +161,23 @@ module.exports = class PgStorage extends AbstractStorage {
       const batch = preRequests.splice(0, MAX_FLASH_UPDATE_INSERT_INSTRUCTIONS);
       await this._updateConfigServiceTable(batch);
       await this._updateConfigServiceHistoryTable(batch);
-      logger.info(`_flashUpdateSchedule finish`);
+      logger.info(`_processConfigChanges finish`);
     }
+  }
+
+  /**
+   * Send all updates to postgres
+   *
+   * @private
+   */
+  async _flashUpdateSchedule () {
+    const schedule = Object.values(this.updates.schedule);
+    if (!schedule.length) {
+      return;
+    }
+    await this._processConfigChanges(schedule);
+    this.updates.schedule = {};
+    logger.info(`_flashUpdateSchedule finish`);
   }
 
   /**
