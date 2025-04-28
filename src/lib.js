@@ -149,6 +149,35 @@ function cloneDeepWithoutUndefined (obj) {
 }
 
 /**
+ * Deep equality function for non-primitive arguments
+ *
+ * @param value1
+ * @param value2
+ * @returns {boolean}
+ */
+function deepEqual (value1, value2) {
+  if (value1 === value2) return true; // Сравнение по значению для примитивов
+
+  if (typeof value1 !== 'object' || value1 === null ||
+    typeof value2 !== 'object' || value2 === null) {
+    return false; // Один из них не объект или null и они не равны
+  }
+
+  const keys1 = Object.keys(value1);
+  const keys2 = Object.keys(value2);
+
+  if (keys1.length !== keys2.length) return false; // Разное количество ключей
+
+  for (let key of keys1) {
+    if (!keys2.includes(key) || !deepEqual(value1[key], value2[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
  * Checks if the passed object is a Schema
  *
  * @param {Object} obj
@@ -238,6 +267,7 @@ module.exports = {
   filterObj,
   get,
   cloneDeep,
+  deepEqual,
   isSchemaItem,
   canDeepDive,
   defineFinalHiddenProperty,

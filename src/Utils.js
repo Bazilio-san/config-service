@@ -26,6 +26,17 @@ module.exports = class Utils {
   }
 
   /**
+   * Deep equality function for non-primitive arguments
+   *
+   * @param value1
+   * @param value2
+   * @returns {boolean}
+   */
+  deepEqual (value1, value2) {
+    return __.deepEqual(value1, value2);
+  }
+
+  /**
    * Returns the full path to the directory from where the service will take the Schema file
    * @return {String}
    */

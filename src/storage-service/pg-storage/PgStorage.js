@@ -6,6 +6,7 @@ const { UPDATE_CHANGES_INTERVAL_MILLIS, FETCH_CHANGES_INTERVAL_MILLIS, TABLE_NAM
 const { initLogger } = require('../../logger');
 const { prepareDbTables } = require('./prepare-db-tables');
 const FileStorage = require('../FileStorage');
+const { deepEqual } = require('../../lib');
 
 // TODO описать структуру pgStorageOptions
 
@@ -153,7 +154,7 @@ module.exports = class PgStorage extends AbstractStorage {
   }
 
   async _processConfigChanges (configChanges) {
-    const preRequests = configChanges.filter((item) => this.lastFetchedRows.get(item.paramPath) !== item.value);
+    const preRequests = configChanges.filter((item) => !deepEqual(this.lastFetchedRows.get(item.paramPath), item.value));
     if (!preRequests.length) {
       return;
     }
