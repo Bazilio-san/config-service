@@ -353,7 +353,7 @@ module.exports = class Schema extends Utils {
             const newValue = cs.validateNewValue(newVal, schemaItem);
             if (newValue !== undefined) {
               const oldValue = this[_value_];
-              if (oldValue !== newValue) {
+              if (!cs.deepEqual(oldValue, newValue)) {
                 this[_value_] = newValue;
                 const changes = {
                   paramPath: this.path,
