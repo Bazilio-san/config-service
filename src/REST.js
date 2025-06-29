@@ -144,14 +144,16 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   socket.on(`${prefix}/set`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'set')) {
       const { propPath, paramValue } = request;
-      exec('set', [propPath, paramValue, setOptions(request)], args);
+      const options = setOptions(request);
+      exec('set', [propPath, paramValue, options], args);
     }
   });
 
   socket.on(`${prefix}/setArr`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'setArr')) {
       const { paramArr } = request;
-      exec('setArr', [paramArr, setOptions(request)], args);
+      const options = setOptions(request);
+      exec('setArr', [paramArr, options], args);
     }
   });
 
