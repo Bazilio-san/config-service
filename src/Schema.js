@@ -366,7 +366,11 @@ module.exports = class Schema extends Utils {
                   updatedBy: this[_updatedBy_],
                 };
                 if (onChange && typeof onChange === 'function') {
-                  onChange(changes);
+                  try {
+                    onChange(changes);
+                  } catch (err) {
+                    console.error(err);
+                  }
                 }
                 ee.emit('cs-leaf-change', changes);
               }
