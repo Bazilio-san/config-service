@@ -12,7 +12,7 @@ const log = (msg) => {
   console.log(`\x1b[94m[config-service]:\x1b[0m${msg}`);
 };
 
-const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignoreSocketAuth }) => {
+const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignoreSocketAuth, preparePayloadHandler }) => {
   if (typeof socket.applyFn !== 'function') {
     socket.getCallback = (args) => {
       if (!args) {
@@ -124,12 +124,20 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
   });
 
   const setOptions = (request) => {
-    const { callerId = socket.id, updatedBy } = request;
-    let { payload } = request;
+    let { callerId, updatedBy, payload } = request;
+    if (!callerId) {
+      callerId = socket.id;
+    }
+    if (!updatedBy) {
+      updatedBy = socket.user;
+    }
     if (!payload) {
       payload = {};
     }
     payload.wsId = socket.session?.wsId;
+    if (typeof preparePayloadHandler === 'function') {
+      payload = preparePayloadHandler(payload);
+    }
     return { callerId, updatedBy: updatedBy || socket.user, payload };
   };
 
@@ -182,7 +190,14 @@ module.exports = class REST extends API {
       this.debugHTTP = this.debug('config-service:http');
     }
 
-    this.initSocket = ({ socket }, ignoreSocketAuth = false) => addSocketListeners({ socket, debugSocket, prefix, ignoreSocketAuth, configService: this });
+    this.initSocket = ({ socket }, ignoreSocketAuth = false, preparePayloadHandler = undefined) => addSocketListeners({
+      socket,
+      debugSocket,
+      prefix,
+      ignoreSocketAuth,
+      preparePayloadHandler,
+      configService: this,
+    });
 
     const emitId = `broadcast/${prefix}/param-changed`;
 
