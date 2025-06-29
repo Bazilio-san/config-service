@@ -123,17 +123,22 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
     }
   });
 
+  const setOptions = (request) => {
+    const { callerId = socket.id, updatedBy } = request;
+    return { callerId, updatedBy: updatedBy || socket.user, session: socket.session };
+  };
+
   socket.on(`${prefix}/set`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'set')) {
-      const { propPath, paramValue, callerId = socket.id, updatedBy } = request;
-      exec('set', [propPath, paramValue, { callerId, updatedBy: updatedBy || socket.user }], args);
+      const { propPath, paramValue } = request;
+      exec('set', [propPath, paramValue, setOptions], args);
     }
   });
 
   socket.on(`${prefix}/setArr`, async (request, ...args) => {
     if (checkRequestArgs(request, args, 'setArr')) {
-      const { paramArr, callerId = socket.id, updatedBy = socket.user } = request;
-      exec('setArr', [paramArr, { callerId, updatedBy }], args);
+      const { paramArr } = request;
+      exec('setArr', [paramArr, setOptions], args);
     }
   });
 
