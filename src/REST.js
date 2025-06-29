@@ -125,7 +125,12 @@ const addSocketListeners = ({ socket, debugSocket, prefix, configService, ignore
 
   const setOptions = (request) => {
     const { callerId = socket.id, updatedBy } = request;
-    return { callerId, updatedBy: updatedBy || socket.user, session: socket.session };
+    let { payload } = request;
+    if (!payload) {
+      payload = {};
+    }
+    payload.wsId = socket.session?.wsId;
+    return { callerId, updatedBy: updatedBy || socket.user, payload };
   };
 
   socket.on(`${prefix}/set`, async (request, ...args) => {
@@ -167,7 +172,7 @@ module.exports = class REST extends API {
 
     // SOCKET IO
 
-    const { prefix = 'cs', broadcast: { throttleMills, extended } = {} } = serviceOptions.socketIoOptions || {};
+    const { prefix = 'cs', broadcast: { throttleMills, extended, broadcastHandler } = {} } = serviceOptions.socketIoOptions || {};
     let debugIO = () => {};
     let debugSocket;
     this.debugHTTP = () => {};
@@ -183,13 +188,20 @@ module.exports = class REST extends API {
 
     this.initSocketBroadcast = (io) => {
       let broadcast = (data) => {
-        const { paramPath, oldValue, newValue, isJustInitialized, schemaItem, callerId } = data;
-        const response = { paramPath, oldValue, newValue, isJustInitialized, callerId };
+        const {
+          paramPath, oldValue, newValue, isJustInitialized, schemaItem, callerId, updatedBy, payload,
+        } = data;
+        const response = { paramPath, oldValue, newValue, isJustInitialized, callerId, updatedBy, payload };
         if (extended && schemaItem.type !== 'section') {
           response.schemaItem = this.cloneDeep(schemaItem, { pureObj: true, removeSymbols: true });
         }
-        debugIO(`[${emitId}]: path: ${paramPath}, value: ${newValue}`);
-        io.emit(emitId, response);
+        if (typeof broadcastHandler === 'function') {
+          debugIO(`broadcastHandler: [${emitId}]: path: ${paramPath}, value: ${newValue}`);
+          broadcastHandler(io, response, emitId);
+        } else {
+          debugIO(`[${emitId}]: path: ${paramPath}, value: ${newValue}`);
+          io.emit(emitId, response);
+        }
       };
       if (throttleMills) {
         broadcast = __.throttle(broadcast, throttleMills);

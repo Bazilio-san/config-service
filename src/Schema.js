@@ -18,7 +18,7 @@ const _isProp_ = Symbol.for('_isProp_');
 const _value_ = Symbol.for('_value_');
 const _callerId_ = Symbol.for('_callerId_');
 const _updatedBy_ = Symbol.for('_updatedBy_');
-const _session_ = Symbol.for('_session_');
+const _payload_ = Symbol.for('_payload_');
 const _initialized_ = Symbol.for('_initialized_');
 const _lng_ = Symbol.for('_lng_');
 const _onChange_ = Symbol.for('_onChange_');
@@ -365,7 +365,7 @@ module.exports = class Schema extends Utils {
                   isJustInitialized,
                   callerId: this[_callerId_],
                   updatedBy: this[_updatedBy_],
-                  session: this[_session_],
+                  payload: this[_payload_],
                 };
                 if (onChange && typeof onChange === 'function') {
                   try {

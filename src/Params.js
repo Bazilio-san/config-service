@@ -12,7 +12,7 @@ const _isProp_ = Symbol.for('_isProp_');
 const _onChange_ = Symbol.for('_onChange_');
 const _callerId_ = Symbol.for('_callerId_');
 const _updatedBy_ = Symbol.for('_updatedBy_');
-const _session_ = Symbol.for('_session_');
+const _payload_ = Symbol.for('_payload_');
 
 /**
  * Initialization:
@@ -179,7 +179,7 @@ module.exports = class Params extends Schema {
     }
     schemaItem[_callerId_] = options.callerId;
     schemaItem[_updatedBy_] = options.updatedBy;
-    schemaItem[_session_] = options.session;
+    schemaItem[_payload_] = options.payload;
     this._traverseSchema(schemaItem, traverseOptions, this.__addNewValueCallback);
     if (absentPaths.size) {
       // console.log(`Missed:\n${[...absentPaths].join('\n')}`);
