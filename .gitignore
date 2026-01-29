@@ -26,3 +26,4 @@ thumbs.db
 /TODO.txt
 /example/config/local.*
 
+/.npmrc
